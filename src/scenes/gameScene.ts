@@ -1,3 +1,5 @@
+import { InputManager } from '../classes/inputManager';
+
 var player;
 var player2;
 var ground;
@@ -6,6 +8,12 @@ var platform;
 
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
+    private inputManager: InputManager;
+
+    setInputManager(inputManager: InputManager) {
+        this.inputManager = inputManager;
+    }
+
     preload () {
         this.load.image('sky', 'src/assets/images/sky.png');
         this.load.image('ground', 'src/assets/images/platform.png');
@@ -70,6 +78,45 @@ export class GameScene extends Phaser.Scene {
     }
 
     update () {
+        const inputData = this.inputManager.handleInputs();
 
+        // LEFT-RIGHT
+        player.setVelocityX(inputData.deltaX);
+
+        // JUMP
+        if (inputData.jumpDown && player.body.touching.down) {
+            player.setVelocityY(-300);
+        }
+
+        // SWITCH
+        if (inputData.switchPressed) {
+            console.log('SWITCH PRESSED');
+        }
+
+        /*else {
+            player.setVelocityY(-300);
+        }*/
+        /*if (inputData.deltaX)
+        {
+
+            player.anims.play('left', true);
+        }
+        else if (cursors.right.isDown)
+        {
+            player.setVelocityX(180);
+
+            player.anims.play('right', true);
+        }
+        else
+        {
+            player.setVelocityX(0);
+
+            player.anims.play('turn');
+        }*/
+
+        // if (cursors.up.isDown && player.body.touching.down)
+        // {
+        //     player.setVelocityY(-300);
+        // }
     }
 }

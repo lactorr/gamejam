@@ -6,15 +6,23 @@ import { GameScene } from '../scenes/gameScene';
 
 export type InputData = {
     deltaX: number, deltaY: number,
-    jumpDown?: boolean,
-    switchDown?: boolean,
-    debugDown?: boolean,
+    jumpDown: boolean,
+    switchDown: boolean,
+    switchPressed: boolean,
+    debugDown: boolean,
 };
 
 export class InputManager {
     private keyboardCursors: Phaser.Types.Input.Keyboard.CursorKeys;
     private keyboardSwitchKey: Phaser.Input.Keyboard.Key;
-    private previousInputData: InputData = { deltaX: 0, deltaY: 0 };
+    private previousInputData: InputData = {
+        deltaX: 0,
+        deltaY: 0,
+        jumpDown: false,
+        switchDown: false,
+        switchPressed: false,
+        debugDown: false,
+    };
 
     constructor(gameScene: Phaser.Scene) {
         this.keyboardCursors = gameScene.input.keyboard.createCursorKeys();
@@ -27,6 +35,7 @@ export class InputManager {
             deltaY: 0,
             jumpDown: false,
             switchDown: false,
+            switchPressed: false,
             debugDown: false,
         };
 
@@ -57,6 +66,9 @@ export class InputManager {
         if (this.keyboardSwitchKey.isDown) {
             out.switchDown = true;
         }
+        if (this.keyboardSwitchKey.isUp && this.previousInputData.switchDown) {
+            out.switchPressed = true;
+        }
 
         // if (!!this.pad) {
         //     // Joystick axes
@@ -85,6 +97,8 @@ export class InputManager {
         //         inputsEventsCenter.emit('actionPressed');
         //     }
         // }
+
+        this.previousInputData = out;
 
         return out;
     }

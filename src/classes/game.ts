@@ -14,13 +14,12 @@ import { GameScene } from '../scenes/gameScene';
 /* TODO: test */
 
 export class Game {
-  private inputData: InputData = { deltaX: 0, deltaY: 0 };
   private gameRunning = true;
   private renderEngine: RenderEngine;
   private level: Level;
   private playerAlive: Player;
   private playerDead: Player;
-  private gameScene: Phaser.Scene;
+  private gameScene: GameScene;
   private inputManager: InputManager;
   //  private gameOverText: Phaser.GameObjects.Text;
 
@@ -48,9 +47,10 @@ export class Game {
     var phaser = new Phaser.Game(config);
     phaser.events.on('ready', () => {
         //TODO ca ressemble pas à une façon logique de faire. Il doit y avoir un autre moyen
-        this.gameScene = phaser.scene.getScenes(false)[0];
+        this.gameScene = phaser.scene.getScenes(false)[0] as GameScene;
 
         this.inputManager = new InputManager(this.gameScene);
+        this.gameScene.setInputManager(this.inputManager);
 
         console.log('GAME READY, GL HF');
     });
