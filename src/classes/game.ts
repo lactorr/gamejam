@@ -17,8 +17,6 @@ export class Game {
   private gameRunning = true;
   private renderEngine: RenderEngine;
   private level: Level;
-  private playerAlive: Player;
-  private playerDead: Player;
   private gameScene: GameScene;
   private inputManager: InputManager;
   //  private gameOverText: Phaser.GameObjects.Text;
@@ -26,8 +24,6 @@ export class Game {
   constructor(){
     this.renderEngine = new RenderEngine(/* RenderEngine parameters */);
     this.level = {elements:[]}; //Level(/* parametres Level */);
-    this.playerAlive = new Player(/* parametres Player */);
-    this.playerDead = new Player(/* parametres Player */);
 
     //this.gameScene = new GameScene();
 
