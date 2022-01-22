@@ -40,13 +40,13 @@ export class InputManager {
         };
 
         if (this.keyboardCursors.left.isDown) {
-            out.deltaX = -180;
+            out.deltaX = -1;
             /*player.setVelocityX(-180);
 
             player.anims.play('left', true);*/
         }
         else if (this.keyboardCursors.right.isDown) {
-            out.deltaX = +180;
+            out.deltaX = +1;
             /*player.setVelocityX(180);
 
             player.anims.play('right', true);*/
