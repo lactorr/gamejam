@@ -159,9 +159,11 @@ update (delta) {
   if (inputData.switchPressed) {
     console.log('SWITCH PRESSED');
     if (this.controlledPlayer === this.playerAlive) {
+      this.controlledPlayer.gameObject.setVelocityX(0);
       this.controlledPlayer = this.playerDead;
     }
     else /* if (this.controlledPlayer === this.playerDead) */ {
+      this.controlledPlayer.gameObject.setVelocityX(0);
       this.controlledPlayer = this.playerAlive;
     }
   }
