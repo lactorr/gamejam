@@ -1,16 +1,19 @@
+var player;
+var player2;
+var ground;
+var cursors;
+var platform;
 
+// noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
-
-    preload ()
-    {
+    preload () {
         this.load.image('sky', 'src/assets/images/sky.png');
         this.load.image('ground', 'src/assets/images/platform.png');
         this.load.image('star', 'src/assets/images/star.png');
         this.load.spritesheet('dude', 'src/assets/images/dude.png', { frameWidth: 32, frameHeight: 48 });
     }
 
-    create ()
-    {
+    create () {
         ground = this.physics.add.staticImage(400, 300, 'ground').setSize(800, 4).setDisplaySize(800, 4);
         platform = this.physics.add.image(400, 400, 'ground').setScale(0.5).refreshBody();
 
@@ -64,33 +67,9 @@ export class GameScene extends Phaser.Scene {
 
         this.physics.add.collider([player, player2], ground);
         this.physics.add.collider(player, player2);
-
     }
 
-    update ()
-    {
-        if (cursors.left.isDown)
-        {
-            player.setVelocityX(-180);
+    update () {
 
-            player.anims.play('left', true);
-        }
-        else if (cursors.right.isDown)
-        {
-            player.setVelocityX(180);
-
-            player.anims.play('right', true);
-        }
-        else
-        {
-            player.setVelocityX(0);
-
-            player.anims.play('turn');
-        }
-
-        if (cursors.up.isDown && player.body.touching.down)
-        {
-            player.setVelocityY(-300);
-        }
     }
 }

@@ -2,31 +2,26 @@
   Game stuff
 */
 import * as Phaser from 'phaser';
-import { InputData } from "./inputManager";
-import { Player } from "./player";
-import { Level } from "./level";
-import { RenderEngine } from "./renderEngine";
-import { GameScene } from "./gameScene";
+import { InputData, InputManager } from './inputManager';
+import { Player } from './player';
+import { Level } from './level';
+import { RenderEngine } from './renderEngine';
+import { GameScene } from '../scenes/gameScene';
+// import { MainMenuScene } from './scenes/main-menu';
 
 // TODO: Remove soon
 /** Todo: test */
 /* TODO: test */
 
-var player;
-var player2;
-var ground;
-var cursors;
-var platform;
-
 export class Game {
-
   private inputData: InputData = { deltaX: 0, deltaY: 0 };
   private gameRunning = true;
   private renderEngine: RenderEngine;
   private level: Level;
   private playerAlive: Player;
   private playerDead: Player;
-  private phaser: Phaser.Scene;
+  private gameScene: Phaser.Scene;
+  private inputManager: InputManager;
   //  private gameOverText: Phaser.GameObjects.Text;
 
   constructor(){
@@ -34,6 +29,8 @@ export class Game {
     this.level = {elements:[]}; //Level(/* parametres Level */);
     this.playerAlive = new Player(/* parametres Player */);
     this.playerDead = new Player(/* parametres Player */);
+
+    //this.gameScene = new GameScene();
 
     var config = {
         type: Phaser.AUTO,
@@ -49,6 +46,14 @@ export class Game {
         scene: [GameScene]
     };
     var phaser = new Phaser.Game(config);
+    phaser.events.on('ready', () => {
+        //TODO ca ressemble pas à une façon logique de faire. Il doit y avoir un autre moyen
+        this.gameScene = phaser.scene.getScenes(false)[0];
+
+        this.inputManager = new InputManager(this.gameScene);
+
+        console.log('GAME READY, GL HF');
+    });
   }
 
   switchToUser(){
