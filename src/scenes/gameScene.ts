@@ -20,7 +20,8 @@ export class GameScene extends Phaser.Scene {
         this.load.image('sky', 'src/assets/images/sky.png');
         this.load.image('ground', 'src/assets/images/platform.png');
         this.load.image('star', 'src/assets/images/star.png');
-        this.load.spritesheet('dude', 'src/assets/images/dude.png', { frameWidth: 32, frameHeight: 48 });
+        this.load.image('catalive', 'src/assets/images/catalive.png' /*{, frameWidth: 32, frameHeight: 48 }*/);
+        this.load.image('catdead', 'src/assets/images/catdead.png');
     }
 
     create() {
@@ -33,26 +34,26 @@ export class GameScene extends Phaser.Scene {
         platform.setImmovable(true);
         platform.body.allowGravity = false;
 
-        this.playerAlive = new Player(this.physics.add.sprite(100, 150, 'dude').setGravity(0, 300));
-        this.playerDead = new Player(this.physics.add.sprite(100, 550, 'dude').setGravity(0, -300).setRotation(Math.PI));
+        this.playerAlive = new Player(this.physics.add.sprite(100, 150, 'catalive').setGravity(0, 300).setSize(329, 172).setDisplaySize(109, 57));
+        this.playerDead = new Player(this.physics.add.sprite(100, 550, 'catdead').setGravity(0, -300).setSize(329, 172).setDisplaySize(109, 57));
         this.controlledPlayer = this.playerAlive;
 
         this.anims.create({
             key: 'left',
-            frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers('catalive', { start: 0, end: 3 }),
             frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
             key: 'turn',
-            frames: [ { key: 'dude', frame: 4 } ],
+            frames: [ { key: 'catalive', frame: 4 } ],
             frameRate: 20
         });
 
         this.anims.create({
             key: 'right',
-            frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+            frames: this.anims.generateFrameNumbers('catalive', { start: 5, end: 8 }),
             frameRate: 10,
             repeat: -1
         });
