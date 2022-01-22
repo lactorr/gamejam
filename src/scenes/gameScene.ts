@@ -1,17 +1,23 @@
 import { InputManager } from '../classes/inputManager';
 import { Player } from '../classes/player';
+import { Level } from '../classes/level';
 
 var ground;
 var cursors;
 var platform;
-var box1;
-var box1d;
+
+var variables = {
+  BLOCKW: 30,
+  BLOCKH: 30,
+
+};
 
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
     private inputManager: InputManager;
     private playerAlive: Player;
     private playerDead: Player;
+    private level: Level;
     private controlledPlayer: Player;
 
     setInputManager(inputManager: InputManager) {
@@ -24,31 +30,40 @@ export class GameScene extends Phaser.Scene {
         this.load.image('star', 'src/assets/images/star.png');
         this.load.image('catalive', 'src/assets/images/catalive.png' /*{, frameWidth: 32, frameHeight: 48 }*/);
         this.load.image('catdead', 'src/assets/images/catdead.png');
-        this.load.image('boxfixe01', 'src/assets/images/boxfixe01.png');
-        this.load.image('boxfixe01d', 'src/assets/images/boxfixe01d.png');
     }
 
     create() {
-        //this.physics.world.gravity.y = 0;
-        console.log(this.physics.world);
+        //this.level = Level();
+        this.level = { elements:[
+          { x:1, y:3, w:30, h:10, type: "block" },
+          { x:2, y:1, w:30, h:10, type: "blockd" },
+          { x:3, y:2, w:30, h:10, type: "block" },
+          { x:4, y:1, w:30, h:10, type: "blockd" },
+        ]};
+
+        this.level.elements.map(function(element){
+          var ex = element.x * variables.BLOCKW;
+          var ey = element.y * variables.BLOCKH;
+
+          switch(element.type){
+            case "block":
+              this.physics.add.staticImage(400, 300, 'ground').setSize(800, 4).setDisplaySize(800, 4);
+            break;
+            case "blockd":
+            break;
+            default:
+              console.log("Type doesn't exists");
+            break;
+          }
+        });
 
         ground = this.physics.add.staticImage(400, 300, 'ground').setSize(800, 4).setDisplaySize(800, 4);
-        platform = this.physics.add.image(400, 400, 'ground').setScale(0.5).refreshBody();
 
-        box1 = this.physics.add.image(400, 200, 'boxfixe01').setDisplaySize(328*0.3, 265*0.3);
-        box1d = this.physics.add.image(400, 400, 'boxfixe01d').setDisplaySize(328*0.3, 265*0.3);
-
-        box1.setImmovable(true);
-        box1d.setImmovable(true);
-
-        platform.setImmovable(true);
-        platform.body.allowGravity = false;
-
-
-        this.playerAlive = new Player(this.physics.add.sprite(100, 150, 'catalive').setGravity(0, 300).setDisplaySize(109, 57));
-        this.playerDead = new Player(this.physics.add.sprite(100, 550, 'catdead').setGravity(0, -300).setDisplaySize(109, 57));
+        this.playerAlive = new Player(this.physics.add.sprite(100, 200, 'catalive').setGravity(0, 300).setSize(329, 172).setDisplaySize(109, 57));
+        this.playerDead = new Player(this.physics.add.sprite(100, 400, 'catdead').setGravity(0, -300).setSize(329, 172).setDisplaySize(109, 57));
         this.controlledPlayer = this.playerAlive;
 
+/*
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('catalive', { start: 0, end: 3 }),
@@ -68,7 +83,7 @@ export class GameScene extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
-
+*/
         cursors = this.input.keyboard.createCursorKeys();
 
         this.physics.add.collider(
@@ -84,8 +99,6 @@ export class GameScene extends Phaser.Scene {
 
         this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], ground);
         this.physics.add.collider(this.playerAlive.gameObject, this.playerDead.gameObject);
-
-        this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], [box1, box1d]);
     }
 
     update () {
