@@ -15,6 +15,13 @@ const Constants = {
 
     PLAYER_VELOCITY: 120,
     MOB_VELOCITY: 100,
+    BLOCKW : 60,
+    BLOCKH : 50,
+    SWITCH_SIZE : 30,
+    GROUND_SPEED : 0.005,
+    JUMP_VELOCITY : 250,
+    PLAYER_GRAVITY : 500,
+    PLAYER_XVELOCITY : 70,
 }
 
 export default Constants;
