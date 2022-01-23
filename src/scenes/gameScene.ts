@@ -203,10 +203,14 @@ export class GameScene extends Phaser.Scene {
 
     this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], levelBlocks);
 
-
-    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], switchAlive, function collectSwitch(player, switchAlive: any) {
+    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], switchAlive, (player, switchAlive: any) => {
       switchAlive.disableBody(true, true);
       this.targetGroundPositionY += variables.BLOCKH;
+    }, null, this);
+
+    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], switchDead, (player, switchDead: any) => {
+      switchDead.disableBody(true, true);
+      this.targetGroundPositionY -= variables.BLOCKH;
     }, null, this);
   }
 
