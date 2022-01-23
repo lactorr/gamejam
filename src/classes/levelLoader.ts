@@ -46,6 +46,7 @@ export class LevelLoader {
         }
       }
     }
+    this.level.levelWidth = Number(j) * Constants.BLOCKW;
     console.log(this.level.elements)
     this.level.elements.map((element) => {
       var ex = element.x * Constants.BLOCKW ;
