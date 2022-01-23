@@ -145,6 +145,8 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.playerAlive.gameObject, this.playerDead.gameObject);
 
     this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], levelBlocks);
+
+    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [levelBlocks.key.switchAlive,levelBlocks.key.switchDead], collectSwitch, null, this);
   }
 
   update (time, delta) {
@@ -220,4 +222,8 @@ export class GameScene extends Phaser.Scene {
       this.targetGroundPositionY -= variables.BLOCKH;
     }
   }
+    //COLLECT SWITCH
+    function collectSwitch (player, bonus) {
+    bonus.disableBody(true, true);
 }
+
