@@ -37,7 +37,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('sky', 'src/assets/images/sky.png');
     this.load.image('ground', 'src/assets/images/platform.png');
     this.load.image('star', 'src/assets/images/star.png');
-    this.load.spritesheet('catalive', 'src/assets/images/catalive_animated.png', {frameWidth: 250, frameHeight: 167 });
+    this.load.spritesheet('catalive', 'src/assets/images/catalive_animated.png', {frameWidth: 252, frameHeight: 167 });
     this.load.spritesheet('catdead', 'src/assets/images/catdead.png', {frameWidth: 250, frameHeight: 167 });
     this.load.image('blockNtrAlive', 'src/assets/images/boxfixe01.png');
     this.load.image('blockNtrDead', 'src/assets/images/boxfixe01d.png');
@@ -67,6 +67,15 @@ export class GameScene extends Phaser.Scene {
       immovable: true,
       defaultKey: 'blockNtrAlive',
     });
+    var switchAlive = this.physics.add.group({
+        immovable: true,
+        defaultKey: 'switchAlive',
+      });
+      var switchDead = this.physics.add.group({
+        immovable: true,
+        defaultKey: 'switchDead',
+      });
+
     //this.level = Level();
     this.level = { elements:[
       { x:2, y:-1, w:1, h:1, type: "blockNtrAlive" },
@@ -86,21 +95,23 @@ export class GameScene extends Phaser.Scene {
       var ex = element.x * variables.BLOCKW;
       var ey = element.y * variables.BLOCKH;
 
-      switch(element.type){
+    switch(element.type){
         case "blockNtrAlive":
         levelBlocks.create(ex, ey, element.type).setOrigin(0,0).setDisplaySize(element.w * variables.BLOCKW, element.h * variables.BLOCKH);
         break;
         case "blockNtrDead":
         levelBlocks.create(ex, ey, element.type).setOrigin(0,0).setDisplaySize(element.w * variables.BLOCKW, element.h * variables.BLOCKH);
+        break;
         case "switchAlive":
-        levelBlocks.create(ex + (variables.BLOCKW-variables.SWITCH_SIZE)*0.5, ey + (variables.BLOCKH-variables.SWITCH_SIZE)*0.5, element.type).setOrigin(0,0).setDisplaySize(element.w * variables.SWITCH_SIZE, element.h * variables.SWITCH_SIZE);
+        switchAlive.create(ex + (variables.BLOCKW-variables.SWITCH_SIZE)*0.5, ey + (variables.BLOCKH-variables.SWITCH_SIZE)*0.5, element.type).setOrigin(0,0).setDisplaySize(element.w * variables.SWITCH_SIZE, element.h * variables.SWITCH_SIZE);
+        break;
         case "switchDead":
-        levelBlocks.create(ex + (variables.BLOCKW-variables.SWITCH_SIZE)*0.5, ey + (variables.BLOCKH-variables.SWITCH_SIZE)*0.5, element.type).setOrigin(0,0).setDisplaySize(element.w * variables.SWITCH_SIZE, element.h * variables.SWITCH_SIZE);
+        switchDead.create(ex + (variables.BLOCKW-variables.SWITCH_SIZE)*0.5, ey + (variables.BLOCKH-variables.SWITCH_SIZE)*0.5, element.type).setOrigin(0,0).setDisplaySize(element.w * variables.SWITCH_SIZE, element.h * variables.SWITCH_SIZE);
         break;
         default:
         console.log("Type doesn't exists");
         break;
-      }
+    }
 
     });
 
@@ -118,32 +129,59 @@ export class GameScene extends Phaser.Scene {
     this.playerDead.gameObject.setOrigin(0.5,0);
     this.controlledPlayer = this.playerAlive;
 
-
+//ANIMATIONS CATALIVE
     this.anims.create({
-    key: 'left',
+    key: 'left-alive',
     frames: this.anims.generateFrameNumbers('catalive', { start: 0, end: 7 }),
     frameRate: 10,
     repeat: -1
     });
 
     this.anims.create({
-    key: 'turn',
+    key: 'turn-alive',
     frames: [ { key: 'catalive', frame: 8 } ],
     frameRate: 20
     });
 
     this.anims.create({
-    key: 'right',
+    key: 'right-alive',
     frames: this.anims.generateFrameNumbers('catalive', { start: 8, end: 15 }),
     frameRate: 10,
     repeat: -1
     });
 
     this.anims.create({
-        key: 'jump',
+        key: 'jump-alive',
         frames: [ { key: 'catalive', frame: 14 } ],
         frameRate: 10,
         });
+
+        //ANIMATIONS CATDEAD
+    this.anims.create({
+        key: 'left-dead',
+        frames: this.anims.generateFrameNumbers('catdead', { start: 0, end: 7 }),
+        frameRate: 10,
+        repeat: -1
+        });
+    
+        this.anims.create({
+        key: 'turn-dead',
+        frames: [ { key: 'catdead', frame: 8 } ],
+        frameRate: 20
+        });
+    
+        this.anims.create({
+        key: 'right-dead',
+        frames: this.anims.generateFrameNumbers('catdead', { start: 8, end: 15 }),
+        frameRate: 10,
+        repeat: -1
+        });
+    
+        this.anims.create({
+            key: 'jump-dead',
+            frames: [ { key: 'catdead', frame: 14 } ],
+            frameRate: 10,
+            });
 
   cursors = this.input.keyboard.createCursorKeys();
 
@@ -163,9 +201,13 @@ export class GameScene extends Phaser.Scene {
 
     this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], levelBlocks);
 
-    //this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [levelBlocks.key.switchAlive,levelBlocks.key.switchDead], collectSwitch, null, this);
-  }
 
+    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], switchAlive, function collectSwitch (player, switchAlive:any) {
+        switchAlive.disableBody(true, true);
+        this.targetGroundPositionY += variables.BLOCKH;
+    }, null, this);
+  }
+  
   update (time, delta) {
     const inputData = this.inputManager.handleInputs();
 
@@ -202,15 +244,22 @@ export class GameScene extends Phaser.Scene {
 
     // LEFT-RIGHT
     this.controlledPlayer.gameObject.setVelocityX(inputData.deltaX * variables.PLAYER_XVELOCITY);
-    // FLIP ASSET
+    // ANIMATIONS
+    //if (this.controlledPlayer === this.playerAlive){
+        
+    //}
+    //if (this.controlledPlayer === this.playerDead){
+        
+    //}
+
     if (inputData.deltaX <0){
-        this.controlledPlayer.gameObject.anims.play('left', true);
+        this.controlledPlayer.gameObject.anims.play('left-alive', true);
     }
     else if (inputData.deltaX >0){
-        this.controlledPlayer.gameObject.anims.play('right', true);
+        this.controlledPlayer.gameObject.anims.play('right-alive', true);
     }
     else {
-        this.controlledPlayer.gameObject.anims.play('turn', true)
+        this.controlledPlayer.gameObject.anims.play('turn-alive', true)
     }
 
 
@@ -227,7 +276,7 @@ export class GameScene extends Phaser.Scene {
     this.controlledPlayer.gameObject.setVelocityY(mult * -variables.JUMP_VELOCITY);    
     }
     if (inputData.jumpDown && !isTouchingFloor) {
-    this.controlledPlayer.gameObject.anims.play('jump', true);    
+    this.controlledPlayer.gameObject.anims.play('jump-alive', true);    
     }
 
 
@@ -253,9 +302,6 @@ export class GameScene extends Phaser.Scene {
       console.log('DEATH PRESSED');
       this.targetGroundPositionY -= variables.BLOCKH;
     }
-  }
-    //COLLECT SWITCH
-    function collectSwitch (player, bonus) {
-    bonus.disableBody(true, true);
-}
 
+}
+}
