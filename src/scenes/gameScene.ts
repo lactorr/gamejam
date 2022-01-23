@@ -33,7 +33,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     create() {
-        //this.physics.world.gravity.y = 0;
         console.log(this.physics.world);
 
         ground = this.physics.add.staticImage(400, 300, 'ground').setSize(800, 4).setDisplaySize(800, 4);
@@ -43,7 +42,8 @@ export class GameScene extends Phaser.Scene {
         box1d = this.physics.add.image(400, 400, 'boxfixe01d').setDisplaySize(328*0.3, 265*0.3);
 
         loopSynth = this.sound.add('loopSynth', { loop: true });
-        loopSynth.play();
+        loopMetal = this.sound.add('loopMetal', {loop: true});
+        loopSynth.play(); //defaultMusic
 
         box1.setImmovable(true);
         box1d.setImmovable(true);
@@ -118,9 +118,13 @@ export class GameScene extends Phaser.Scene {
             console.log('SWITCH PRESSED');
             if (this.controlledPlayer === this.playerAlive) {
                 this.controlledPlayer = this.playerDead;
+                loopSynth.stop();
+                loopMetal.play();
             }
             else /* if (this.controlledPlayer === this.playerDead) */ {
                 this.controlledPlayer = this.playerAlive;
+                loopMetal.stop();
+                loopSynth.play();
             }
         }
 
