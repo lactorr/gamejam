@@ -12,6 +12,7 @@ let t = 0;
 let variables = {
   BLOCKW: 60,
   BLOCKH: 50,
+  SWITCH_SIZE: 30,
   GROUND_SPEED: 0.005,
   JUMP_VELOCITY: 250,
   PLAYER_GRAVITY: 500,
@@ -40,6 +41,8 @@ export class GameScene extends Phaser.Scene {
     this.load.image('catdead', 'src/assets/images/catdead.png');
     this.load.image('blockNtrAlive', 'src/assets/images/boxfixe01.png');
     this.load.image('blockNtrDead', 'src/assets/images/boxfixe01d.png');
+    this.load.image('switchAlive', 'src/assets/images/pointlive.png');
+    this.load.image('switchDead', 'src/assets/images/pointdeath.png');
   }
 
   create() {
@@ -78,6 +81,10 @@ export class GameScene extends Phaser.Scene {
         break;
         case "blockNtrDead":
         levelBlocks.create(ex, ey, element.type).setOrigin(0,0).setDisplaySize(element.w * variables.BLOCKW, element.h * variables.BLOCKH);
+        case "switchAlive":
+        levelBlocks.create(ex + (variables.BLOCKW-variables.SWITCH_SIZE)*0.5, ey + (variables.BLOCKH-variables.SWITCH_SIZE)*0.5, element.type).setOrigin(0,0).setDisplaySize(element.w * variables.SWITCH_SIZE, element.h * variables.SWITCH_SIZE);
+        case "switchDead":
+        levelBlocks.create(ex + (variables.BLOCKW-variables.SWITCH_SIZE)*0.5, ey + (variables.BLOCKH-variables.SWITCH_SIZE)*0.5, element.type).setOrigin(0,0).setDisplaySize(element.w * variables.SWITCH_SIZE, element.h * variables.SWITCH_SIZE);
         break;
         default:
         console.log("Type doesn't exists");
