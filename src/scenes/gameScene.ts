@@ -37,8 +37,8 @@ export class GameScene extends Phaser.Scene {
     this.load.image('sky', 'src/assets/images/sky.png');
     this.load.image('ground', 'src/assets/images/platform.png');
     this.load.image('star', 'src/assets/images/star.png');
-    this.load.image('catalive', 'src/assets/images/catalive.png' /*{, frameWidth: 32, frameHeight: 48 }*/);
-    this.load.image('catdead', 'src/assets/images/catdead.png');
+    this.load.spritesheet('catalive', 'src/assets/images/catalive_animated.png', {frameWidth: 250, frameHeight: 167 });
+    this.load.spritesheet('catdead', 'src/assets/images/catdead.png', {frameWidth: 250, frameHeight: 167 });
     this.load.image('blockNtrAlive', 'src/assets/images/boxfixe01.png');
     this.load.image('blockNtrDead', 'src/assets/images/boxfixe01d.png');
     this.load.image('switchAlive', 'src/assets/images/pointlive.png');
@@ -101,33 +101,33 @@ export class GameScene extends Phaser.Scene {
     //box1.setImmovable(true);
     //box1d.setImmovable(true);
 
-    this.playerAlive = new Player(this.physics.add.sprite(40, -50, 'catalive').setGravity(0, variables.PLAYER_GRAVITY).setMass(100).setSize(329, 172).setDisplaySize(109*0.6, 57*0.6));
+    this.playerAlive = new Player(this.physics.add.sprite(40, -50, 'catalive').setGravity(0, variables.PLAYER_GRAVITY).setMass(100).setSize(250, 167).setDisplaySize(250*0.3, 167*0.3));
     this.playerAlive.gameObject.setOrigin(0.5,1);
     this.playerDead = new Player(this.physics.add.sprite(40, 50, 'catdead').setGravity(0, -variables.PLAYER_GRAVITY).setMass(100).setSize(329, 172).setDisplaySize(109*0.6, 57*0.6));
     this.playerDead.gameObject.setOrigin(0.5,0);
     this.controlledPlayer = this.playerAlive;
 
-    /*
+
       this.anims.create({
       key: 'left',
-      frames: this.anims.generateFrameNumbers('catalive', { start: 0, end: 3 }),
+      frames: this.anims.generateFrameNumbers('catalive', { start: 0, end: 7 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.anims.create({
     key: 'turn',
-    frames: [ { key: 'catalive', frame: 4 } ],
+    frames: [ { key: 'catalive', frame: 8 } ],
     frameRate: 20
   });
 
   this.anims.create({
   key: 'right',
-  frames: this.anims.generateFrameNumbers('catalive', { start: 5, end: 8 }),
+  frames: this.anims.generateFrameNumbers('catalive', { start: 8, end: 15 }),
   frameRate: 10,
   repeat: -1
   });
-  */
+
   cursors = this.input.keyboard.createCursorKeys();
 
   this.physics.add.collider(
@@ -146,7 +146,7 @@ export class GameScene extends Phaser.Scene {
 
     this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], levelBlocks);
 
-    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [levelBlocks.key.switchAlive,levelBlocks.key.switchDead], collectSwitch, null, this);
+    //this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [levelBlocks.key.switchAlive,levelBlocks.key.switchDead], collectSwitch, null, this);
   }
 
   update (time, delta) {
@@ -185,6 +185,17 @@ export class GameScene extends Phaser.Scene {
 
     // LEFT-RIGHT
     this.controlledPlayer.gameObject.setVelocityX(inputData.deltaX * variables.PLAYER_XVELOCITY);
+    // FLIP ASSET
+    if (inputData.deltaX <0){
+        this.controlledPlayer.gameObject.anims.play('left', true);
+    }
+    else if (inputData.deltaX >0){
+        this.controlledPlayer.gameObject.anims.play('right', true);
+    }
+    else {
+        this.controlledPlayer.gameObject.anims.play('turn', true)
+    }
+
 
     // JUMP
     let mult = 1;
