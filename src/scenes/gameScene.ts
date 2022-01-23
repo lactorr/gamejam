@@ -1,5 +1,8 @@
 import { InputManager } from '../classes/inputManager';
 import { Player } from '../classes/player';
+//import SoundFade from 'phaser3-rex-plugins/plugins/soundfade.js';
+import { SoundManager } from '../classes/soundManager';
+import music_loop_synth  from '../assets/sounds/music_loop_synth.mp3';
 
 let ground;
 let cursors;
@@ -15,12 +18,19 @@ export class GameScene extends Phaser.Scene {
     private playerAlive: Player;
     private playerDead: Player;
     private controlledPlayer: Player;
+    private soundManager: SoundManager;
 
     setInputManager(inputManager: InputManager) {
         this.inputManager = inputManager;
     }
 
+    setSoundManager(soundManager: SoundManager){
+      this.soundManager = soundManager;
+    }
+
     preload() {
+        this.soundManager = new SoundManager();
+
         this.load.image('sky', 'src/assets/images/sky.png');
         this.load.image('ground', 'src/assets/images/platform.png');
         this.load.image('star', 'src/assets/images/star.png');
@@ -28,8 +38,13 @@ export class GameScene extends Phaser.Scene {
         this.load.image('catdead', 'src/assets/images/catdead.png');
         this.load.image('boxfixe01', 'src/assets/images/boxfixe01.png');
         this.load.image('boxfixe01d', 'src/assets/images/boxfixe01d.png');
+
+        this.soundManager.loadSound(music_loop_synth);
+        /*sound assets
         this.load.audio('loopSynth', ['src/assets/sounds/music_loop_synth.mp3']);
-        this.load.audio('loopMetal', ['src/assets/sounds/music_loop_metal.mp3']);
+        this.load.audio('loopMetal', ['src/assets/sounds/music_loop_metal.mp3']);*/
+
+        //-> pass vanillajs new Audio
     }
 
     create() {
@@ -41,9 +56,12 @@ export class GameScene extends Phaser.Scene {
         box1 = this.physics.add.image(400, 200, 'boxfixe01').setDisplaySize(328*0.3, 265*0.3);
         box1d = this.physics.add.image(400, 400, 'boxfixe01d').setDisplaySize(328*0.3, 265*0.3);
 
-        loopSynth = this.sound.add('loopSynth', { loop: true });
+        /*loopSynth = this.sound.add('loopSynth', { loop: true });
         loopMetal = this.sound.add('loopMetal', {loop: true});
-        loopSynth.play(); //defaultMusic
+        //loopSynth.onDecoded.add(this.start, this);
+        //loopSynth.play(); //defaultMusic
+        //var plugin = this.plugins.get('rexSoundFade') as any;
+        SoundFade.fadeIn(this, loopSynth, 6000);*/
 
         box1.setImmovable(true);
         box1d.setImmovable(true);
@@ -118,13 +136,13 @@ export class GameScene extends Phaser.Scene {
             console.log('SWITCH PRESSED');
             if (this.controlledPlayer === this.playerAlive) {
                 this.controlledPlayer = this.playerDead;
-                loopSynth.stop();
-                loopMetal.play();
+                /*loopSynth.stop();
+                loopMetal.play();*/
             }
             else /* if (this.controlledPlayer === this.playerDead) */ {
                 this.controlledPlayer = this.playerAlive;
-                loopMetal.stop();
-                loopSynth.play();
+                /*loopMetal.stop();
+                loopSynth.play();*/
             }
         }
 

@@ -7,6 +7,7 @@ import { Player } from './player';
 import { Level } from './level';
 import { RenderEngine } from './renderEngine';
 import { GameScene } from '../scenes/gameScene';
+
 // import { MainMenuScene } from './scenes/main-menu';
 
 // TODO: Remove soon
@@ -47,7 +48,6 @@ export class Game {
 
         this.inputManager = new InputManager(this.gameScene);
         this.gameScene.setInputManager(this.inputManager);
-
         console.log('GAME READY, GL HF');
     });
   }
