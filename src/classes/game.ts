@@ -8,7 +8,7 @@ import { Level } from './level';
 import { RenderEngine } from './renderEngine';
 import { GameScene } from '../scenes/gameScene';
 import { HUDScene } from '../scenes/hud';
-// import { MainMenuScene } from './scenes/main-menu';
+import { MainMenuScene } from '../scenes/MainMenu';
 
 // TODO: Remove soon
 /** Todo: test */
@@ -39,7 +39,7 @@ export class Game {
                 debug: true,
             }
         },
-        scene: [ GameScene, HUDScene ]
+        scene: [ GameScene, HUDScene, MainMenuScene ]
     };
     const phaser = new Phaser.Game(config);
     phaser.events.on('ready', () => {
