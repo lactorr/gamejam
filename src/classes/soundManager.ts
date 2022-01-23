@@ -4,12 +4,10 @@ export class SoundManager {
   constructor() {}
 
   //get the sound and make it Audio
-  loadSound(path, volume = 0) {
+  loadSound(path, volume) {
     const audio = new Audio(path);
     audio.loop = true;
-    if(volume > 0) {
-      audio.volume = volume;
-    };
+    audio.volume = volume;
     return audio;
   }
 
@@ -33,9 +31,4 @@ export class SoundManager {
   lowerVolume(audio){
     audio.volume -= 0.1;
   }
-
-
-
-  /**/
-
 }

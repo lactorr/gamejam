@@ -33,6 +33,7 @@ let t = 0;
 let loopMetal;
 let loopSynth;
 const metalVolume = 0.3;
+const synthVolume = 0.5;
 
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
@@ -61,6 +62,7 @@ export class GameScene extends Phaser.Scene {
     this.soundManager = soundManager;
   }
   preload() {
+    this.soundManager = new SoundManager();
     this.load.json('levelData', level1);
     this.load.image('ground', assetPlatform);
     this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 250, frameHeight : 157});
@@ -74,7 +76,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('scientistline', assetScientist);
     this.load.image('line', assetLine);
     //sounds
-    loopSynth = this.soundManager.loadSound(music_loop_synth);
+    loopSynth = this.soundManager.loadSound(music_loop_synth, synthVolume);
     loopMetal = this.soundManager.loadSound(music_loop_metal, metalVolume);
   }
 
@@ -206,7 +208,9 @@ export class GameScene extends Phaser.Scene {
             [ this.playerAlive.gameObject, this.playerDead.gameObject ],
             this.level.switchAliveGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
-              this.targetGroundPositionY += constants.BLOCKH;
+              this.targetGroundPositionY += constants.BLOCKH; //vers le bas synth ++
+              this.soundManager.addVolume(loopSynth);
+              this.soundManager.lowerVolume(loopMetal);
             }, null, this
         );
 
@@ -215,6 +219,8 @@ export class GameScene extends Phaser.Scene {
             this.level.switchDeadGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
               this.targetGroundPositionY -= constants.BLOCKH;
+              this.soundManager.addVolume(loopMetal);
+              this.soundManager.lowerVolume(loopSynth);
             }, null, this
         );
   }
