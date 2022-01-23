@@ -19,7 +19,7 @@ export class Player {
             .setGravity(0, (isAlive ? 1 : -1) * constants.PLAYER_GRAVITY)
             .setMass(100)
             .setSize(250, 157)
-            .setDisplaySize(250 * 0.3, 157 * 0.3)
+            .setDisplaySize(250 * 0.2, 157 * 0.2)
         );
         this.gameObject.body.debugBodyColor = 0x00ff0000;
         this.gameObject.setCollideWorldBounds(true);

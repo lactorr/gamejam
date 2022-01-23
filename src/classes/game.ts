@@ -8,6 +8,7 @@ import { Level } from './level';
 import { RenderEngine } from './renderEngine';
 import { GameScene } from '../scenes/gameScene';
 import { HUDScene } from '../scenes/hud';
+import constants from '../constants';
 // import { MainMenuScene } from './scenes/main-menu';
 
 // TODO: Remove soon
@@ -30,13 +31,13 @@ export class Game {
 
     let config = {
         type: Phaser.AUTO,
-        width: 800,
-        height: 600,
+        width: constants.GAME_WIDTH,
+        height: constants.GAME_HEIGHT,
         physics: {
             default: 'arcade',
             arcade: {
                 gravity: { y: 0 },
-                debug: true,
+                debug: false,
             }
         },
         scene: [ GameScene, HUDScene ]
@@ -44,7 +45,7 @@ export class Game {
     const phaser = new Phaser.Game(config);
     phaser.events.on('ready', () => {
         //TODO ca ressemble pas à une façon logique de faire. Il doit y avoir un autre moyen
-        this.gameScene = phaser.scene.getScenes(false)[0] as GameScene;
+        this.gameScene = phaser.scene.getScene('GameScene') as GameScene;
 
         this.inputManager = new InputManager(this.gameScene);
         this.gameScene.setInputManager(this.inputManager);
