@@ -44,11 +44,14 @@ export class Game {
     const phaser = new Phaser.Game(config);
     phaser.events.on('ready', () => {
         //TODO ca ressemble pas à une façon logique de faire. Il doit y avoir un autre moyen
-        this.gameScene = phaser.scene.getScenes(false)[0] as GameScene;
+        this.gameScene = phaser.scene.getScene('GameScene') as GameScene;
 
         this.inputManager = new InputManager(this.gameScene);
         this.gameScene.setInputManager(this.inputManager);
         phaser.scene.run('HUD');
+        phaser.scene.run('MainMenuScene');
+
+        (phaser.scene.getScene('MainMenuScene') as MainMenuScene).setInputManager(this.inputManager);
 
         console.log('GAME READY, GL HF');
     });

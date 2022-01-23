@@ -28,6 +28,15 @@ export class GameScene extends Phaser.Scene {
   private controlledPlayer: Player;
   private targetGroundPositionY: number = 0;
   private currentGroundPositionY: number = 0;
+  private gameStarted: boolean = false;
+
+  constructor () {
+    super('GameScene');
+  }
+
+  startGame() {
+    this.gameStarted = true;
+  }
 
   setInputManager(inputManager: InputManager) {
     this.inputManager = inputManager;
@@ -216,6 +225,11 @@ export class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     this.inputManager.updateInputData();
+
+    if (!this.gameStarted) {
+      return;
+    }
+
     const inputData = this.inputManager.handleInputs();
 
     //ground.setPosition(0,Math.sin(delta/1000)*100+300);
