@@ -9,24 +9,36 @@ export type InputData = {
     jumpDown: boolean,
     switchDown: boolean,
     switchPressed: boolean,
+    goLifeDown: boolean,
+    goLifePressed: boolean,
+    goDeathDown: boolean,
+    goDeathPressed: boolean,
     debugDown: boolean,
 };
 
 export class InputManager {
     private keyboardCursors: Phaser.Types.Input.Keyboard.CursorKeys;
     private keyboardSwitchKey: Phaser.Input.Keyboard.Key;
+    private keyboardLifeKey: Phaser.Input.Keyboard.Key;
+    private keyboardDeathKey: Phaser.Input.Keyboard.Key;
     private previousInputData: InputData = {
         deltaX: 0,
         deltaY: 0,
         jumpDown: false,
         switchDown: false,
         switchPressed: false,
+        goLifeDown: false,
+        goLifePressed: false,
+        goDeathDown: false,
+        goDeathPressed: false,
         debugDown: false,
     };
 
     constructor(gameScene: Phaser.Scene) {
         this.keyboardCursors = gameScene.input.keyboard.createCursorKeys();
         this.keyboardSwitchKey = gameScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
+        this.keyboardLifeKey = gameScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ADD);
+        this.keyboardDeathKey = gameScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_SUBTRACT);
     }
 
     handleInputs(): InputData {
@@ -36,6 +48,10 @@ export class InputManager {
             jumpDown: false,
             switchDown: false,
             switchPressed: false,
+            goLifeDown: false,
+            goLifePressed: false,
+            goDeathDown: false,
+            goDeathPressed: false,
             debugDown: false,
         };
 
@@ -68,6 +84,20 @@ export class InputManager {
         }
         if (this.keyboardSwitchKey.isUp && this.previousInputData.switchDown) {
             out.switchPressed = true;
+        }
+
+        if (this.keyboardLifeKey.isDown) {
+            out.goLifeDown = true;
+        }
+        if (this.keyboardLifeKey.isUp && this.previousInputData.goLifeDown) {
+            out.goLifePressed = true;
+        }
+
+        if (this.keyboardDeathKey.isDown) {
+            out.goDeathDown = true;
+        }
+        if (this.keyboardDeathKey.isUp && this.previousInputData.goDeathDown) {
+            out.goDeathPressed = true;
         }
 
         // if (!!this.pad) {
