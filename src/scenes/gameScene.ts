@@ -215,6 +215,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(time, delta) {
+    this.inputManager.updateInputData();
     const inputData = this.inputManager.handleInputs();
 
     //ground.setPosition(0,Math.sin(delta/1000)*100+300);
