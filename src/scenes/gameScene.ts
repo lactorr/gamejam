@@ -4,6 +4,19 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 
+import level1 from '../assets/levels/level1.json';
+import assetPlatform from '../assets/images/platform.png';
+import assetCatAnimA from '../assets/images/cat_anim_a.png';
+import assetCatAnimD from '../assets/images/cat_anim_d.png';
+import assetBoxFixe1 from '../assets/images/boxfixe01.png';
+import assetBoxFixe1d from '../assets/images/boxfixe01d.png';
+import assetPointLive from '../assets/images/pointlive.png';
+import assetPointDeath from '../assets/images/pointdeath.png';
+import assetBoxLine from '../assets/images/boxline.png';
+import assetBoxDoorLine from '../assets/images/doorline.png';
+import assetScientist from '../assets/images/scientistline.png';
+import assetLine from '../assets/images/line.png';
+
 import {addDebugText, clearDebugText} from './hud';
 
 let ground;
@@ -30,22 +43,18 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.json('levelData', 'src/assets/levels/level1.json');
-    this.load.image('sky', 'src/assets/images/sky.png');
-    this.load.image('ground', 'src/assets/images/platform.png');
-    this.load.image('star', 'src/assets/images/star.png');
-    this.load.spritesheet('catalive', 'src/assets/images/catalive_animated.png',
-                          {frameWidth : 252, frameHeight : 167});
-    this.load.spritesheet('catdead', 'src/assets/images/catdead.png',
-                          {frameWidth : 250, frameHeight : 167});
-    this.load.image('blockNtrAlive', 'src/assets/images/boxfixe01.png');
-    this.load.image('blockNtrDead', 'src/assets/images/boxfixe01d.png');
-    this.load.image('switchAlive', 'src/assets/images/pointlive.png');
-    this.load.image('switchDead', 'src/assets/images/pointdeath.png');
-    this.load.image('boxline', 'src/assets/images/boxline.png');
-    this.load.image('doorline', 'src/assets/images/doorline.png');
-    this.load.image('scientistline', 'src/assets/images/scientistline.png');
-    this.load.image('line', 'src/assets/images/line.png');
+    this.load.json('levelData', level1);
+    this.load.image('ground', assetPlatform);
+    this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('catdead', assetCatAnimD, {frameWidth : 250, frameHeight : 157});
+    this.load.image('blockNtrAlive', assetBoxFixe1);
+    this.load.image('blockNtrDead', assetBoxFixe1d);
+    this.load.image('switchAlive', assetPointLive);
+    this.load.image('switchDead', assetPointDeath);
+    this.load.image('boxline', assetBoxLine);
+    this.load.image('doorline', assetBoxDoorLine);
+    this.load.image('scientistline', assetScientist);
+    this.load.image('line', assetLine);
   }
 
   create() {
