@@ -25,7 +25,6 @@ export class GameScene extends Phaser.Scene {
   private currentGroundPositionY: number = 0;
   private levelLoader: LevelLoader;
 
-
   setInputManager(inputManager: InputManager) {
     this.inputManager = inputManager;
   }
@@ -162,21 +161,8 @@ export class GameScene extends Phaser.Scene {
       frameRate : 10,
     });
 
-    cursors = this.input.keyboard.createCursorKeys();
-
-    this.physics.add.collider(
-        this.playerAlive.gameObject, platform, function(_player, _platform) {
-          if (_player.body.touching.up && _platform.body.touching.down) {
-            /*
-            DO SOMETHING
-            */
-          }
-        });
-
-    this.physics.add.collider(
-        [ this.playerAlive.gameObject, this.playerDead.gameObject ], ground);
-    this.physics.add.collider(this.playerAlive.gameObject,
-                              this.playerDead.gameObject);
+    this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], ground);
+    this.physics.add.collider(this.playerAlive.gameObject, this.playerDead.gameObject);
 
     this.physics.add.collider(
         [ this.playerAlive.gameObject, this.playerDead.gameObject ],
@@ -199,6 +185,7 @@ export class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     const inputData = this.inputManager.handleInputs();
+    clearDebugText();
 
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
 
@@ -206,27 +193,14 @@ export class GameScene extends Phaser.Scene {
     const groundPositionDiff =
         this.targetGroundPositionY - this.currentGroundPositionY;
     if (Math.abs(groundPositionDiff) > 0.000001) {
-      clearDebugText();
-      addDebugText('UPDATE GROUND0 ' + delta + ' ' +
-                   this.targetGroundPositionY + ' ' +
-                   this.currentGroundPositionY);
       if (groundPositionDiff < 0) {
-        this.currentGroundPositionY -=
-            delta * constants.BLOCKH * constants.GROUND_SPEED;
-        this.currentGroundPositionY =
-            Math.max(this.currentGroundPositionY, this.targetGroundPositionY);
-        addDebugText('UPDATE GROUND ' +
-                     "NEG");
-      } else if (groundPositionDiff > 0) {
-        this.currentGroundPositionY +=
-            delta * constants.BLOCKH * constants.GROUND_SPEED;
-        this.currentGroundPositionY =
-            Math.min(this.currentGroundPositionY, this.targetGroundPositionY);
-        addDebugText('UPDATE GROUND ' +
-                     "POS");
+        this.currentGroundPositionY -= delta * constants.BLOCKH * constants.GROUND_SPEED;
+        this.currentGroundPositionY = Math.max(this.currentGroundPositionY, this.targetGroundPositionY);
       }
-      addDebugText('UPDATE GROUND ' + this.targetGroundPositionY + ' ' +
-                   this.currentGroundPositionY);
+      else if (groundPositionDiff > 0) {
+        this.currentGroundPositionY += delta * constants.BLOCKH * constants.GROUND_SPEED;
+        this.currentGroundPositionY = Math.min(this.currentGroundPositionY, this.targetGroundPositionY);
+      }
       ground.setPosition(0, this.currentGroundPositionY);
 
       if (this.playerDead.gameObject.y < ground.y) {
@@ -286,13 +260,15 @@ export class GameScene extends Phaser.Scene {
         }
       }
 
-      // SWITCH
-      if (inputData.goLifePressed) {
-        console.log('LIFE PRESSED');
-        this.targetGroundPositionY += constants.BLOCKH;
-      } else if (inputData.goDeathPressed) {
-        console.log('DEATH PRESSED');
-        this.targetGroundPositionY -= constants.BLOCKH;
-      }
+    // DEBUG
+    if (inputData.goLifePressed) {
+      console.log('LIFE PRESSED');
+      this.targetGroundPositionY += constants.BLOCKH;
     }
+    else if (inputData.goDeathPressed) {
+      console.log('DEATH PRESSED');
+      this.targetGroundPositionY -= constants.BLOCKH;
+    }
+
   }
+}
