@@ -38,6 +38,10 @@ export function clearDebugText() {
 export class HUDScene extends Phaser.Scene {
     private debugPadText: Phaser.GameObjects.Text;
     private isDebugVisible: boolean;
+    private cartonAliveBas: Phaser.GameObjects.Image;
+    private cartonAliveHaut: Phaser.GameObjects.Image;
+    private cartonDeadBas: Phaser.GameObjects.Image;
+    private cartonDeadHaut: Phaser.GameObjects.Image;
 
     constructor () {
         super('HUD');
@@ -63,10 +67,10 @@ export class HUDScene extends Phaser.Scene {
         this.debugPadText.setVisible(this.isDebugVisible);
         //this.physics.config.debug = true;
 
-        this.add.image(0, -30, 'cartonAliveHaut').setOrigin(0, 0);
-        this.add.image(0, -20, 'cartonDeadHaut').setOrigin(0, 0).setVisible(false);
-        this.add.image(0, constants.GAME_HEIGHT, 'cartonAliveBas').setOrigin(0, 1);
-        this.add.image(0, constants.GAME_HEIGHT, 'cartonDeadBas').setOrigin(0, 1).setVisible(false);
+        this.cartonAliveHaut  = this.add.image(0, -30, 'cartonAliveHaut').setOrigin(0, 0);
+        this.cartonDeadHaut = this.add.image(0, -20, 'cartonDeadHaut').setOrigin(0, 0).setVisible(false);
+        this.cartonAliveBas = this.add.image(0, constants.GAME_HEIGHT, 'cartonAliveBas').setOrigin(0, 1);
+        this.cartonDeadBas  = this.add.image(0, constants.GAME_HEIGHT, 'cartonDeadBas').setOrigin(0, 1).setVisible(false);
         this.add.image(0, constants.GAME_HEIGHT, 'keys').setOrigin(0, 1);
         //this.add.image(0, -30, 'cartonDeadBas').setOrigin(0, 0);
         //this.add.image(0, -300, 'cartonAliveBas');
@@ -80,75 +84,22 @@ export class HUDScene extends Phaser.Scene {
     }
 
     update(time, delta) {
-        this.debugPad(delta);
-    }
+        const gameScene: any = this.game.scene.getScene('GameScene');
 
-    debugPad(delta) {
+        if (gameScene.controlledPlayer === gameScene.playerAlive) {
+            this.cartonAliveBas.setVisible(true);
+            this.cartonAliveHaut.setVisible(true);
+            this.cartonDeadBas.setVisible(false);
+            this.cartonDeadHaut.setVisible(false);
+        }
+        else {
+            this.cartonAliveBas.setVisible(false);
+            this.cartonAliveHaut.setVisible(false);
+            this.cartonDeadBas.setVisible(true);
+            this.cartonDeadHaut.setVisible(true);
+        }
+
         let debug = [];
-
-        //let pads = this.input.gamepad.gamepads;
-        // let pads = this.input.gamepad.getAll();
-        // let pads = navigator.getGamepads();
-
-        // for (let i = 0; i < pads.length; i++)
-        // {
-        //     let pad = pads[i];
-        //
-        //     if (!pad) {
-        //         continue;
-        //     }
-        //
-        //     //  Timestamp, index. ID
-        //     //debug.push(pad.id);
-        //     debug.push('Index: ' + pad.index + ' Timestamp: ' + pad.timestamp);
-        //
-        //     //  Buttons
-        //
-        //     let buttons = '';
-        //
-        //     for (let b = 0; b < pad.buttons.length; b++)
-        //     {
-        //         let button = pad.buttons[b];
-        //
-        //         buttons = buttons.concat('B' + button.index + ': ' + button.value + '  ');
-        //         // buttons = buttons.concat('B' + b + ': ' + button.value + '  ');
-        //
-        //         if (b === 8)
-        //         {
-        //             debug.push(buttons);
-        //             buttons = '';
-        //         }
-        //     }
-        //
-        //     debug.push(buttons);
-        //
-        //     //  Axis
-        //
-        //     let axes = '';
-        //
-        //     for (let a = 0; a < pad.axes.length; a++)
-        //     {
-        //         let axis = pad.axes[a];
-        //
-        //         axes = axes.concat('A' + axis.index + ': ' + Math.round(axis.getValue()*100)/100 + '  ');
-        //         // axes = axes.concat('A' + a + ': ' + axis + '  ');
-        //
-        //         if (a === 1)
-        //         {
-        //             debug.push(axes);
-        //             axes = '';
-        //         }
-        //     }
-        //
-        //     const fps = Math.round(1000/delta * 100)/100;
-        //
-        //     debug.push(axes);
-        //     debug.push('');
-        //     debug.push('PX: ' + px + '; PY: ' + py);
-        //     debug.push('RX: ' + rx + '; RY: ' + ry);
-        //     debug.push('FPS:' + fps);
-        //     debug.push('PV:' + pv + '; INV_F:' + invincibilityFrames);
-        // }
 
         const fps = Math.round(1000/delta * 100)/100;
         debug.push('FPS:' + fps);
