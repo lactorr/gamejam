@@ -50,7 +50,6 @@ export class Game {
         this.inputManager = new InputManager(this.gameScene);
         this.gameScene.setInputManager(this.inputManager);
         phaser.scene.run('HUD');
-
         console.log('GAME READY, GL HF');
     });
   }
