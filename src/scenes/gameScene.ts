@@ -43,6 +43,10 @@ export class GameScene extends Phaser.Scene {
     this.load.image('blockNtrDead', 'src/assets/images/boxfixe01d.png');
     this.load.image('switchAlive', 'src/assets/images/pointlive.png');
     this.load.image('switchDead', 'src/assets/images/pointdeath.png');
+    this.load.image('boxline', 'src/assets/images/boxline.png');
+    this.load.image('doorline', 'src/assets/images/doorline.png');
+    this.load.image('scientistline', 'src/assets/images/scientistline.png');
+    this.load.image('line', 'src/assets/images/line.png');
   }
 
   create() {
@@ -51,6 +55,13 @@ export class GameScene extends Phaser.Scene {
     //this.cameras.main.setO
 
   this.physics.world.setBounds(0, -1000, 10000, 2000);
+
+  // LIGNE DU POURSUIVANT
+  this.add.image(50, 250, 'line').setOrigin(0, 0.5).setSize(2219, 49).setDisplaySize(2219*0.3, 49*0.3);
+  this.add.image(100, 250, 'boxline').setOrigin(0, 0.5).setSize(207, 109).setDisplaySize(207*0.4, 109*0.4);
+  this.add.image(680, 250, 'doorline').setOrigin(0, 0.5).setSize(197, 240).setDisplaySize(197*0.3, 240*0.3);
+  this.add.image(30, 250, 'scientistline').setOrigin(0, 0.5).setSize(178, 249).setDisplaySize(178*0.4, 249*0.4);
+  
 
     var levelBlocks = this.physics.add.group({
       immovable: true,
