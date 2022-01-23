@@ -45,9 +45,14 @@ export class GameScene extends Phaser.Scene {
   private scientistImage: Phaser.GameObjects.Image;
   private fondImage: Phaser.GameObjects.Image;
   private fondGroup: Phaser.GameObjects.Group;
+  private gameStarted: boolean = false;
 
   constructor () {
     super('GameScene');
+  }
+
+  startGame() {
+    this.gameStarted = true;
   }
 
   setInputManager(inputManager: InputManager) {
@@ -229,6 +234,12 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(time, delta) {
+    this.inputManager.updateInputData();
+
+    if (!this.gameStarted) {
+      return;
+    }
+
     const inputData = this.inputManager.handleInputs();
     clearDebugText();
 
