@@ -3,7 +3,8 @@ import {LevelLoader} from '../classes/levelLoader';
 import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
-
+//levels
+import level1 from '../assets/levels/level2.json';
 import level1 from '../assets/levels/level0.json';
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -16,8 +17,11 @@ import assetBoxLine from '../assets/images/boxline.png';
 import assetBoxDoorLine from '../assets/images/doorline.png';
 import assetScientist from '../assets/images/scientistline.png';
 import assetLine from '../assets/images/line.png';
+//sounds
+import { SoundManager } from '../classes/soundManager';
+import music_loop_synth  from '../assets/sounds/music_loop_synth.mp3';
+import music_loop_metal  from '../assets/sounds/music_loop_metal.mp3';
 import assetFond from '../assets/images/fond.png';
-
 import {addDebugText, clearDebugText} from './hud';
 
 let ground;
@@ -26,7 +30,11 @@ let platform;
 let box1;
 let box1d;
 let t = 0;
-
+//sounds
+let loopMetal;
+let loopSynth;
+const metalVolume = 0.3;
+const synthVolume = 0.5;
 
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
@@ -46,6 +54,8 @@ export class GameScene extends Phaser.Scene {
   private fondImage: Phaser.GameObjects.Image;
   private fondGroup: Phaser.GameObjects.Group;
   private gameStarted: boolean = false;
+  private soundManager: SoundManager;
+  private isMusicPlaying: boolean = false;
 
   constructor () {
     super('GameScene');
@@ -59,7 +69,11 @@ export class GameScene extends Phaser.Scene {
     this.inputManager = inputManager;
   }
 
+  setSoundManager(soundManager: SoundManager){
+    this.soundManager = soundManager;
+  }
   preload() {
+    this.soundManager = new SoundManager();
     this.load.json('levelData', level1);
     this.load.image('ground', assetPlatform);
     this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 250, frameHeight : 157});
@@ -72,11 +86,16 @@ export class GameScene extends Phaser.Scene {
     this.load.image('doorline', assetBoxDoorLine);
     this.load.image('scientistline', assetScientist);
     this.load.image('line', assetLine);
+    //sounds
+    loopSynth = this.soundManager.loadSound(music_loop_synth, synthVolume);
+    loopMetal = this.soundManager.loadSound(music_loop_metal, metalVolume);
     this.load.image('fond', assetFond);
   }
 
   create() {
     this.levelLoader = new LevelLoader(this);
+    this.soundManager.startSound(loopSynth);
+    this.soundManager.startSound(loopMetal);
 
     this.cameras.main.centerOn(400, 0);
     // On peut pas avoir Y qui va vers le haut ca me tend T_T - xurei
@@ -211,7 +230,9 @@ export class GameScene extends Phaser.Scene {
             [ this.playerAlive.gameObject, this.playerDead.gameObject ],
             this.level.switchAliveGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
-              this.targetGroundPositionY += constants.BLOCKH;
+              this.targetGroundPositionY += constants.BLOCKH; //vers le bas synth ++
+              this.soundManager.addVolume(loopSynth);
+              this.soundManager.lowerVolume(loopMetal);
             }, null, this
         );
 
@@ -220,6 +241,8 @@ export class GameScene extends Phaser.Scene {
             this.level.switchDeadGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
               this.targetGroundPositionY -= constants.BLOCKH;
+              this.soundManager.addVolume(loopMetal);
+              this.soundManager.lowerVolume(loopSynth);
             }, null, this
         );
   }
