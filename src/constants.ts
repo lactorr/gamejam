@@ -1,7 +1,7 @@
 const TILE_SIZE = 16;
 const Constants = {
-    GAME_HEIGHT: 600,
     GAME_WIDTH: 800,
+    GAME_HEIGHT: 700,
 
     TILE_SIZE,
     ROOM_W: 29*TILE_SIZE,
