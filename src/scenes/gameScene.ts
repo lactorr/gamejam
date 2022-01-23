@@ -3,13 +3,9 @@ import {LevelLoader} from '../classes/levelLoader';
 import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
-<<<<<<< HEAD
 //levels
 import level1 from '../assets/levels/level2.json';
-=======
-
 import level1 from '../assets/levels/level0.json';
->>>>>>> dev
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
 import assetCatAnimD from '../assets/images/cat_anim_d.png';
@@ -21,15 +17,11 @@ import assetBoxLine from '../assets/images/boxline.png';
 import assetBoxDoorLine from '../assets/images/doorline.png';
 import assetScientist from '../assets/images/scientistline.png';
 import assetLine from '../assets/images/line.png';
-<<<<<<< HEAD
 //sounds
 import { SoundManager } from '../classes/soundManager';
 import music_loop_synth  from '../assets/sounds/music_loop_synth.mp3';
 import music_loop_metal  from '../assets/sounds/music_loop_metal.mp3';
-=======
 import assetFond from '../assets/images/fond.png';
->>>>>>> dev
-
 import {addDebugText, clearDebugText} from './hud';
 
 let ground;
