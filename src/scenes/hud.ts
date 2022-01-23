@@ -88,7 +88,7 @@ export class HUDScene extends Phaser.Scene {
 
         if (gameScene.controlledPlayer === gameScene.playerAlive) {
             this.cartonAliveBas.setVisible(true);
-            this.cartonAliveHaut.setVisible(true);
+            this.cartonAliveHaut.setVisible(false);
             this.cartonDeadBas.setVisible(false);
             this.cartonDeadHaut.setVisible(false);
         }
@@ -96,7 +96,7 @@ export class HUDScene extends Phaser.Scene {
             this.cartonAliveBas.setVisible(false);
             this.cartonAliveHaut.setVisible(false);
             this.cartonDeadBas.setVisible(true);
-            this.cartonDeadHaut.setVisible(true);
+            this.cartonDeadHaut.setVisible(false);
         }
 
         let debug = [];

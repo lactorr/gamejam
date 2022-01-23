@@ -34,6 +34,7 @@ export class InputManager {
         goDeathPressed: false,
         debugDown: false,
     };
+    //private currentInputData: InputData;
 
     constructor(gameScene: Phaser.Scene) {
         this.keyboardCursors = gameScene.input.keyboard.createCursorKeys();
@@ -43,7 +44,7 @@ export class InputManager {
         this.keyboardSpace = gameScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
 
-    handleInputs(): InputData {
+    updateInputData() {
         const out: InputData = {
             deltaX: 0,
             deltaY: 0,
@@ -133,5 +134,9 @@ export class InputManager {
         this.previousInputData = out;
 
         return out;
+    }
+
+    handleInputs(): InputData {
+        return this.previousInputData;
     }
 }

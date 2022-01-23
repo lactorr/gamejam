@@ -5,7 +5,6 @@ import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
 import level1 from '../assets/levels/level2.json';
-import level1 from '../assets/levels/level0.json';
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
 import assetCatAnimD from '../assets/images/cat_anim_d.png';
@@ -53,11 +52,18 @@ export class GameScene extends Phaser.Scene {
   private scientistImage: Phaser.GameObjects.Image;
   private fondImage: Phaser.GameObjects.Image;
   private fondGroup: Phaser.GameObjects.Group;
+  private gameStarted: boolean = false;
   private soundManager: SoundManager;
   private isMusicPlaying: boolean = false;
 
   constructor () {
     super('GameScene');
+  }
+
+  startGame() {
+    this.gameStarted = true;
+    this.soundManager.startSound(loopSynth);
+    this.soundManager.startSound(loopMetal);
   }
 
   setInputManager(inputManager: InputManager) {
@@ -89,8 +95,6 @@ export class GameScene extends Phaser.Scene {
 
   create() {
     this.levelLoader = new LevelLoader(this);
-    this.soundManager.startSound(loopSynth);
-    this.soundManager.startSound(loopMetal);
 
     this.cameras.main.centerOn(400, 0);
     // On peut pas avoir Y qui va vers le haut ca me tend T_T - xurei
@@ -252,6 +256,12 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(time, delta) {
+    this.inputManager.updateInputData();
+
+    if (!this.gameStarted) {
+      return;
+    }
+
     const inputData = this.inputManager.handleInputs();
     clearDebugText();
 
