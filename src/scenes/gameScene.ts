@@ -24,7 +24,11 @@ export class GameScene extends Phaser.Scene {
   private targetGroundPositionY: number = 0;
   private currentGroundPositionY: number = 0;
   private levelLoader: LevelLoader;
-
+  // Line images
+  private lineImage: Phaser.GameObjects.Image;
+  private boxImage: Phaser.GameObjects.Image;
+  private doorImage: Phaser.GameObjects.Image;
+  private scientistImage: Phaser.GameObjects.Image;
 
   setInputManager(inputManager: InputManager) {
     this.inputManager = inputManager;
@@ -59,20 +63,20 @@ export class GameScene extends Phaser.Scene {
     this.physics.world.setBounds(0, -1000, 10000, 2000);
 
     // LIGNE DU POURSUIVANT
-    this.add.image(50, 250, 'line')
-        .setOrigin(0, 0.5)
+    this.lineImage = this.add.image(50, 250, 'line')
+        .setOrigin(0.5, 0.5)
         .setSize(2219, 49)
         .setDisplaySize(2219 * 0.3, 49 * 0.3);
-    this.add.image(100, 250, 'boxline')
-        .setOrigin(0, 0.5)
+    this.boxImage = this.add.image(100, 250, 'boxline')
+        .setOrigin(0.5, 0.5)
         .setSize(207, 109)
         .setDisplaySize(207 * 0.4, 109 * 0.4);
-    this.add.image(680, 250, 'doorline')
-        .setOrigin(0, 0.5)
+    this.doorImage = this.add.image(680, 250, 'doorline')
+        .setOrigin(0.5, 0.5)
         .setSize(197, 240)
         .setDisplaySize(197 * 0.3, 240 * 0.3);
-    this.add.image(30, 250, 'scientistline')
-        .setOrigin(0, 0.5)
+    this.scientistImage = this.add.image(30, 250, 'scientistline')
+        .setOrigin(0.5, 0.5)
         .setSize(178, 249)
         .setDisplaySize(178 * 0.4, 249 * 0.4);
 
@@ -196,10 +200,22 @@ export class GameScene extends Phaser.Scene {
                   this.targetGroundPositionY -= constants.BLOCKH;
                 }, null, this);
   }
+  updateLine( boxOffset ){
 
+    var lineWidth = this.lineImage.displayWidth;
+    console.log(lineWidth);
+    this.scientistImage.x = boxOffset - (lineWidth/2);
+    this.lineImage.x = boxOffset;
+    this.doorImage.x = boxOffset + (lineWidth/2);
+    var completePercent = ( boxOffset / Number(this.level.levelWidth));
+    this.boxImage.x = this.scientistImage.x + lineWidth*completePercent;
+  }
   update(time, delta) {
     const inputData = this.inputManager.handleInputs();
-
+    var boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
+    this.updateLine(boxOffset);
+    this.cameras.main.x = 400 - boxOffset;
+    ground.x = boxOffset;
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
 
     // UPDATE GROUND IF NEEDED
