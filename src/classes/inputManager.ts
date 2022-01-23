@@ -21,6 +21,7 @@ export class InputManager {
     private keyboardSwitchKey: Phaser.Input.Keyboard.Key;
     private keyboardLifeKey: Phaser.Input.Keyboard.Key;
     private keyboardDeathKey: Phaser.Input.Keyboard.Key;
+    private keyboardSpace: Phaser.Input.Keyboard.Key;
     private previousInputData: InputData = {
         deltaX: 0,
         deltaY: 0,
@@ -39,6 +40,7 @@ export class InputManager {
         this.keyboardSwitchKey = gameScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
         this.keyboardLifeKey = gameScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ADD);
         this.keyboardDeathKey = gameScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_SUBTRACT);
+        this.keyboardSpace = gameScene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
 
     handleInputs(): InputData {
@@ -74,7 +76,7 @@ export class InputManager {
         //     player.anims.play('turn');*/
         // }
 
-        if (this.keyboardCursors.up.isDown /*&& player.body.touching.down*/) {
+        if (this.keyboardCursors.up.isDown || this.keyboardSpace.isDown /*&& player.body.touching.down*/) {
             //player.setVelocityY(-300);
             out.jumpDown = true;
         }
