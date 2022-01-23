@@ -26,6 +26,7 @@ export class GameScene extends Phaser.Scene {
         this.load.image('catdead', 'src/assets/images/catdead.png');
         this.load.image('boxfixe01', 'src/assets/images/boxfixe01.png');
         this.load.image('boxfixe01d', 'src/assets/images/boxfixe01d.png');
+        this.load.audio('musicBackground', ['src/assets/sounds/music_loop_synth.mp3', 'src/assets/sounds/music_loop_metal.mp3']);
     }
 
     create() {
@@ -38,12 +39,14 @@ export class GameScene extends Phaser.Scene {
         box1 = this.physics.add.image(400, 200, 'boxfixe01').setDisplaySize(328*0.3, 265*0.3);
         box1d = this.physics.add.image(400, 400, 'boxfixe01d').setDisplaySize(328*0.3, 265*0.3);
 
+        var musicBackground = this.sound.add('musicBackground', { loop: true });
+        musicBackground.play();
+
         box1.setImmovable(true);
         box1d.setImmovable(true);
 
         platform.setImmovable(true);
         platform.body.allowGravity = false;
-
 
         this.playerAlive = new Player(this.physics.add.sprite(100, 150, 'catalive').setGravity(0, 300).setDisplaySize(109, 57));
         this.playerDead = new Player(this.physics.add.sprite(100, 550, 'catdead').setGravity(0, -300).setDisplaySize(109, 57));
