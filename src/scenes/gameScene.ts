@@ -89,13 +89,10 @@ export class GameScene extends Phaser.Scene {
     this.load.image('doorline', assetBoxDoorLine);
     this.load.image('scientistline', assetScientist);
     this.load.image('line', assetLine);
-<<<<<<< HEAD
     //sounds
     loopSynth = this.soundManager.loadSound(music_loop_synth, synthVolume);
     loopMetal = this.soundManager.loadSound(music_loop_metal, metalVolume);
-=======
     this.load.image('fond', assetFond);
->>>>>>> dev
   }
 
   create() {
