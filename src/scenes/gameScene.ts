@@ -24,7 +24,7 @@ export class GameScene extends Phaser.Scene {
   private targetGroundPositionY: number = 0;
   private currentGroundPositionY: number = 0;
   private levelLoader: LevelLoader;
-
+  private boxImage: Phaser.GameObjects.Image;
 
   setInputManager(inputManager: InputManager) {
     this.inputManager = inputManager;
@@ -63,7 +63,7 @@ export class GameScene extends Phaser.Scene {
         .setOrigin(0, 0.5)
         .setSize(2219, 49)
         .setDisplaySize(2219 * 0.3, 49 * 0.3);
-    this.add.image(100, 250, 'boxline')
+    this.boxImage = this.add.image(100, 250, 'boxline')
         .setOrigin(0, 0.5)
         .setSize(207, 109)
         .setDisplaySize(207 * 0.4, 109 * 0.4);
@@ -199,7 +199,12 @@ export class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     const inputData = this.inputManager.handleInputs();
+    var boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
+    var completePercent = ( boxOffset / Number(this.level.levelWidth));
 
+    this.boxImage.x=boxOffset;
+    this.cameras.main.x= 400 - boxOffset;
+    ground.x = boxOffset;
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
 
     // UPDATE GROUND IF NEEDED
