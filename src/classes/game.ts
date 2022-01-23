@@ -24,7 +24,7 @@ export class Game {
 
   constructor(){
     this.renderEngine = new RenderEngine(/* RenderEngine parameters */);
-    this.level = {elements:[]}; //Level(/* parametres Level */);
+    //this.level = {elements:[]}; //Level(/* parametres Level */);
 
     //this.gameScene = new GameScene();
 
