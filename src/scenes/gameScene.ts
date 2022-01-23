@@ -91,83 +91,85 @@ export class GameScene extends Phaser.Scene {
                  .setSize(800, 20)
                  .setDisplaySize(800, 4);
     ground.setImmovable(true);
-    // box1 = this.physics.add.image(400, 200,
-    // 'boxfixe01').setDisplaySize(328*0.3, 265*0.3); box1d =
-    // this.physics.add.image(400, 400, 'boxfixe01d').setDisplaySize(328*0.3,
-    // 265*0.3);
 
-    // box1.setImmovable(true);
-    // box1d.setImmovable(true);
-
-    this.playerAlive = new Player(this.physics.add.sprite(40, -50, 'catalive')
-                                      .setGravity(0, constants.PLAYER_GRAVITY)
-                                      .setMass(100)
-                                      .setSize(250, 167)
-                                      .setDisplaySize(250 * 0.3, 167 * 0.3));
-    this.playerAlive.gameObject.setOrigin(0.5, 1);
-    this.playerDead = new Player(this.physics.add.sprite(40, 50, 'catdead')
-                                     .setGravity(0, -constants.PLAYER_GRAVITY)
-                                     .setMass(100)
-                                     .setSize(329, 172)
-                                     .setDisplaySize(109 * 0.6, 57 * 0.6));
-    this.playerDead.gameObject.setOrigin(0.5, 0);
+    this.playerAlive = new Player(this, true);
+    this.playerDead = new Player(this, false);
     this.controlledPlayer = this.playerAlive;
 
     // ANIMATIONS CATALIVE
     this.anims.create({
-      key : 'left-alive',
-      frames :
-          this.anims.generateFrameNumbers('catalive', {start : 0, end : 7}),
-      frameRate : 10,
-      repeat : -1
+      key: 'left-alive',
+      frames: this.anims.generateFrameNumbers('catalive', {start: 0, end: 9}),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
-      key : 'turn-alive',
-      frames : [ {key : 'catalive', frame : 8} ],
-      frameRate : 20
+      key: 'idle-alive-left',
+      frames: [ {key: 'catalive', frame: 9} ],
+      frameRate: 20
+    });
+    this.anims.create({
+      key: 'idle-alive-right',
+      frames: [ {key: 'catalive', frame: 10} ],
+      frameRate: 20
     });
 
     this.anims.create({
-      key : 'right-alive',
-      frames :
-          this.anims.generateFrameNumbers('catalive', {start : 8, end : 15}),
-      frameRate : 10,
-      repeat : -1
+      key: 'right-alive',
+      frames: this.anims.generateFrameNumbers('catalive', {start: 10, end: 19}),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
-      key : 'jump-alive',
-      frames : [ {key : 'catalive', frame : 14} ],
-      frameRate : 10,
+      key: 'jump-alive-left',
+      frames: [ {key: 'catalive', frame: 6} ],
+      frameRate: 10,
+    });
+    this.anims.create({
+      key: 'jump-alive-right',
+      frames: [ {key: 'catalive', frame: 14} ],
+      frameRate: 10,
     });
 
     // ANIMATIONS CATDEAD
     this.anims.create({
-      key : 'left-dead',
-      frames : this.anims.generateFrameNumbers('catdead', {start : 0, end : 7}),
-      frameRate : 10,
-      repeat : -1
+      key: 'left-dead',
+      frames: this.anims.generateFrameNumbers('catdead', {start: 0, end: 9}),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
-      key : 'turn-dead',
-      frames : [ {key : 'catdead', frame : 8} ],
-      frameRate : 20
+      key: 'idle-dead-left',
+      frames: [ {key: 'catdead', frame: 9} ],
+      frameRate: 20
     });
 
     this.anims.create({
-      key : 'right-dead',
-      frames :
-          this.anims.generateFrameNumbers('catdead', {start : 8, end : 15}),
-      frameRate : 10,
-      repeat : -1
+      key: 'idle-dead-right',
+      frames: [ {key: 'catdead', frame: 10} ],
+      frameRate: 20
     });
 
     this.anims.create({
-      key : 'jump-dead',
-      frames : [ {key : 'catdead', frame : 14} ],
-      frameRate : 10,
+      key: 'right-dead',
+      frames: this.anims.generateFrameNumbers('catdead', {start: 10, end: 19}),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'jump-dead-left',
+      frames: [ {key: 'catdead', frame: 6} ],
+      frameRate: 10,
+    });
+
+    this.anims.create({
+      key: 'jump-dead-right',
+      frames: [ {key: 'catdead', frame: 14} ],
+      frameRate: 10,
     });
 
     this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], ground);
@@ -179,17 +181,19 @@ export class GameScene extends Phaser.Scene {
 
         this.physics.add.overlap(
             [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-            this.level.switchAliveGroup, function collectSwitch(player, switchAlive: any) {
+            this.level.switchAliveGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
               this.targetGroundPositionY += constants.BLOCKH;
-            }, null, this);
+            }, null, this
+        );
 
         this.physics.add.overlap(
             [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-            this.level.switchDeadGroup, function collectSwitch(player, switchAlive: any) {
-                  switchAlive.disableBody(true, true);
-                  this.targetGroundPositionY -= constants.BLOCKH;
-                }, null, this);
+            this.level.switchDeadGroup, (player, switchAlive: any) => {
+              switchAlive.disableBody(true, true);
+              this.targetGroundPositionY -= constants.BLOCKH;
+            }, null, this
+        );
   }
 
   update(time, delta) {
@@ -199,8 +203,7 @@ export class GameScene extends Phaser.Scene {
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
 
     // UPDATE GROUND IF NEEDED
-    const groundPositionDiff =
-        this.targetGroundPositionY - this.currentGroundPositionY;
+    const groundPositionDiff = this.targetGroundPositionY - this.currentGroundPositionY;
     if (Math.abs(groundPositionDiff) > 0.000001) {
       if (groundPositionDiff < 0) {
         this.currentGroundPositionY -= delta * constants.BLOCKH * constants.GROUND_SPEED;
@@ -218,56 +221,53 @@ export class GameScene extends Phaser.Scene {
       if (this.playerAlive.gameObject.y > ground.y) {
         this.playerAlive.gameObject.y = ground.y;
       }
-    } else {
     }
 
-    // LEFT-RIGHT
-    this.controlledPlayer.gameObject.setVelocityX(inputData.deltaX *
-                                                  constants.PLAYER_XVELOCITY);
-    // ANIMATIONS
-    // if (this.controlledPlayer === this.playerAlive){
-
-    //}
-    // if (this.controlledPlayer === this.playerDead){
-
-    //}
-
-    if (inputData.deltaX < 0) {
-      this.controlledPlayer.gameObject.anims.play('left-alive', true);
-    } else if (inputData.deltaX > 0) {
-      this.controlledPlayer.gameObject.anims.play('right-alive', true);
-    } else {
-      this.controlledPlayer.gameObject.anims.play('turn-alive', true)
-    }
-
-    // JUMP
+    // CAT precalc useful values
     let mult = 1;
     if (this.controlledPlayer.gameObject.body.gravity.y < 0) {
       mult = -1;
     }
-    const isTouchingFloor =
-        ((mult > 0 && this.controlledPlayer.gameObject.body.touching.down) ||
-         (mult < 0 && this.controlledPlayer.gameObject.body.touching.up));
-    if (inputData.jumpDown && isTouchingFloor) {
-      this.controlledPlayer.gameObject.setVelocityY(mult *
-                                                    -constants.JUMP_VELOCITY);
+    const isTouchingFloor = (
+      (mult > 0 && this.controlledPlayer.gameObject.body.touching.down) ||
+      (mult < 0 && this.controlledPlayer.gameObject.body.touching.up)
+    );
+
+    // LEFT-RIGHT
+    this.controlledPlayer.gameObject.setVelocityX(inputData.deltaX * constants.PLAYER_XVELOCITY);
+
+    //Save the direction when not idle, so we can keep the current orientation when not moving
+    if (inputData.deltaX !== 0) {
+      if (inputData.deltaX > 0) {
+        this.controlledPlayer.currentDirection = 1;
+      }
+      else {
+        this.controlledPlayer.currentDirection = -1;
+      }
     }
-    if (inputData.jumpDown && !isTouchingFloor) {
-      this.controlledPlayer.gameObject.anims.play('jump-alive', true);
+    // JUMP
+    if (inputData.jumpDown && isTouchingFloor) {
+      this.controlledPlayer.gameObject.setVelocityY(mult * -constants.JUMP_VELOCITY);
     }
 
     // SWITCH
     if (inputData.switchPressed) {
-        console.log('SWITCH PRESSED');
-        if(this.controlledPlayer === this.playerAlive) {
-          this.controlledPlayer.gameObject.setVelocityX(0);
-          this.controlledPlayer = this.playerDead;
-        }
-        else /* if (this.controlledPlayer === this.playerDead) */ {
-          this.controlledPlayer.gameObject.setVelocityX(0);
-          this.controlledPlayer = this.playerAlive;
-        }
+      console.log('SWITCH PRESSED');
+      if(this.controlledPlayer === this.playerAlive) {
+        this.controlledPlayer.gameObject.setVelocityX(0);
+        this.controlledPlayer = this.playerDead;
       }
+      else /* if (this.controlledPlayer === this.playerDead) */ {
+        this.controlledPlayer.gameObject.setVelocityX(0);
+        this.controlledPlayer = this.playerAlive;
+      }
+    }
+
+
+    // ANIMATIONS
+    this.playerAlive.updateAnimation(this.controlledPlayer === this.playerAlive, inputData, isTouchingFloor);
+    this.playerDead.updateAnimation(this.controlledPlayer === this.playerDead, inputData, isTouchingFloor);
+
 
     // DEBUG
     if (inputData.goLifePressed) {
