@@ -133,7 +133,7 @@ export class HUDScene extends Phaser.Scene {
 
         const fps = Math.round(1000/delta * 100)/100;
         debug.push('FPS:' + fps);
-        debug.push('debug:' + debugText);
+        debug.push('debug:\n' + debugText);
         this.debugPadText.setText(debug);
     }
 }

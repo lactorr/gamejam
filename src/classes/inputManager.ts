@@ -76,7 +76,7 @@ export class InputManager {
         //     player.anims.play('turn');*/
         // }
 
-        if (this.keyboardCursors.up.isDown || this.keyboardSpace.isDown /*&& player.body.touching.down*/) {
+        if (this.keyboardSpace.isDown /*&& player.body.touching.down*/) {
             //player.setVelocityY(-300);
             out.jumpDown = true;
         }

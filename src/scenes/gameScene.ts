@@ -4,6 +4,19 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 
+import level1 from '../assets/levels/level1.json';
+import assetPlatform from '../assets/images/platform.png';
+import assetCatAnimA from '../assets/images/cat_anim_a.png';
+import assetCatAnimD from '../assets/images/cat_anim_d.png';
+import assetBoxFixe1 from '../assets/images/boxfixe01.png';
+import assetBoxFixe1d from '../assets/images/boxfixe01d.png';
+import assetPointLive from '../assets/images/pointlive.png';
+import assetPointDeath from '../assets/images/pointdeath.png';
+import assetBoxLine from '../assets/images/boxline.png';
+import assetBoxDoorLine from '../assets/images/doorline.png';
+import assetScientist from '../assets/images/scientistline.png';
+import assetLine from '../assets/images/line.png';
+
 import {addDebugText, clearDebugText} from './hud';
 
 let ground;
@@ -35,22 +48,18 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.json('levelData', 'src/assets/levels/level1.json');
-    this.load.image('sky', 'src/assets/images/sky.png');
-    this.load.image('ground', 'src/assets/images/platform.png');
-    this.load.image('star', 'src/assets/images/star.png');
-    this.load.spritesheet('catalive', 'src/assets/images/catalive_animated.png',
-                          {frameWidth : 252, frameHeight : 167});
-    this.load.spritesheet('catdead', 'src/assets/images/catdead.png',
-                          {frameWidth : 250, frameHeight : 167});
-    this.load.image('blockNtrAlive', 'src/assets/images/boxfixe01.png');
-    this.load.image('blockNtrDead', 'src/assets/images/boxfixe01d.png');
-    this.load.image('switchAlive', 'src/assets/images/pointlive.png');
-    this.load.image('switchDead', 'src/assets/images/pointdeath.png');
-    this.load.image('boxline', 'src/assets/images/boxline.png');
-    this.load.image('doorline', 'src/assets/images/doorline.png');
-    this.load.image('scientistline', 'src/assets/images/scientistline.png');
-    this.load.image('line', 'src/assets/images/line.png');
+    this.load.json('levelData', level1);
+    this.load.image('ground', assetPlatform);
+    this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('catdead', assetCatAnimD, {frameWidth : 250, frameHeight : 157});
+    this.load.image('blockNtrAlive', assetBoxFixe1);
+    this.load.image('blockNtrDead', assetBoxFixe1d);
+    this.load.image('switchAlive', assetPointLive);
+    this.load.image('switchDead', assetPointDeath);
+    this.load.image('boxline', assetBoxLine);
+    this.load.image('doorline', assetBoxDoorLine);
+    this.load.image('scientistline', assetScientist);
+    this.load.image('line', assetLine);
   }
 
   create() {
@@ -87,100 +96,89 @@ export class GameScene extends Phaser.Scene {
                  .setSize(800, 20)
                  .setDisplaySize(800, 4);
     ground.setImmovable(true);
-    // box1 = this.physics.add.image(400, 200,
-    // 'boxfixe01').setDisplaySize(328*0.3, 265*0.3); box1d =
-    // this.physics.add.image(400, 400, 'boxfixe01d').setDisplaySize(328*0.3,
-    // 265*0.3);
 
-    // box1.setImmovable(true);
-    // box1d.setImmovable(true);
-
-    this.playerAlive = new Player(this.physics.add.sprite(40, -50, 'catalive')
-                                      .setGravity(0, constants.PLAYER_GRAVITY)
-                                      .setMass(100)
-                                      .setSize(250, 167)
-                                      .setDisplaySize(250 * 0.3, 167 * 0.3));
-    this.playerAlive.gameObject.setOrigin(0.5, 1);
-    this.playerDead = new Player(this.physics.add.sprite(40, 50, 'catdead')
-                                     .setGravity(0, -constants.PLAYER_GRAVITY)
-                                     .setMass(100)
-                                     .setSize(329, 172)
-                                     .setDisplaySize(109 * 0.6, 57 * 0.6));
-    this.playerDead.gameObject.setOrigin(0.5, 0);
+    this.playerAlive = new Player(this, true);
+    this.playerDead = new Player(this, false);
     this.controlledPlayer = this.playerAlive;
 
     // ANIMATIONS CATALIVE
     this.anims.create({
-      key : 'left-alive',
-      frames :
-          this.anims.generateFrameNumbers('catalive', {start : 0, end : 7}),
-      frameRate : 10,
-      repeat : -1
+      key: 'left-alive',
+      frames: this.anims.generateFrameNumbers('catalive', {start: 0, end: 9}),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
-      key : 'turn-alive',
-      frames : [ {key : 'catalive', frame : 8} ],
-      frameRate : 20
+      key: 'idle-alive-left',
+      frames: [ {key: 'catalive', frame: 9} ],
+      frameRate: 20
+    });
+    this.anims.create({
+      key: 'idle-alive-right',
+      frames: [ {key: 'catalive', frame: 10} ],
+      frameRate: 20
     });
 
     this.anims.create({
-      key : 'right-alive',
-      frames :
-          this.anims.generateFrameNumbers('catalive', {start : 8, end : 15}),
-      frameRate : 10,
-      repeat : -1
+      key: 'right-alive',
+      frames: this.anims.generateFrameNumbers('catalive', {start: 10, end: 19}),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
-      key : 'jump-alive',
-      frames : [ {key : 'catalive', frame : 14} ],
-      frameRate : 10,
+      key: 'jump-alive-left',
+      frames: [ {key: 'catalive', frame: 6} ],
+      frameRate: 10,
+    });
+    this.anims.create({
+      key: 'jump-alive-right',
+      frames: [ {key: 'catalive', frame: 14} ],
+      frameRate: 10,
     });
 
     // ANIMATIONS CATDEAD
     this.anims.create({
-      key : 'left-dead',
-      frames : this.anims.generateFrameNumbers('catdead', {start : 0, end : 7}),
-      frameRate : 10,
-      repeat : -1
+      key: 'left-dead',
+      frames: this.anims.generateFrameNumbers('catdead', {start: 0, end: 9}),
+      frameRate: 10,
+      repeat: -1
     });
 
     this.anims.create({
-      key : 'turn-dead',
-      frames : [ {key : 'catdead', frame : 8} ],
-      frameRate : 20
+      key: 'idle-dead-left',
+      frames: [ {key: 'catdead', frame: 9} ],
+      frameRate: 20
     });
 
     this.anims.create({
-      key : 'right-dead',
-      frames :
-          this.anims.generateFrameNumbers('catdead', {start : 8, end : 15}),
-      frameRate : 10,
-      repeat : -1
+      key: 'idle-dead-right',
+      frames: [ {key: 'catdead', frame: 10} ],
+      frameRate: 20
     });
 
     this.anims.create({
-      key : 'jump-dead',
-      frames : [ {key : 'catdead', frame : 14} ],
-      frameRate : 10,
+      key: 'right-dead',
+      frames: this.anims.generateFrameNumbers('catdead', {start: 10, end: 19}),
+      frameRate: 10,
+      repeat: -1
     });
 
-    cursors = this.input.keyboard.createCursorKeys();
+    this.anims.create({
+      key: 'jump-dead-left',
+      frames: [ {key: 'catdead', frame: 6} ],
+      frameRate: 10,
+    });
 
-    this.physics.add.collider(
-        this.playerAlive.gameObject, platform, function(_player, _platform) {
-          if (_player.body.touching.up && _platform.body.touching.down) {
-            /*
-            DO SOMETHING
-            */
-          }
-        });
+    this.anims.create({
+      key: 'jump-dead-right',
+      frames: [ {key: 'catdead', frame: 14} ],
+      frameRate: 10,
+    });
 
-    this.physics.add.collider(
-        [ this.playerAlive.gameObject, this.playerDead.gameObject ], ground);
-    this.physics.add.collider(this.playerAlive.gameObject,
-                              this.playerDead.gameObject);
+    this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], ground);
+    this.physics.add.collider(this.playerAlive.gameObject, this.playerDead.gameObject);
 
     this.physics.add.collider(
         [ this.playerAlive.gameObject, this.playerDead.gameObject ],
@@ -188,30 +186,34 @@ export class GameScene extends Phaser.Scene {
 
         this.physics.add.overlap(
             [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-            this.level.switchAliveGroup, function collectSwitch(player, switchAlive: any) {
+            this.level.switchAliveGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
               this.targetGroundPositionY += constants.BLOCKH;
-            }, null, this);
+            }, null, this
+        );
 
         this.physics.add.overlap(
             [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-            this.level.switchDeadGroup, function collectSwitch(player, switchAlive: any) {
-                  switchAlive.disableBody(true, true);
-                  this.targetGroundPositionY -= constants.BLOCKH;
-                }, null, this);
+            this.level.switchDeadGroup, (player, switchAlive: any) => {
+              switchAlive.disableBody(true, true);
+              this.targetGroundPositionY -= constants.BLOCKH;
+            }, null, this
+        );
   }
-  updateLine( boxOffset ){
 
+  updateLine( boxOffset ){
     var lineWidth = this.lineImage.displayWidth;
-    console.log(lineWidth);
     this.scientistImage.x = boxOffset - (lineWidth/2);
     this.lineImage.x = boxOffset;
     this.doorImage.x = boxOffset + (lineWidth/2);
     var completePercent = ( boxOffset / Number(this.level.levelWidth));
     this.boxImage.x = this.scientistImage.x + lineWidth*completePercent;
   }
+
   update(time, delta) {
     const inputData = this.inputManager.handleInputs();
+    clearDebugText();
+
     var boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
     this.updateLine(boxOffset);
     this.cameras.main.x = 400 - boxOffset;
@@ -219,30 +221,16 @@ export class GameScene extends Phaser.Scene {
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
 
     // UPDATE GROUND IF NEEDED
-    const groundPositionDiff =
-        this.targetGroundPositionY - this.currentGroundPositionY;
+    const groundPositionDiff = this.targetGroundPositionY - this.currentGroundPositionY;
     if (Math.abs(groundPositionDiff) > 0.000001) {
-      clearDebugText();
-      addDebugText('UPDATE GROUND0 ' + delta + ' ' +
-                   this.targetGroundPositionY + ' ' +
-                   this.currentGroundPositionY);
       if (groundPositionDiff < 0) {
-        this.currentGroundPositionY -=
-            delta * constants.BLOCKH * constants.GROUND_SPEED;
-        this.currentGroundPositionY =
-            Math.max(this.currentGroundPositionY, this.targetGroundPositionY);
-        addDebugText('UPDATE GROUND ' +
-                     "NEG");
-      } else if (groundPositionDiff > 0) {
-        this.currentGroundPositionY +=
-            delta * constants.BLOCKH * constants.GROUND_SPEED;
-        this.currentGroundPositionY =
-            Math.min(this.currentGroundPositionY, this.targetGroundPositionY);
-        addDebugText('UPDATE GROUND ' +
-                     "POS");
+        this.currentGroundPositionY -= delta * constants.BLOCKH * constants.GROUND_SPEED;
+        this.currentGroundPositionY = Math.max(this.currentGroundPositionY, this.targetGroundPositionY);
       }
-      addDebugText('UPDATE GROUND ' + this.targetGroundPositionY + ' ' +
-                   this.currentGroundPositionY);
+      else if (groundPositionDiff > 0) {
+        this.currentGroundPositionY += delta * constants.BLOCKH * constants.GROUND_SPEED;
+        this.currentGroundPositionY = Math.min(this.currentGroundPositionY, this.targetGroundPositionY);
+      }
       ground.setPosition(0, this.currentGroundPositionY);
 
       if (this.playerDead.gameObject.y < ground.y) {
@@ -251,64 +239,63 @@ export class GameScene extends Phaser.Scene {
       if (this.playerAlive.gameObject.y > ground.y) {
         this.playerAlive.gameObject.y = ground.y;
       }
-    } else {
     }
 
-    // LEFT-RIGHT
-    this.controlledPlayer.gameObject.setVelocityX(inputData.deltaX *
-                                                  constants.PLAYER_XVELOCITY);
-    // ANIMATIONS
-    // if (this.controlledPlayer === this.playerAlive){
-
-    //}
-    // if (this.controlledPlayer === this.playerDead){
-
-    //}
-
-    if (inputData.deltaX < 0) {
-      this.controlledPlayer.gameObject.anims.play('left-alive', true);
-    } else if (inputData.deltaX > 0) {
-      this.controlledPlayer.gameObject.anims.play('right-alive', true);
-    } else {
-      this.controlledPlayer.gameObject.anims.play('turn-alive', true)
-    }
-
-    // JUMP
+    // CAT precalc useful values
     let mult = 1;
     if (this.controlledPlayer.gameObject.body.gravity.y < 0) {
       mult = -1;
     }
-    const isTouchingFloor =
-        ((mult > 0 && this.controlledPlayer.gameObject.body.touching.down) ||
-         (mult < 0 && this.controlledPlayer.gameObject.body.touching.up));
-    if (inputData.jumpDown && isTouchingFloor) {
-      this.controlledPlayer.gameObject.setVelocityY(mult *
-                                                    -constants.JUMP_VELOCITY);
+    const isTouchingFloor = (
+      (mult > 0 && this.controlledPlayer.gameObject.body.touching.down) ||
+      (mult < 0 && this.controlledPlayer.gameObject.body.touching.up)
+    );
+
+    // LEFT-RIGHT
+    this.controlledPlayer.gameObject.setVelocityX(inputData.deltaX * constants.PLAYER_XVELOCITY);
+
+    //Save the direction when not idle, so we can keep the current orientation when not moving
+    if (inputData.deltaX !== 0) {
+      if (inputData.deltaX > 0) {
+        this.controlledPlayer.currentDirection = 1;
+      }
+      else {
+        this.controlledPlayer.currentDirection = -1;
+      }
     }
-    if (inputData.jumpDown && !isTouchingFloor) {
-      this.controlledPlayer.gameObject.anims.play('jump-alive', true);
+    // JUMP
+    if (inputData.jumpDown && isTouchingFloor) {
+      this.controlledPlayer.gameObject.setVelocityY(mult * -constants.JUMP_VELOCITY);
     }
 
     // SWITCH
     if (inputData.switchPressed) {
-        console.log('SWITCH PRESSED');
-        if(this.controlledPlayer === this.playerAlive) {
-          this.controlledPlayer.gameObject.setVelocityX(0);
-          this.controlledPlayer = this.playerDead;
-        }
-        else /* if (this.controlledPlayer === this.playerDead) */ {
-          this.controlledPlayer.gameObject.setVelocityX(0);
-          this.controlledPlayer = this.playerAlive;
-        }
+      console.log('SWITCH PRESSED');
+      if(this.controlledPlayer === this.playerAlive) {
+        this.controlledPlayer.gameObject.setVelocityX(0);
+        this.controlledPlayer = this.playerDead;
       }
-
-      // SWITCH
-      if (inputData.goLifePressed) {
-        console.log('LIFE PRESSED');
-        this.targetGroundPositionY += constants.BLOCKH;
-      } else if (inputData.goDeathPressed) {
-        console.log('DEATH PRESSED');
-        this.targetGroundPositionY -= constants.BLOCKH;
+      else /* if (this.controlledPlayer === this.playerDead) */ {
+        this.controlledPlayer.gameObject.setVelocityX(0);
+        this.controlledPlayer = this.playerAlive;
       }
     }
+
+
+    // ANIMATIONS
+    this.playerAlive.updateAnimation(this.controlledPlayer === this.playerAlive, inputData, isTouchingFloor);
+    this.playerDead.updateAnimation(this.controlledPlayer === this.playerDead, inputData, isTouchingFloor);
+
+
+    // DEBUG
+    if (inputData.goLifePressed) {
+      console.log('LIFE PRESSED');
+      this.targetGroundPositionY += constants.BLOCKH;
+    }
+    else if (inputData.goDeathPressed) {
+      console.log('DEATH PRESSED');
+      this.targetGroundPositionY -= constants.BLOCKH;
+    }
+
   }
+}
