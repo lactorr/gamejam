@@ -1,11 +1,13 @@
 import { InputManager } from '../classes/inputManager';
 import { Player } from '../classes/player';
 
-var ground;
-var cursors;
-var platform;
-var box1;
-var box1d;
+let ground;
+let cursors;
+let platform;
+let box1;
+let box1d;
+let loopMetal;
+let loopSynth;
 
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
@@ -26,7 +28,8 @@ export class GameScene extends Phaser.Scene {
         this.load.image('catdead', 'src/assets/images/catdead.png');
         this.load.image('boxfixe01', 'src/assets/images/boxfixe01.png');
         this.load.image('boxfixe01d', 'src/assets/images/boxfixe01d.png');
-        this.load.audio('musicBackground', ['src/assets/sounds/music_loop_synth.mp3', 'src/assets/sounds/music_loop_metal.mp3']);
+        this.load.audio('loopSynth', ['src/assets/sounds/music_loop_synth.mp3']);
+        this.load.audio('loopMetal', ['src/assets/sounds/music_loop_metal.mp3']);
     }
 
     create() {
@@ -39,8 +42,8 @@ export class GameScene extends Phaser.Scene {
         box1 = this.physics.add.image(400, 200, 'boxfixe01').setDisplaySize(328*0.3, 265*0.3);
         box1d = this.physics.add.image(400, 400, 'boxfixe01d').setDisplaySize(328*0.3, 265*0.3);
 
-        var musicBackground = this.sound.add('musicBackground', { loop: true });
-        musicBackground.play();
+        loopSynth = this.sound.add('loopSynth', { loop: true });
+        loopSynth.play();
 
         box1.setImmovable(true);
         box1d.setImmovable(true);
