@@ -108,25 +108,31 @@ export class GameScene extends Phaser.Scene {
     this.controlledPlayer = this.playerAlive;
 
 
-      this.anims.create({
-      key: 'left',
-      frames: this.anims.generateFrameNumbers('catalive', { start: 0, end: 7 }),
-      frameRate: 10,
-      repeat: -1
+    this.anims.create({
+    key: 'left',
+    frames: this.anims.generateFrameNumbers('catalive', { start: 0, end: 7 }),
+    frameRate: 10,
+    repeat: -1
     });
 
     this.anims.create({
     key: 'turn',
     frames: [ { key: 'catalive', frame: 8 } ],
     frameRate: 20
-  });
+    });
 
-  this.anims.create({
-  key: 'right',
-  frames: this.anims.generateFrameNumbers('catalive', { start: 8, end: 15 }),
-  frameRate: 10,
-  repeat: -1
-  });
+    this.anims.create({
+    key: 'right',
+    frames: this.anims.generateFrameNumbers('catalive', { start: 8, end: 15 }),
+    frameRate: 10,
+    repeat: -1
+    });
+
+    this.anims.create({
+        key: 'jump',
+        frames: [ { key: 'catalive', frame: 14 } ],
+        frameRate: 10,
+        });
 
   cursors = this.input.keyboard.createCursorKeys();
 
@@ -207,8 +213,12 @@ export class GameScene extends Phaser.Scene {
       || (mult < 0 && this.controlledPlayer.gameObject.body.touching.up)
     );
     if (inputData.jumpDown && isTouchingFloor) {
-      this.controlledPlayer.gameObject.setVelocityY(mult * -variables.JUMP_VELOCITY);
+    this.controlledPlayer.gameObject.setVelocityY(mult * -variables.JUMP_VELOCITY);    
     }
+    if (inputData.jumpDown && !isTouchingFloor) {
+    this.controlledPlayer.gameObject.anims.play('jump', true);    
+    }
+
 
     // SWITCH
     if (inputData.switchPressed) {
