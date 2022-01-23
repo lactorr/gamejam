@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 
-import level1 from '../assets/levels/level1.json';
+import level1 from '../assets/levels/level2.json';
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
 import assetCatAnimD from '../assets/images/cat_anim_d.png';
@@ -68,8 +68,8 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.centerOn(400, 0);
     // On peut pas avoir Y qui va vers le haut ca me tend T_T - xurei
     // this.cameras.main.setO
-
-    this.physics.world.setBounds(0, -1000, 10000, 2000);
+    this.cameras.main.setBounds(-1000, -1000, 10000, 2000);
+    this.physics.world.setBounds(-1000, -1000, 10000, 2000);
 
     // LIGNE DU POURSUIVANT
     this.lineImage = this.add.image(50, 250, 'line')
@@ -216,8 +216,8 @@ export class GameScene extends Phaser.Scene {
 
     var boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
     this.updateLine(boxOffset);
-    this.cameras.main.x = 400 - boxOffset;
-    ground.x = boxOffset;
+    this.cameras.main.setScroll( boxOffset - 400, -300);
+    ground.x = boxOffset ;
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
 
     // UPDATE GROUND IF NEEDED
