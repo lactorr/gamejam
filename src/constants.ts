@@ -1,5 +1,8 @@
 const TILE_SIZE = 16;
 const Constants = {
+    GAME_WIDTH: 800,
+    GAME_HEIGHT: 700,
+
     TILE_SIZE,
     ROOM_W: 29*TILE_SIZE,
     ROOM_H: 19*TILE_SIZE,
@@ -13,8 +16,15 @@ const Constants = {
     Z_BORDERS: 5,
     Z_BACKGROUND: 0,
 
-    PLAYER_VELOCITY: 120,
+    PLAYER_VELOCITY: 150,
     MOB_VELOCITY: 100,
+    BLOCKW : 60,
+    BLOCKH : 50,
+    SWITCH_SIZE : 30,
+    GROUND_SPEED : 0.003,
+    JUMP_VELOCITY : 250,
+    PLAYER_GRAVITY : 500,
+    PLAYER_XVELOCITY : 70,
 }
 
 export default Constants;
