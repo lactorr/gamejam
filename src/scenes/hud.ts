@@ -1,5 +1,10 @@
 //setting game configuration and loading the assets for the loading screen
 import constants from '../constants';
+import assetCartonAliveBas from '../assets/images/cartonalivebas.png';
+import assetCartonAliveHaut from '../assets/images/cartonalivehaut.png';
+import assetCartonDeadBas from '../assets/images/cartondeadbas.png';
+import assetCartonDeadHaut from '../assets/images/cartondeadhaut.png';
+import assetKeys from '../assets/images/touches.png';
 //import { inputsEventsCenter } from './dungeon-map';
 
 let px = 0, py = 0;
@@ -39,7 +44,11 @@ export class HUDScene extends Phaser.Scene {
     }
 
     preload() {
-
+        this.load.image('cartonAliveBas', assetCartonAliveBas);
+        this.load.image('cartonAliveHaut', assetCartonAliveHaut);
+        this.load.image('cartonDeadBas', assetCartonDeadBas);
+        this.load.image('cartonDeadHaut', assetCartonDeadHaut);
+        this.load.image('keys', assetKeys);
     }
 
     create() {
@@ -52,7 +61,17 @@ export class HUDScene extends Phaser.Scene {
         this.debugPadText.setDepth(constants.Z_HUD_DEBUG);
         this.isDebugVisible = true;
         this.debugPadText.setVisible(this.isDebugVisible);
-        this.physics.config.debug = true;
+        //this.physics.config.debug = true;
+
+        this.add.image(0, -30, 'cartonAliveHaut').setOrigin(0, 0);
+        this.add.image(0, -20, 'cartonDeadHaut').setOrigin(0, 0).setVisible(false);
+        this.add.image(0, constants.GAME_HEIGHT, 'cartonAliveBas').setOrigin(0, 1);
+        this.add.image(0, constants.GAME_HEIGHT, 'cartonDeadBas').setOrigin(0, 1).setVisible(false);
+        this.add.image(0, constants.GAME_HEIGHT, 'keys').setOrigin(0, 1);
+        //this.add.image(0, -30, 'cartonDeadBas').setOrigin(0, 0);
+        //this.add.image(0, -300, 'cartonAliveBas');
+        //this.add.image(0, 0, 'cartonAliveBas');
+        //this.add.image(0, 0, 'cartonAliveBas');
 
         /*inputsEventsCenter.on('debugPressed', () => {
             this.isDebugVisible = !this.isDebugVisible;

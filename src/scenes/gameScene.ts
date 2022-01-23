@@ -16,6 +16,7 @@ import assetBoxLine from '../assets/images/boxline.png';
 import assetBoxDoorLine from '../assets/images/doorline.png';
 import assetScientist from '../assets/images/scientistline.png';
 import assetLine from '../assets/images/line.png';
+import assetFond from '../assets/images/fond.png';
 
 import {addDebugText, clearDebugText} from './hud';
 
@@ -42,6 +43,8 @@ export class GameScene extends Phaser.Scene {
   private boxImage: Phaser.GameObjects.Image;
   private doorImage: Phaser.GameObjects.Image;
   private scientistImage: Phaser.GameObjects.Image;
+  private fondImage: Phaser.GameObjects.Image;
+  private fondGroup: Phaser.GameObjects.Group;
 
   setInputManager(inputManager: InputManager) {
     this.inputManager = inputManager;
@@ -60,6 +63,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('doorline', assetBoxDoorLine);
     this.load.image('scientistline', assetScientist);
     this.load.image('line', assetLine);
+    this.load.image('fond', assetFond);
   }
 
   create() {
@@ -92,10 +96,20 @@ export class GameScene extends Phaser.Scene {
     this.level = this.levelLoader.parse( this.cache.json.get('levelData'));
 
     ground = this.physics.add.image(0, 0, 'ground')
-                 .setOrigin(0, 0.5)
+                 //.setOrigin(0, 0.5)
                  .setSize(800, 20)
                  .setDisplaySize(800, 4);
     ground.setImmovable(true);
+
+    //Generate background
+    const fondImages = [];
+    for (let x = 0; x < this.level.levelWidth; x += 1600) {
+      fondImages.push(this.add.image(x, 0, 'fond'));
+    }
+
+    this.fondGroup = this.add.group(fondImages).setDepth(-1);
+
+    //this.fondImage = this.add.image(0, 0, 'fond').setDepth(-1);
 
     this.playerAlive = new Player(this, true);
     this.playerDead = new Player(this, false);
@@ -232,14 +246,15 @@ export class GameScene extends Phaser.Scene {
         this.currentGroundPositionY = Math.min(this.currentGroundPositionY, this.targetGroundPositionY);
       }
       ground.setPosition(0, this.currentGroundPositionY);
-
-      if (this.playerDead.gameObject.y < ground.y) {
-        this.playerDead.gameObject.y = ground.y;
-      }
-      if (this.playerAlive.gameObject.y > ground.y) {
-        this.playerAlive.gameObject.y = ground.y;
-      }
     }
+    if (this.playerDead.gameObject.y < ground.y) {
+      this.playerDead.gameObject.y = ground.y+10;
+    }
+    if (this.playerAlive.gameObject.y > ground.y) {
+      this.playerAlive.gameObject.y = ground.y-10;
+    }
+
+    this.fondGroup.setY(this.currentGroundPositionY);
 
     // CAT precalc useful values
     let mult = 1;
