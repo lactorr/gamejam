@@ -18,8 +18,6 @@ import assetScientist from '../assets/images/scientistline.png';
 import assetLine from '../assets/images/line.png';
 //sounds
 import { SoundManager } from '../classes/soundManager';
-import music_loop_synth  from '../assets/sounds/music_loop_synth.mp3';
-import music_loop_metal  from '../assets/sounds/music_loop_metal.mp3';
 import assetFond from '../assets/images/fond.png';
 import {addDebugText, clearDebugText} from './hud';
 
@@ -54,7 +52,6 @@ export class GameScene extends Phaser.Scene {
   private fondGroup: Phaser.GameObjects.Group;
   private gameStarted: boolean = false;
   private soundManager: SoundManager;
-  private isMusicPlaying: boolean = false;
 
   constructor () {
     super('GameScene');
@@ -87,9 +84,9 @@ export class GameScene extends Phaser.Scene {
     this.load.image('doorline', assetBoxDoorLine);
     this.load.image('scientistline', assetScientist);
     this.load.image('line', assetLine);
-    //sounds
+    /*sounds
     loopSynth = this.soundManager.loadSound(music_loop_synth, synthVolume);
-    loopMetal = this.soundManager.loadSound(music_loop_metal, metalVolume);
+    loopMetal = this.soundManager.loadSound(music_loop_metal, metalVolume);*/
     this.load.image('fond', assetFond);
   }
 
@@ -230,8 +227,9 @@ export class GameScene extends Phaser.Scene {
             this.level.switchAliveGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
               this.targetGroundPositionY += constants.BLOCKH; //vers le bas synth ++
-              this.soundManager.addVolume(loopSynth);
-              this.soundManager.lowerVolume(loopMetal);
+              //this.soundManager.updateMusicRatio(targetGroundPositionY/constants.BLOCKH);
+              /*this.soundManager.addVolume(loopSynth);
+              this.soundManager.lowerVolume(loopMetal);*/
             }, null, this
         );
 
@@ -240,8 +238,9 @@ export class GameScene extends Phaser.Scene {
             this.level.switchDeadGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
               this.targetGroundPositionY -= constants.BLOCKH;
-              this.soundManager.addVolume(loopMetal);
-              this.soundManager.lowerVolume(loopSynth);
+              //this.soundManager.updateMusicRatio(targetGroundPositionY/constants.BLOCKH);
+              /*this.soundManager.addVolume(loopMetal);
+              this.soundManager.lowerVolume(loopSynth);*/
             }, null, this
         );
   }
