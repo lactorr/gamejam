@@ -37,7 +37,7 @@ export class Game {
             default: 'arcade',
             arcade: {
                 gravity: { y: 0 },
-                debug: false,
+                debug: true,
             }
         },
         scene: [ GameScene, HUDScene, MainMenuScene ]
@@ -53,7 +53,7 @@ export class Game {
         phaser.scene.run('HUD');
         phaser.scene.run('MainMenuScene');
 
-        (phaser.scene.getScene('MainMenuScene') as MainMenuScene).setInputManager(this.inputManager);
+        (mainMenuScene as MainMenuScene).setInputManager(this.inputManager);
 
         console.log('GAME READY, GL HF');
     });

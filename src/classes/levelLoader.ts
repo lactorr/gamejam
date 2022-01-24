@@ -22,7 +22,7 @@ export class LevelLoader {
     }).setOrigin(0, 0);
   }
 
-  parse(json):Level {
+  parse(json, mask):Level {
     console.log(json);
     this.level.elements = [];
     var blocks = json.blocks;
@@ -57,7 +57,8 @@ export class LevelLoader {
         this.level.blockGroup.create(ex, ey, element.type)
             .setOrigin(0, 0)
             .setDisplaySize(element.w * Constants.BLOCKW,
-                            element.h * Constants.BLOCKH);
+                            element.h * Constants.BLOCKH)
+            .setMask(mask);
         break;
       case "blockNtrDead":
         this.level.blockGroup.create(ex, ey, element.type)

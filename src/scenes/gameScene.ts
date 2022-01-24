@@ -16,6 +16,7 @@ import assetBoxLine from '../assets/images/boxline.png';
 import assetBoxDoorLine from '../assets/images/doorline.png';
 import assetScientist from '../assets/images/scientistline.png';
 import assetLine from '../assets/images/line.png';
+import assetBoxBackground from '../assets/images/box_background.png';
 //sounds
 import { SoundManager } from '../classes/soundManager';
 import music_loop_synth  from '../assets/sounds/music_loop_synth.mp3';
@@ -55,6 +56,8 @@ export class GameScene extends Phaser.Scene {
   private gameStarted: boolean = false;
   private soundManager: SoundManager;
   private isMusicPlaying: boolean = false;
+  private boxBackground: Phaser.GameObjects.Image;
+  private gameAreaMask: Phaser.Display.Masks.GeometryMask;
 
   constructor () {
     super('GameScene');
@@ -87,6 +90,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('doorline', assetBoxDoorLine);
     this.load.image('scientistline', assetScientist);
     this.load.image('line', assetLine);
+    this.load.image('boxBackground', assetBoxBackground);
     //sounds
     loopSynth = this.soundManager.loadSound(music_loop_synth, synthVolume);
     loopMetal = this.soundManager.loadSound(music_loop_metal, metalVolume);
@@ -97,7 +101,7 @@ export class GameScene extends Phaser.Scene {
     console.log(this.input)
     this.levelLoader = new LevelLoader(this);
 
-    this.cameras.main.centerOn(400, 0);
+    this.cameras.main.centerOn(constants.GAME_WIDTH/2, 0);
     // On peut pas avoir Y qui va vers le haut ca me tend T_T - xurei
     // this.cameras.main.setO
     this.cameras.main.setBounds(-1000, -1000, 10000, 2000);
@@ -121,12 +125,25 @@ export class GameScene extends Phaser.Scene {
         .setSize(178, 249)
         .setDisplaySize(178 * 0.4, 249 * 0.4);
 
-    this.level = this.levelLoader.parse( this.cache.json.get('levelData'));
+    // GAME AREA
+    this.boxBackground = this.add.image(0, 0, 'boxBackground');
+    this.gameAreaMask = this.boxBackground.createGeometryMask();
+
+    const shape1 = (this.make.graphics as any)().fillStyle(0xffffff).fillRect(-400, -250, 800, 500);
+    //this.add.existing(shape1);
+    this.gameAreaMask = shape1.createGeometryMask();
+
+    this.level = this.levelLoader.parse( this.cache.json.get('levelData'), this.gameAreaMask);
+    /*this.level.blockGroup.getChildren().forEach((c:any) => {
+      c.setMask(this.gameAreaMask);
+    });*/
+
+    // this.cameras.main.setMask(mask1);
 
     ground = this.physics.add.image(0, 0, 'ground')
                  //.setOrigin(0, 0.5)
                  .setSize(800, 20)
-                 .setDisplaySize(800, 4);
+                 .setDisplaySize(800, 12);
     ground.setImmovable(true);
 
     //Generate background
@@ -252,9 +269,11 @@ export class GameScene extends Phaser.Scene {
         );
   }
 
-  updateLine( boxOffset ){
+  updateFixedImages(boxOffset){
     var lineWidth = this.lineImage.displayWidth;
     this.scientistImage.x = boxOffset - (lineWidth/2);
+    this.boxBackground.x = boxOffset;
+    this.gameAreaMask.geometryMask.x = boxOffset;
     this.lineImage.x = boxOffset;
     this.doorImage.x = boxOffset + (lineWidth/2);
     var completePercent = ( boxOffset / Number(this.level.levelWidth));
@@ -271,10 +290,10 @@ export class GameScene extends Phaser.Scene {
     const inputData = this.inputManager.handleInputs();
     clearDebugText();
 
-    var boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
-    this.updateLine(boxOffset);
-    this.cameras.main.setScroll( boxOffset - 400, -300);
-    ground.x = boxOffset ;
+    const boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
+    this.updateFixedImages(boxOffset);
+    this.cameras.main.setScroll( boxOffset - constants.GAME_WIDTH/2, -300);
+    ground.x = boxOffset;
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
 
     // UPDATE GROUND IF NEEDED
@@ -288,7 +307,7 @@ export class GameScene extends Phaser.Scene {
         this.currentGroundPositionY += delta * constants.BLOCKH * constants.GROUND_SPEED;
         this.currentGroundPositionY = Math.min(this.currentGroundPositionY, this.targetGroundPositionY);
       }
-      ground.setPosition(0, this.currentGroundPositionY);
+      ground.y = this.currentGroundPositionY;
     }
     if (this.playerDead.gameObject.y < ground.y) {
       this.playerDead.gameObject.y = ground.y+10;

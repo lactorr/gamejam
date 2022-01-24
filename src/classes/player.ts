@@ -9,7 +9,7 @@ export class Player {
 
     constructor(gameScene: Phaser.Scene, isAlive: boolean) {
         const x = 40;
-        const y = isAlive ? -50 : 50;
+        const y = isAlive ? -10 : 10;
 
         this.isAlive = isAlive;
         this.animType = this.isAlive ? 'alive' : 'dead';
@@ -18,8 +18,8 @@ export class Player {
           gameScene.physics.add.sprite(x, y, isAlive ? 'catalive' : 'catdead')
             .setGravity(0, (isAlive ? 1 : -1) * constants.PLAYER_GRAVITY)
             .setMass(100)
-            .setSize(250, 157)
             .setDisplaySize(250 * 0.2, 157 * 0.2)
+            .setSize(250, 157)
         );
         this.gameObject.body.debugBodyColor = 0x00ff0000;
         this.gameObject.setCollideWorldBounds(true);
