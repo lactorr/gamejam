@@ -94,6 +94,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+    console.log(this.input)
     this.levelLoader = new LevelLoader(this);
 
     this.cameras.main.centerOn(400, 0);
@@ -141,6 +142,11 @@ export class GameScene extends Phaser.Scene {
     this.playerAlive = new Player(this, true);
     this.playerDead = new Player(this, false);
     this.controlledPlayer = this.playerAlive;
+
+    //Restart
+    var keyObj = this.input.keyboard.addKey('backspace'); 
+    keyObj.on('up', function() { this.scene.restart();
+    }, this);
 
     // ANIMATIONS CATALIVE
     this.anims.create({
