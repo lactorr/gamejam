@@ -27,11 +27,6 @@ let platform;
 let box1;
 let box1d;
 let t = 0;
-//sounds
-let loopMetal;
-let loopSynth;
-const metalVolume = 0.3;
-const synthVolume = 0.5;
 
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
@@ -59,8 +54,6 @@ export class GameScene extends Phaser.Scene {
 
   startGame() {
     this.gameStarted = true;
-    this.soundManager.startSound(loopSynth);
-    this.soundManager.startSound(loopMetal);
   }
 
   setInputManager(inputManager: InputManager) {
@@ -84,18 +77,15 @@ export class GameScene extends Phaser.Scene {
     this.load.image('doorline', assetBoxDoorLine);
     this.load.image('scientistline', assetScientist);
     this.load.image('line', assetLine);
-    /*sounds
-    loopSynth = this.soundManager.loadSound(music_loop_synth, synthVolume);
-    loopMetal = this.soundManager.loadSound(music_loop_metal, metalVolume);*/
     this.load.image('fond', assetFond);
   }
 
   create() {
     this.levelLoader = new LevelLoader(this);
-
     this.cameras.main.centerOn(400, 0);
+    this.soundManager.startSound(this.soundManager.gameSounds.musicMetal);
+    this.soundManager.startSound(this.soundManager.gameSounds.musicSynth);
     // On peut pas avoir Y qui va vers le haut ca me tend T_T - xurei
-    // this.cameras.main.setO
     this.cameras.main.setBounds(-1000, -1000, 10000, 2000);
     this.physics.world.setBounds(-1000, -1000, 10000, 2000);
 
@@ -120,7 +110,6 @@ export class GameScene extends Phaser.Scene {
     this.level = this.levelLoader.parse( this.cache.json.get('levelData'));
 
     ground = this.physics.add.image(0, 0, 'ground')
-                 //.setOrigin(0, 0.5)
                  .setSize(800, 20)
                  .setDisplaySize(800, 4);
     ground.setImmovable(true);
@@ -132,8 +121,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.fondGroup = this.add.group(fondImages).setDepth(-1);
-
-    //this.fondImage = this.add.image(0, 0, 'fond').setDepth(-1);
 
     this.playerAlive = new Player(this, true);
     this.playerDead = new Player(this, false);
@@ -226,10 +213,7 @@ export class GameScene extends Phaser.Scene {
             [ this.playerAlive.gameObject, this.playerDead.gameObject ],
             this.level.switchAliveGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
-              this.targetGroundPositionY += constants.BLOCKH; //vers le bas synth ++
-              //this.soundManager.updateMusicRatio(targetGroundPositionY/constants.BLOCKH);
-              /*this.soundManager.addVolume(loopSynth);
-              this.soundManager.lowerVolume(loopMetal);*/
+              this.targetGroundPositionY += constants.BLOCKH;
             }, null, this
         );
 
@@ -238,9 +222,6 @@ export class GameScene extends Phaser.Scene {
             this.level.switchDeadGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
               this.targetGroundPositionY -= constants.BLOCKH;
-              //this.soundManager.updateMusicRatio(targetGroundPositionY/constants.BLOCKH);
-              /*this.soundManager.addVolume(loopMetal);
-              this.soundManager.lowerVolume(loopSynth);*/
             }, null, this
         );
   }
@@ -282,6 +263,7 @@ export class GameScene extends Phaser.Scene {
         this.currentGroundPositionY = Math.min(this.currentGroundPositionY, this.targetGroundPositionY);
       }
       ground.setPosition(0, this.currentGroundPositionY);
+      this.soundManager.updateMusicRatio(this.currentGroundPositionY/constants.BLOCKH);
     }
     if (this.playerDead.gameObject.y < ground.y) {
       this.playerDead.gameObject.y = ground.y+10;

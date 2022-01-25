@@ -25,6 +25,8 @@ const Constants = {
     JUMP_VELOCITY : 250,
     PLAYER_GRAVITY : 500,
     PLAYER_XVELOCITY : 70,
+
+    MUSIC_VOL : 0.8,
 }
 
 export default Constants;
