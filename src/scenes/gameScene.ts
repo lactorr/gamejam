@@ -190,6 +190,17 @@ export class GameScene extends Phaser.Scene {
     keyObj.on('up', function() { this.scene.restart();
     }, this);
 
+    //Pause
+    var keyEnter = this.input.keyboard.addKey('enter');
+    keyEnter.on('up', function() {
+      console.log('pause');
+      this.scene.pause();
+      this.scene.sleep('HUDScene');
+      console.log('HUD enlevé')
+      this.scene.launch('PauseScreen');
+      // (this.game.scene.getScene('GameScene') as GameScene).pause();
+    }, this);
+
     // ANIMATIONS CATALIVE
     this.anims.create({
       key: 'left-alive',
