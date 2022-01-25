@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level1 from '../assets/levels/level2.json';
+//import level1 from '../assets/levels/level2.json';
 import level1 from '../assets/levels/level0.json';
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -23,6 +23,8 @@ import music_loop_synth  from '../assets/sounds/music_loop_synth.mp3';
 import music_loop_metal  from '../assets/sounds/music_loop_metal.mp3';
 import assetFond from '../assets/images/fond.png';
 import {addDebugText, clearDebugText} from './hud';
+// Custom Hitbox
+import { CustomBox, CustomHitBox, CustomHitBoxResponse, getCustomHitBox, collideHitBox, customHitBoxCollide } from '../classes/subBox';
 
 let ground;
 let cursors;
@@ -35,6 +37,7 @@ let loopMetal;
 let loopSynth;
 const metalVolume = 0.3;
 const synthVolume = 0.5;
+let globalScene;
 
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
@@ -67,6 +70,7 @@ export class GameScene extends Phaser.Scene {
   setSoundManager(soundManager: SoundManager){
     this.soundManager = soundManager;
   }
+
   preload() {
     this.soundManager = new SoundManager();
     this.load.json('levelData', level1);
@@ -88,6 +92,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+    globalScene = this;
     this.levelLoader = new LevelLoader(this);
     this.soundManager.startSound(loopSynth);
     this.soundManager.startSound(loopMetal);
@@ -219,7 +224,11 @@ export class GameScene extends Phaser.Scene {
 
     this.physics.add.collider(
         [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-        this.level.blockGroup);
+        this.level.blockGroup, (player:any, block:any)=>{
+          let v = customHitBoxCollide(player, block, 2, 2);
+          console.log(v);
+        }, null, this
+      );
 
         this.physics.add.overlap(
             [ this.playerAlive.gameObject, this.playerDead.gameObject ],
@@ -305,6 +314,7 @@ export class GameScene extends Phaser.Scene {
         this.controlledPlayer.currentDirection = -1;
       }
     }
+
     // JUMP
     if (inputData.jumpDown && isTouchingFloor) {
       this.controlledPlayer.gameObject.setVelocityY(mult * -constants.JUMP_VELOCITY);
@@ -323,11 +333,9 @@ export class GameScene extends Phaser.Scene {
       }
     }
 
-
     // ANIMATIONS
     this.playerAlive.updateAnimation(this.controlledPlayer === this.playerAlive, inputData, isTouchingFloor);
     this.playerDead.updateAnimation(this.controlledPlayer === this.playerDead, inputData, isTouchingFloor);
-
 
     // DEBUG
     if (inputData.goLifePressed) {
