@@ -3,6 +3,9 @@ const Constants = {
     GAME_WIDTH: 1366,
     GAME_HEIGHT: 768,
 
+    GAMEAREA_WIDTH: 832,
+    GAMEAREA_HEIGHT: 500,
+
     TILE_SIZE,
     ROOM_W: 29*TILE_SIZE,
     ROOM_H: 19*TILE_SIZE,
@@ -16,7 +19,6 @@ const Constants = {
     Z_BORDERS: 5,
     Z_BACKGROUND: 0,
 
-    PLAYER_VELOCITY: 150,
     MOB_VELOCITY: 100,
     BLOCKW : 60,
     BLOCKH : 50,
@@ -24,7 +26,7 @@ const Constants = {
     GROUND_SPEED : 0.003,
     JUMP_VELOCITY : 250,
     PLAYER_GRAVITY : 500,
-    PLAYER_XVELOCITY : 70,
+    PLAYER_XVELOCITY : 100,
 }
 
 export default Constants;

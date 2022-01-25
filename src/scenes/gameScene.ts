@@ -5,6 +5,7 @@ import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
 import level1 from '../assets/levels/level1.json';
+//images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
 import assetCatAnimD from '../assets/images/cat_anim_d.png';
@@ -16,7 +17,8 @@ import assetBoxLine from '../assets/images/boxline.png';
 import assetBoxDoorLine from '../assets/images/doorline.png';
 import assetScientist from '../assets/images/scientistline.png';
 import assetLine from '../assets/images/line.png';
-import assetBoxBackground from '../assets/images/box_background.png';
+import assetBoxBackground1A from '../assets/images/framea1.png';
+import assetBoxBackground1D from '../assets/images/framed1.png';
 //sounds
 import { SoundManager } from '../classes/soundManager';
 import music_loop_synth  from '../assets/sounds/music_loop_synth.mp3';
@@ -25,6 +27,9 @@ import assetFond from '../assets/images/fond.png';
 import {addDebugText, clearDebugText} from './hud';
 
 let ground;
+let ceil;
+let floor;
+let wallL, wallR;
 let cursors;
 let platform;
 let box1;
@@ -56,7 +61,8 @@ export class GameScene extends Phaser.Scene {
   private gameStarted: boolean = false;
   private soundManager: SoundManager;
   private isMusicPlaying: boolean = false;
-  private boxBackground: Phaser.GameObjects.Image;
+  private boxBackground1A: Phaser.GameObjects.Image;
+  private boxBackground1D: Phaser.GameObjects.Image;
   private gameAreaMask: Phaser.Display.Masks.GeometryMask;
 
   constructor () {
@@ -90,7 +96,8 @@ export class GameScene extends Phaser.Scene {
     this.load.image('doorline', assetBoxDoorLine);
     this.load.image('scientistline', assetScientist);
     this.load.image('line', assetLine);
-    this.load.image('boxBackground', assetBoxBackground);
+    this.load.image('boxBackground1A', assetBoxBackground1A);
+    this.load.image('boxBackground1D', assetBoxBackground1D);
     //sounds
     loopSynth = this.soundManager.loadSound(music_loop_synth, synthVolume);
     loopMetal = this.soundManager.loadSound(music_loop_metal, metalVolume);
@@ -126,25 +133,45 @@ export class GameScene extends Phaser.Scene {
         .setDisplaySize(178 * 0.4, 249 * 0.4);
 
     // GAME AREA
-    this.boxBackground = this.add.image(0, 0, 'boxBackground');
-    this.gameAreaMask = this.boxBackground.createGeometryMask();
+    this.boxBackground1A = this.add.image(0, 0, 'boxBackground1A').setOrigin(0.5, 1);
+    this.boxBackground1A.setDepth(-2);
+    this.boxBackground1A.setDisplaySize(957, 280);
+    this.boxBackground1D = this.add.image(0, 0, 'boxBackground1D').setOrigin(0.5, 0);
+    this.boxBackground1D.setDepth(-2);
+    this.boxBackground1D.setDisplaySize(957, 280);
+    //this.boxBackground1D.setRotation(Math.PI);
 
-    const shape1 = (this.make.graphics as any)().fillStyle(0xffffff).fillRect(-400, -250, 800, 500);
-    //this.add.existing(shape1);
+    const shape1 = (this.make.graphics as any)().fillStyle(0xffffff).fillRect(
+      -constants.GAMEAREA_WIDTH/2, -constants.GAMEAREA_HEIGHT/2, constants.GAMEAREA_WIDTH, constants.GAMEAREA_HEIGHT);
     this.gameAreaMask = shape1.createGeometryMask();
 
     this.level = this.levelLoader.parse( this.cache.json.get('levelData'), this.gameAreaMask);
-    /*this.level.blockGroup.getChildren().forEach((c:any) => {
-      c.setMask(this.gameAreaMask);
-    });*/
 
-    // this.cameras.main.setMask(mask1);
-
-    ground = this.physics.add.image(0, 0, 'ground')
-                 //.setOrigin(0, 0.5)
-                 .setSize(800, 20)
-                 .setDisplaySize(800, 12);
+    ground = this.physics.add.image(0, 0, 'ground').setDisplaySize(constants.GAME_WIDTH, 12);
     ground.setImmovable(true);
+    ground.setDepth(-1);
+
+    ceil = this.physics.add.image(0, -constants.GAMEAREA_HEIGHT/2 - 16, 'ground').setDisplaySize(constants.GAME_WIDTH, 2);
+    ceil.setImmovable(true);
+    ceil.setDepth(-1);
+    ceil.setVisible(false);
+
+    floor = this.physics.add.image(0, constants.GAMEAREA_HEIGHT/2 + 16, 'ground').setDisplaySize(constants.GAME_WIDTH, 2);
+    floor.setImmovable(true);
+    floor.setDepth(-1);
+    floor.setVisible(false);
+
+    wallL = this.physics.add.image(constants.GAMEAREA_WIDTH/2, 0, 'ground').setDisplaySize(20, constants.GAME_HEIGHT);
+    wallL.setOrigin(1, 0.5);
+    wallL.setImmovable(true);
+    wallL.setDepth(-1);
+    wallL.setVisible(false);
+
+    wallR = this.physics.add.image(constants.GAMEAREA_WIDTH/2, 0, 'ground').setDisplaySize(20, constants.GAME_HEIGHT);
+    wallR.setOrigin(0, 0.5);
+    wallR.setImmovable(true);
+    wallR.setDepth(-1);
+    wallR.setVisible(false);
 
     //Generate background
     const fondImages = [];
@@ -152,16 +179,14 @@ export class GameScene extends Phaser.Scene {
       fondImages.push(this.add.image(x, 0, 'fond'));
     }
 
-    this.fondGroup = this.add.group(fondImages).setDepth(-1);
-
-    //this.fondImage = this.add.image(0, 0, 'fond').setDepth(-1);
+    this.fondGroup = this.add.group(fondImages).setDepth(-10);
 
     this.playerAlive = new Player(this, true);
     this.playerDead = new Player(this, false);
     this.controlledPlayer = this.playerAlive;
 
     //Restart
-    var keyObj = this.input.keyboard.addKey('backspace'); 
+    var keyObj = this.input.keyboard.addKey('backspace');
     keyObj.on('up', function() { this.scene.restart();
     }, this);
 
@@ -241,7 +266,7 @@ export class GameScene extends Phaser.Scene {
       frameRate: 10,
     });
 
-    this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], ground);
+    this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], [ground, floor, ceil, wallL, wallR]);
     this.physics.add.collider(this.playerAlive.gameObject, this.playerDead.gameObject);
 
     this.physics.add.collider(
@@ -272,12 +297,18 @@ export class GameScene extends Phaser.Scene {
   updateFixedImages(boxOffset){
     var lineWidth = this.lineImage.displayWidth;
     this.scientistImage.x = boxOffset - (lineWidth/2);
-    this.boxBackground.x = boxOffset;
+    this.boxBackground1A.x = boxOffset;
+    this.boxBackground1D.x = boxOffset;
     this.gameAreaMask.geometryMask.x = boxOffset;
     this.lineImage.x = boxOffset;
     this.doorImage.x = boxOffset + (lineWidth/2);
     var completePercent = ( boxOffset / Number(this.level.levelWidth));
     this.boxImage.x = this.scientistImage.x + lineWidth*completePercent;
+    ground.x = boxOffset;
+    floor.x = boxOffset;
+    ceil.x = boxOffset;
+    wallL.x = boxOffset - constants.GAMEAREA_WIDTH/2;
+    wallR.x = boxOffset + constants.GAMEAREA_WIDTH/2;
   }
 
   update(time, delta) {
@@ -293,7 +324,6 @@ export class GameScene extends Phaser.Scene {
     const boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
     this.updateFixedImages(boxOffset);
     this.cameras.main.setScroll( boxOffset - constants.GAME_WIDTH/2, -300);
-    ground.x = boxOffset;
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
 
     // UPDATE GROUND IF NEEDED

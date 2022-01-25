@@ -54,35 +54,36 @@ export class LevelLoader {
 
       switch (element.type) {
       case "blockNtrAlive":
-        this.level.blockGroup.create(ex, ey, element.type)
-            .setOrigin(0, 0)
-            .setDisplaySize(element.w * Constants.BLOCKW,
-                            element.h * Constants.BLOCKH)
-            .setMask(mask);
+        const block = this.level.blockGroup.create(ex, ey, element.type)
+          .setOrigin(0, 0)
+          .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
+          .setMask(mask);
+
+        block.body.debugShowBody = false;
         break;
       case "blockNtrDead":
         this.level.blockGroup.create(ex, ey, element.type)
-            .setOrigin(0, 0)
-            .setDisplaySize(element.w * Constants.BLOCKW,
-                            element.h * Constants.BLOCKH);
+          .setOrigin(0, 0)
+          .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
+          .setMask(mask);
         break;
       case "switchAlive":
         this.level.switchAliveGroup
-            .create(ex + (Constants.BLOCKW - Constants.SWITCH_SIZE) * 0.5,
-                    ey + (Constants.BLOCKH - Constants.SWITCH_SIZE) * 0.5,
-                    element.type)
-            .setOrigin(0, 0)
-            .setDisplaySize(element.w * Constants.SWITCH_SIZE,
-                            element.h * Constants.SWITCH_SIZE);
+          .create(ex + (Constants.BLOCKW - Constants.SWITCH_SIZE) * 0.5,
+                  ey + (Constants.BLOCKH - Constants.SWITCH_SIZE) * 0.5,
+                  element.type)
+          .setOrigin(0, 0)
+          .setDisplaySize(element.w * Constants.SWITCH_SIZE, element.h * Constants.SWITCH_SIZE)
+          .setMask(mask);
         break;
       case "switchDead":
         this.level.switchDeadGroup
-            .create(ex + (Constants.BLOCKW - Constants.SWITCH_SIZE) * 0.5,
-                    ey + (Constants.BLOCKH - Constants.SWITCH_SIZE) * 0.5,
-                    element.type)
-            .setOrigin(0, 0)
-            .setDisplaySize(element.w * Constants.SWITCH_SIZE,
-                            element.h * Constants.SWITCH_SIZE);
+          .create(ex + (Constants.BLOCKW - Constants.SWITCH_SIZE) * 0.5,
+                  ey + (Constants.BLOCKH - Constants.SWITCH_SIZE) * 0.5,
+                  element.type)
+          .setOrigin(0, 0)
+          .setDisplaySize(element.w * Constants.SWITCH_SIZE, element.h * Constants.SWITCH_SIZE)
+          .setMask(mask);
         break;
       default:
         console.log("Type doesn't exists");
