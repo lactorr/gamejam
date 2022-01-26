@@ -97,6 +97,8 @@ export class GameScene extends Phaser.Scene {
 
   create() {
     this.gameIsOver = false;
+    this.currentGroundPositionY = 0;
+    this.targetGroundPositionY = 0;
 
     console.log(this.input)
     this.levelLoader = new LevelLoader(this);
@@ -178,12 +180,13 @@ export class GameScene extends Phaser.Scene {
     this.controlledPlayer = this.playerAlive;
 
     //Restart
-    var keyObj = this.input.keyboard.addKey('backspace');
-    keyObj.on('up', function() { this.scene.restart();
+    var keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
+    keyObj.on('up', function() {
+      this.scene.restart();
     }, this);
 
     //Pause
-    var keyEnter = this.input.keyboard.addKey('enter');
+    var keyEnter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     keyEnter.on('up', function() {
       console.log('pause');
       this.scene.pause();
@@ -302,9 +305,9 @@ export class GameScene extends Phaser.Scene {
       //Un chat est écrasé par une boite
       this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], this.level.blockGroup, cPerdu);
       //Un chat dépasse la hauteur max autorisée
-      
+
       //Le chrono est terminé
-      
+
 
 
       //Debug GameOver (touche suppr)
@@ -434,9 +437,7 @@ export class GameScene extends Phaser.Scene {
       console.log('on charge le gameover');
       this.scene.sleep();
       this.scene.sleep('HUDScene');
-      this.scene.launch('GameOver');      
+      this.scene.launch('GameOver');
     }
-
-
   }
 }

@@ -1,5 +1,5 @@
 import constants from '../constants';
-import pauseScreen from '../assets/images/pauseScreen.png';
+import pauseScreen from '../assets/images/pausescreen.png';
 import { InputManager } from '../classes/inputManager';
 import { GameScene } from './gameScene';
 
@@ -22,7 +22,7 @@ export class PauseScreen extends Phaser.Scene {
         //     constants.SIDEBAR_W, constants.ROOM_H, 0x111111);
 
         this.add.image(0, constants.GAME_HEIGHT, 'pauseScreen').setOrigin(0, 1);
-        
+
         var keyEnter = this.input.keyboard.addKey('enter');
         keyEnter.on('up', function() {
           // this.scene.pause();
