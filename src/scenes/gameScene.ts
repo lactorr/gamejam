@@ -52,6 +52,7 @@ export class GameScene extends Phaser.Scene {
   private fondImage: Phaser.GameObjects.Image;
   private fondGroup: Phaser.GameObjects.Group;
   private gameStarted: boolean = false;
+  private gameIsOver: boolean = false;
   private soundManager: SoundManager;
 
   private boxBackground1A: Phaser.GameObjects.Image;
@@ -95,6 +96,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.gameIsOver = false;
+
     console.log(this.input)
     this.levelLoader = new LevelLoader(this);
 
@@ -185,9 +188,8 @@ export class GameScene extends Phaser.Scene {
       console.log('pause');
       this.scene.pause();
       this.scene.sleep('HUDScene');
-      console.log('HUD enlevé')
+      console.log('HUD enlevé');
       this.scene.launch('PauseScreen');
-      // (this.game.scene.getScene('GameScene') as GameScene).pause();
     }, this);
 
     // ANIMATIONS CATALIVE
@@ -288,7 +290,33 @@ export class GameScene extends Phaser.Scene {
               this.targetGroundPositionY -= constants.BLOCKH;
             }, null, this
         );
+
+
+      const cPerdu = () =>{
+        console.log('ca touche');
+        this.gameIsOver = true;
+        console.log(this.gameIsOver)
+      }
+
+      //Conditions de défaite
+      //Un chat est écrasé par une boite
+      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], this.level.blockGroup, cPerdu);
+      //Un chat dépasse la hauteur max autorisée
+      
+      //Le chrono est terminé
+      
+
+
+      //Debug GameOver (touche suppr)
+      // var keyDel = this.input.keyboard.addKey('delete');
+      // keyDel.on('up', function() {
+      //   this.gameIsOver = true;
+      //   console.log('gameIsOver');
+      // }, this);
+
   }
+
+
 
   updateFixedImages(boxOffset){
     var lineWidth = this.lineImage.displayWidth;
@@ -321,6 +349,7 @@ export class GameScene extends Phaser.Scene {
     this.updateFixedImages(boxOffset);
     this.cameras.main.setScroll( boxOffset - constants.GAME_WIDTH/2, -300);
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
+
 
     // UPDATE GROUND IF NEEDED
     const groundPositionDiff = this.targetGroundPositionY - this.currentGroundPositionY;
@@ -400,6 +429,14 @@ export class GameScene extends Phaser.Scene {
       console.log('DEATH PRESSED');
       this.targetGroundPositionY -= constants.BLOCKH;
     }
+    //Scène de GameOver
+    if(this.gameIsOver){
+      console.log('on charge le gameover');
+      this.scene.sleep();
+      this.scene.sleep('HUDScene');
+      this.scene.launch('GameOver');      
+    }
+
 
   }
 }

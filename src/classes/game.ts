@@ -7,6 +7,7 @@ import { Player } from './player';
 import { Level } from './level';
 import { RenderEngine } from './renderEngine';
 import { GameScene } from '../scenes/gameScene';
+import { GameOver } from '../scenes/gameOver';
 import { HUDScene } from '../scenes/hud';
 import { PauseScreen } from '../scenes/pauseScreen';
 import constants from '../constants';
@@ -41,7 +42,7 @@ export class Game {
                 debug: false,
             }
         },
-        scene: [ GameScene, HUDScene, MainMenuScene, PauseScreen ]
+        scene: [ GameScene, HUDScene, MainMenuScene, PauseScreen, GameOver ]
     };
     const phaser = new Phaser.Game(config);
     phaser.events.on('ready', () => {
