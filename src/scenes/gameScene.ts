@@ -21,8 +21,6 @@ import assetBoxBackground1A from '../assets/images/framea1.png';
 import assetBoxBackground1D from '../assets/images/framed1.png';
 //sounds
 import { SoundManager } from '../classes/soundManager';
-import music_loop_synth  from '../assets/sounds/music_loop_synth.mp3';
-import music_loop_metal  from '../assets/sounds/music_loop_metal.mp3';
 import assetFond from '../assets/images/fond.png';
 import {addDebugText, clearDebugText} from './hud';
 
@@ -35,11 +33,6 @@ let platform;
 let box1;
 let box1d;
 let t = 0;
-//sounds
-let loopMetal;
-let loopSynth;
-const metalVolume = 0.3;
-const synthVolume = 0.5;
 
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
@@ -60,7 +53,7 @@ export class GameScene extends Phaser.Scene {
   private fondGroup: Phaser.GameObjects.Group;
   private gameStarted: boolean = false;
   private soundManager: SoundManager;
-  private isMusicPlaying: boolean = false;
+
   private boxBackground1A: Phaser.GameObjects.Image;
   private boxBackground1D: Phaser.GameObjects.Image;
   private gameAreaMask: Phaser.Display.Masks.GeometryMask;
@@ -71,8 +64,8 @@ export class GameScene extends Phaser.Scene {
 
   startGame() {
     this.gameStarted = true;
-    this.soundManager.startSound(loopSynth);
-    this.soundManager.startSound(loopMetal);
+    this.soundManager.startSound(this.soundManager.gameSounds.musicMetal);
+    this.soundManager.startSound(this.soundManager.gameSounds.musicSynth);
   }
 
   setInputManager(inputManager: InputManager) {
@@ -98,9 +91,6 @@ export class GameScene extends Phaser.Scene {
     this.load.image('line', assetLine);
     this.load.image('boxBackground1A', assetBoxBackground1A);
     this.load.image('boxBackground1D', assetBoxBackground1D);
-    //sounds
-    loopSynth = this.soundManager.loadSound(music_loop_synth, synthVolume);
-    loopMetal = this.soundManager.loadSound(music_loop_metal, metalVolume);
     this.load.image('fond', assetFond);
   }
 
@@ -110,7 +100,6 @@ export class GameScene extends Phaser.Scene {
 
     this.cameras.main.centerOn(constants.GAME_WIDTH/2, 0);
     // On peut pas avoir Y qui va vers le haut ca me tend T_T - xurei
-    // this.cameras.main.setO
     this.cameras.main.setBounds(-1000, -1000, 10000, 2000);
     this.physics.world.setBounds(-1000, -1000, 10000, 2000);
 
@@ -277,9 +266,7 @@ export class GameScene extends Phaser.Scene {
             [ this.playerAlive.gameObject, this.playerDead.gameObject ],
             this.level.switchAliveGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
-              this.targetGroundPositionY += constants.BLOCKH; //vers le bas synth ++
-              this.soundManager.addVolume(loopSynth);
-              this.soundManager.lowerVolume(loopMetal);
+              this.targetGroundPositionY += constants.BLOCKH;
             }, null, this
         );
 
@@ -288,8 +275,6 @@ export class GameScene extends Phaser.Scene {
             this.level.switchDeadGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
               this.targetGroundPositionY -= constants.BLOCKH;
-              this.soundManager.addVolume(loopMetal);
-              this.soundManager.lowerVolume(loopSynth);
             }, null, this
         );
   }
@@ -338,6 +323,7 @@ export class GameScene extends Phaser.Scene {
         this.currentGroundPositionY = Math.min(this.currentGroundPositionY, this.targetGroundPositionY);
       }
       ground.y = this.currentGroundPositionY;
+      this.soundManager.updateMusicRatio(this.currentGroundPositionY/constants.BLOCKH);
     }
     if (this.playerDead.gameObject.y < ground.y) {
       this.playerDead.gameObject.y = ground.y+10;
