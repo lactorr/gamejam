@@ -9,6 +9,8 @@ import level1 from '../assets/levels/level1.json';
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
 import assetCatAnimD from '../assets/images/cat_anim_d.png';
+import assetCatSitA from '../assets/images/catalivesit.png';
+import assetCatSitD from '../assets/images/catdeadsit.png';
 import assetBoxFixe1 from '../assets/images/boxfixe01.png';
 import assetBoxFixe1d from '../assets/images/boxfixe01d.png';
 import assetPointLive from '../assets/images/pointlive.png';
@@ -18,7 +20,15 @@ import assetBoxDoorLine from '../assets/images/doorline.png';
 import assetScientist from '../assets/images/scientistline.png';
 import assetLine from '../assets/images/line.png';
 import assetBoxBackground1A from '../assets/images/framea1.png';
+import assetBoxBackground2A from '../assets/images/framea2.png';
+import assetBoxBackground3A from '../assets/images/framea3.png';
+import assetBoxBackground4A from '../assets/images/framea4.png';
+import assetBoxBackground5A from '../assets/images/framea5.png';
 import assetBoxBackground1D from '../assets/images/framed1.png';
+import assetBoxBackground2D from '../assets/images/framed2.png';
+import assetBoxBackground3D from '../assets/images/framed3.png';
+import assetBoxBackground4D from '../assets/images/framed4.png';
+import assetBoxBackground5D from '../assets/images/framed5.png';
 //sounds
 import { SoundManager } from '../classes/soundManager';
 import assetFond from '../assets/images/fond.png';
@@ -55,8 +65,8 @@ export class GameScene extends Phaser.Scene {
   private gameIsOver: boolean = false;
   private soundManager: SoundManager;
 
-  private boxBackground1A: Phaser.GameObjects.Image;
-  private boxBackground1D: Phaser.GameObjects.Image;
+  private boxBackgroundA: Phaser.GameObjects.Image[];
+  private boxBackgroundD: Phaser.GameObjects.Image[];
   private gameAreaMask: Phaser.Display.Masks.GeometryMask;
 
   constructor () {
@@ -65,8 +75,7 @@ export class GameScene extends Phaser.Scene {
 
   startGame() {
     this.gameStarted = true;
-    this.soundManager.startSound(this.soundManager.gameSounds.musicMetal);
-    this.soundManager.startSound(this.soundManager.gameSounds.musicSynth);
+    this.soundManager.startMusic();
   }
 
   setInputManager(inputManager: InputManager) {
@@ -82,6 +91,8 @@ export class GameScene extends Phaser.Scene {
     this.load.image('ground', assetPlatform);
     this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 250, frameHeight : 157});
     this.load.spritesheet('catdead', assetCatAnimD, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('cataliveSit', assetCatSitA, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('catdeadSit', assetCatSitD, {frameWidth : 250, frameHeight : 157});
     this.load.image('blockNtrAlive', assetBoxFixe1);
     this.load.image('blockNtrDead', assetBoxFixe1d);
     this.load.image('switchAlive', assetPointLive);
@@ -91,7 +102,15 @@ export class GameScene extends Phaser.Scene {
     this.load.image('scientistline', assetScientist);
     this.load.image('line', assetLine);
     this.load.image('boxBackground1A', assetBoxBackground1A);
+    this.load.image('boxBackground2A', assetBoxBackground2A);
+    this.load.image('boxBackground3A', assetBoxBackground3A);
+    this.load.image('boxBackground4A', assetBoxBackground4A);
+    this.load.image('boxBackground5A', assetBoxBackground5A);
     this.load.image('boxBackground1D', assetBoxBackground1D);
+    this.load.image('boxBackground2D', assetBoxBackground2D);
+    this.load.image('boxBackground3D', assetBoxBackground3D);
+    this.load.image('boxBackground4D', assetBoxBackground4D);
+    this.load.image('boxBackground5D', assetBoxBackground5D);
     this.load.image('fond', assetFond);
   }
 
@@ -127,12 +146,23 @@ export class GameScene extends Phaser.Scene {
         .setDisplaySize(178 * 0.4, 249 * 0.4);
 
     // GAME AREA
-    this.boxBackground1A = this.add.image(0, 0, 'boxBackground1A').setOrigin(0.5, 1);
-    this.boxBackground1A.setDepth(-2);
-    this.boxBackground1A.setDisplaySize(957, 280);
-    this.boxBackground1D = this.add.image(0, 0, 'boxBackground1D').setOrigin(0.5, 0);
+    this.boxBackgroundA = [];
+    for (let i=1; i!=6; ++i) {
+      this.boxBackgroundA[i] = this.add.image(0, 0, `boxBackground${6-i}A`).setOrigin(0.5, 1);
+      this.boxBackgroundA[i].setDepth(-2);
+      this.boxBackgroundA[i].setDisplaySize(957, 280);
+      //this.boxBackgroundA[i].setVisible(false);
+    }
+    this.boxBackgroundD = [];
+    for (let i=1; i!=6; ++i) {
+      this.boxBackgroundD[i] = this.add.image(0, 0, `boxBackground${i}D`).setOrigin(0.5, 0);
+      this.boxBackgroundD[i].setDepth(-2);
+      this.boxBackgroundD[i].setDisplaySize(957, 280);
+      //this.boxBackgroundD[i].setVisible(false);
+    }
+    /*this.boxBackground1D = this.add.image(0, 0, 'boxBackground1D').setOrigin(0.5, 0);
     this.boxBackground1D.setDepth(-2);
-    this.boxBackground1D.setDisplaySize(957, 280);
+    this.boxBackground1D.setDisplaySize(957, 280);   */
     //this.boxBackground1D.setRotation(Math.PI);
 
     const shape1 = (this.make.graphics as any)().fillStyle(0xffffff).fillRect(
@@ -197,6 +227,13 @@ export class GameScene extends Phaser.Scene {
 
     // ANIMATIONS CATALIVE
     this.anims.create({
+      key: 'sit-alive',
+      frames: this.anims.generateFrameNumbers('cataliveSit', {start: 0, end: 0}),
+      frameRate: 1,
+      repeat: -1
+    });
+
+    this.anims.create({
       key: 'left-alive',
       frames: this.anims.generateFrameNumbers('catalive', {start: 0, end: 9}),
       frameRate: 10,
@@ -233,6 +270,13 @@ export class GameScene extends Phaser.Scene {
     });
 
     // ANIMATIONS CATDEAD
+    this.anims.create({
+      key: 'sit-dead',
+      frames: this.anims.generateFrameNumbers('catdeadSit', {start: 0, end: 0}),
+      frameRate: 1,
+      repeat: -1
+    });
+
     this.anims.create({
       key: 'left-dead',
       frames: this.anims.generateFrameNumbers('catdead', {start: 0, end: 9}),
@@ -303,7 +347,7 @@ export class GameScene extends Phaser.Scene {
 
       //Conditions de défaite
       //Un chat est écrasé par une boite
-      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], this.level.blockGroup, cPerdu);
+      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.blockGroup, ceil, floor], cPerdu);
       //Un chat dépasse la hauteur max autorisée
 
       //Le chrono est terminé
@@ -324,8 +368,30 @@ export class GameScene extends Phaser.Scene {
   updateFixedImages(boxOffset){
     var lineWidth = this.lineImage.displayWidth;
     this.scientistImage.x = boxOffset - (lineWidth/2);
-    this.boxBackground1A.x = boxOffset;
-    this.boxBackground1D.x = boxOffset;
+    let groundIndex = Math.ceil(this.currentGroundPositionY / constants.BLOCKH) + 5;
+    for (let i=0; i!=6; ++i) {
+      if (this.boxBackgroundA[i]) {
+        this.boxBackgroundA[i].x = boxOffset;
+        this.boxBackgroundA[i].setVisible(false);
+      }
+      if (this.boxBackgroundD[i]) {
+        this.boxBackgroundD[i].x = boxOffset;
+        this.boxBackgroundD[i].setVisible(false);
+      }
+      /*this.boxBackgroundA[1].x = boxOffset;
+      this.boxBackgroundA[2].x = boxOffset;
+      this.boxBackgroundA[3].x = boxOffset;
+      this.boxBackgroundA[4].x = boxOffset;*/
+    }
+    addDebugText(groundIndex);
+    const groundIndexA = Math.min(5, groundIndex);
+    const groundIndexD = Math.max(1, Math.min(5, groundIndex-4));
+    addDebugText(groundIndexA);
+    addDebugText(groundIndexD);
+    this.boxBackgroundA[groundIndexA].setVisible(true);
+    this.boxBackgroundD[groundIndexD].setVisible(true);
+    //this.boxBackgroundA[groundIndex].setVisible(true);
+    //this.boxBackground1D.x = boxOffset;
     this.gameAreaMask.geometryMask.x = boxOffset;
     this.lineImage.x = boxOffset;
     this.doorImage.x = boxOffset + (lineWidth/2);

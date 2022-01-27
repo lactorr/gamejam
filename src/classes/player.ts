@@ -34,12 +34,13 @@ export class Player {
 
     updateAnimation(isControlled: boolean, inputData: InputData, isTouchingFloor: boolean) {
         if (!isControlled) {
-            if (this.currentDirection === -1) {
-                this.gameObject.anims.play(`idle-${this.animType}-left`, true);
-            }
-            else {
-                this.gameObject.anims.play(`idle-${this.animType}-right`, true);
-            }
+            this.gameObject.anims.play(`sit-${this.animType}`, true);
+            // if (this.currentDirection === -1) {
+            //     this.gameObject.anims.play(`idle-${this.animType}-left`, true);
+            // }
+            // else {
+            //     this.gameObject.anims.play(`idle-${this.animType}-right`, true);
+            // }
         }
         else {
             if (inputData.deltaX < 0 && isTouchingFloor) {

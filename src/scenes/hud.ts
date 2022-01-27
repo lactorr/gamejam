@@ -60,7 +60,7 @@ export class HUDScene extends Phaser.Scene {
         //     constants.ROOM_W + constants.SIDEBAR_W/2, constants.ROOM_H/2,
         //     constants.SIDEBAR_W, constants.ROOM_H, 0x111111);
 
-        this.debugPadText = this.add.text(10, 30, '', { font: '10px Courier', color: '#ffffff' });
+        this.debugPadText = this.add.text(10, 30, '', { font: '20px Courier', color: '#ffffff' });
         this.debugPadText.setText('waiting for gamepad');
         this.debugPadText.setDepth(constants.Z_HUD_DEBUG);
         this.isDebugVisible = true;

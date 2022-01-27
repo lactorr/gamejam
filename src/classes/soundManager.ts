@@ -1,5 +1,3 @@
-
-
 import music_loop_synth  from '../assets/sounds/music_loop_synth.mp3';
 import music_loop_metal  from '../assets/sounds/music_loop_metal.mp3';
 import constants from '../constants';
@@ -11,13 +9,13 @@ function loadSound(path, volume) {
   return audio;
 }
 
-export class SoundManager {
-  gameSounds= {
-    'musicSynth': loadSound(music_loop_synth, 0.5),
-    'musicMetal': loadSound(music_loop_metal, 0.3)
-  };
+const musicSynth = loadSound(music_loop_synth, 0.5);
+const musicMetal = loadSound(music_loop_metal, 0.5);
 
-  constructor() {
+export class SoundManager {
+  startMusic() {
+    this.startSound(musicMetal);
+    this.startSound(musicSynth);
   }
 
   startSound(audio){
@@ -37,12 +35,17 @@ export class SoundManager {
     audio.pause = true;
   }
 
+  restartSound(audio) {
+    audio.currentTime = 0;
+  }
+
   resumeSound(audio){
     audio.pause = false;
   }
+
   updateMusicRatio(ratio){
     let convertedRatio = (ratio+5)/10;
-    this.gameSounds.musicSynth.volume = Math.max(0,Math.min(1,convertedRatio * constants.MUSIC_VOL));
-    this.gameSounds.musicMetal.volume = Math.max(0, Math.min(1, (1 - convertedRatio) * constants.MUSIC_VOL));
+    musicSynth.volume = Math.max(0,Math.min(1,convertedRatio * constants.MUSIC_VOL));
+    musicMetal.volume = Math.max(0, Math.min(1, (1 - convertedRatio) * constants.MUSIC_VOL));
   }
 }
