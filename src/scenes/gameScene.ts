@@ -298,13 +298,29 @@ export class GameScene extends Phaser.Scene {
         console.log(this.gameIsOver)
       }
 
+      const cGagne = () =>{
+        console.log('cest la win');
+        this.scene.sleep();
+        this.scene.sleep('HUDScene');
+        this.scene.launch('Victory');  
+      }
+
+          //Timer
+      var timerEvent;
+      timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
+        // this.time.addEvent(timerEvent);
+
       //Conditions de défaite
       //Un chat est écrasé par une boite
       this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], this.level.blockGroup, cPerdu);
-      //Un chat dépasse la hauteur max autorisée
-      
+      //Un chat est écrasé par le plafond
+      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
       //Le chrono est terminé
-      
+      // this.physics.add.overlap(this.scientistImage, this.doorImage, cPerdu);
+
+
+      //Conditions de victoire
+      this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
 
 
       //Debug GameOver (touche suppr)
@@ -333,6 +349,17 @@ export class GameScene extends Phaser.Scene {
     ceil.x = boxOffset;
     wallL.x = boxOffset - constants.GAMEAREA_WIDTH/2;
     wallR.x = boxOffset + constants.GAMEAREA_WIDTH/2;
+  
+    //Bouger la tête du scientifique
+    var timeline = this.tweens.timeline({
+      tweens: [{
+        targets: this.scientistImage,
+        x: 650,
+        ease: 'Linear',
+        duration: constants.TIMER
+      },]
+    });
+    console.log(timeline);
   }
 
   update(time, delta) {
@@ -438,5 +465,9 @@ export class GameScene extends Phaser.Scene {
     }
 
 
+
+    // Avancée du scientist de 650 en constants.TIMER ms
+    // this.scientistImage.setX = 30 + 650/timerEvent;
+    
   }
 }
