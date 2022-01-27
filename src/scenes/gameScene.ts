@@ -305,21 +305,17 @@ export class GameScene extends Phaser.Scene {
         this.scene.launch('Victory');  
       }
 
-          //Timer
-      var timerEvent;
-      timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
-        // this.time.addEvent(timerEvent);
-
       //Conditions de défaite
       //Un chat est écrasé par une boite
       this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], this.level.blockGroup, cPerdu);
       //Un chat est écrasé par le plafond
       this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
       //Le chrono est terminé
-      // this.physics.add.overlap(this.scientistImage, this.doorImage, cPerdu);
+      var timerEvent;
+      timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
 
 
-      //Conditions de victoire
+      //Conditions de victoire 
       this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
 
 
@@ -359,12 +355,11 @@ export class GameScene extends Phaser.Scene {
         duration: constants.TIMER
       },]
     });
-    console.log(timeline);
+    // console.log(timeline);
   }
 
   update(time, delta) {
     this.inputManager.updateInputData();
-
     if (!this.gameStarted) {
       return;
     }
