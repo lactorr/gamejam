@@ -29,6 +29,8 @@ const Constants = {
     PLAYER_XVELOCITY : 100,
 
     MUSIC_VOL : 0.8,
+
+    TIMER : 40000, //temps pour réaliser le niveau, en ms
 }
 
 export default Constants;
