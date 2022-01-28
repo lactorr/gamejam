@@ -23,13 +23,23 @@ export class About extends Phaser.Scene {
 
         this.add.image(0, constants.GAME_HEIGHT, 'aboutScreen').setOrigin(0, 1);
         
-        var keyEnter = this.input.keyboard.addKey('backspace');
+        var keyEnter = this.input.keyboard.addKey('enter');
         keyEnter.on('up', function() {
-          // this.scene.pause();
-        this.scene.launch('GameScene');
-        this.scene.launch('HUDScene');
+        this.scene.launch('MainMenuScene');
         this.scene.sleep('About');
-        console.log('on restart le level');
+        console.log('on retourne au menu');
+        }, this);
+
+        var keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
+        keyObj.on('up', function() {
+            this.scene.launch('MainMenuScene');
+            this.scene.sleep('About');
+        }, this);
+
+        var keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        keySpace.on('up', function() {
+            this.scene.launch('MainMenuScene');
+            this.scene.sleep('About');
         }, this);
 
     }

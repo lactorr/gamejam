@@ -52,21 +52,13 @@ export class MainMenuScene extends Phaser.Scene {
 
         //Lancer le jeu quand on clique sur le chat alive Play
         this.catalivesitplay.on('pointerdown', function(){
-            this.clicplay.setVisible(false);
-            this.catalivesitplay.setVisible(false);
-            this.catalivesitabout.setVisible(false);
-            this.catdeadsitplay.setVisible(false);
-            this.catdeadsitabout.setVisible(false);
+            this.scene.sleep();
             (this.game.scene.getScene('GameScene') as GameScene).startGame();
         }, this)
 
         //Lancer l'écran About quand on clique sur le catdeadsit
         this.catalivesitabout.on('pointerdown', function(){
-            this.clicplay.setVisible(false);
-            this.catalivesitplay.setVisible(false);
-            this.catalivesitabout.setVisible(false);
-            this.catdeadsitplay.setVisible(false);
-            this.catdeadsitabout.setVisible(false);
+            this.scene.sleep();
             this.scene.launch('About'); 
         }, this)
 
@@ -80,11 +72,7 @@ export class MainMenuScene extends Phaser.Scene {
         // - Si oui, envoyer un message à GameScene pour lancer le jeu
 
         if (inputData.jumpDown) {
-            this.clicplay.setVisible(false);
-            this.catalivesitplay.setVisible(false);
-            this.catalivesitabout.setVisible(false);
-            this.catdeadsitplay.setVisible(false);
-            this.catdeadsitabout.setVisible(false);
+            this.scene.sleep();
             (this.game.scene.getScene('GameScene') as GameScene).startGame();
         }
     }
