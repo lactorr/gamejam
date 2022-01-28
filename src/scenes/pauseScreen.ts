@@ -25,11 +25,16 @@ export class PauseScreen extends Phaser.Scene {
 
         var keyEnter = this.input.keyboard.addKey('enter');
         keyEnter.on('up', function() {
-          // this.scene.pause();
         this.scene.resume('GameScene');
         this.scene.launch('HUDScene');
         this.scene.sleep('PauseScreen');
         console.log('on enlève la pause');
+        }, this);
+
+        var keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
+        keyObj.on('up', function() {
+            this.scene.launch('GameScene');
+            this.scene.sleep('PauseScreen');
         }, this);
 
     }
