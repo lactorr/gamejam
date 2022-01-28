@@ -1,9 +1,5 @@
 //setting game configuration and loading the assets for the loading screen
 import constants from '../constants';
-import assetCartonAliveBas from '../assets/images/cartonalivebas.png';
-import assetCartonAliveHaut from '../assets/images/cartonalivehaut.png';
-import assetCartonDeadBas from '../assets/images/cartondeadbas.png';
-import assetCartonDeadHaut from '../assets/images/cartondeadhaut.png';
 import assetKeys from '../assets/images/touches.png';
 //import { inputsEventsCenter } from './dungeon-map';
 
@@ -38,20 +34,12 @@ export function clearDebugText() {
 export class HUDScene extends Phaser.Scene {
     private debugPadText: Phaser.GameObjects.Text;
     private isDebugVisible: boolean;
-    private cartonAliveBas: Phaser.GameObjects.Image;
-    private cartonAliveHaut: Phaser.GameObjects.Image;
-    private cartonDeadBas: Phaser.GameObjects.Image;
-    private cartonDeadHaut: Phaser.GameObjects.Image;
 
     constructor () {
         super('HUD');
     }
 
     preload() {
-        this.load.image('cartonAliveBas', assetCartonAliveBas);
-        this.load.image('cartonAliveHaut', assetCartonAliveHaut);
-        this.load.image('cartonDeadBas', assetCartonDeadBas);
-        this.load.image('cartonDeadHaut', assetCartonDeadHaut);
         this.load.image('keys', assetKeys);
     }
 
@@ -67,11 +55,7 @@ export class HUDScene extends Phaser.Scene {
         this.debugPadText.setVisible(this.isDebugVisible);
         //this.physics.config.debug = true;
 
-        this.cartonAliveHaut  = this.add.image(0, -30, 'cartonAliveHaut').setOrigin(0, 0);
-        this.cartonDeadHaut = this.add.image(0, -20, 'cartonDeadHaut').setOrigin(0, 0).setVisible(false);
-        this.cartonAliveBas = this.add.image(0, constants.GAME_HEIGHT, 'cartonAliveBas').setOrigin(0, 1);
-        this.cartonDeadBas  = this.add.image(0, constants.GAME_HEIGHT, 'cartonDeadBas').setOrigin(0, 1).setVisible(false);
-        this.add.image(0, constants.GAME_HEIGHT, 'keys').setOrigin(0, 1);
+        //this.add.image(0, constants.GAME_HEIGHT, 'keys').setOrigin(0, 1);
         //this.add.image(0, -30, 'cartonDeadBas').setOrigin(0, 0);
         //this.add.image(0, -300, 'cartonAliveBas');
         //this.add.image(0, 0, 'cartonAliveBas');
@@ -85,19 +69,6 @@ export class HUDScene extends Phaser.Scene {
 
     update(time, delta) {
         const gameScene: any = this.game.scene.getScene('GameScene');
-
-        if (gameScene.controlledPlayer === gameScene.playerAlive) {
-            this.cartonAliveBas.setVisible(true);
-            this.cartonAliveHaut.setVisible(false);
-            this.cartonDeadBas.setVisible(false);
-            this.cartonDeadHaut.setVisible(false);
-        }
-        else {
-            this.cartonAliveBas.setVisible(false);
-            this.cartonAliveHaut.setVisible(false);
-            this.cartonDeadBas.setVisible(true);
-            this.cartonDeadHaut.setVisible(false);
-        }
 
         let debug = [];
 

@@ -9,8 +9,10 @@ import level1 from '../assets/levels/level1.json';
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
 import assetCatAnimD from '../assets/images/cat_anim_d.png';
-import assetCatSitA from '../assets/images/catalivesit.png';
-import assetCatSitD from '../assets/images/catdeadsit.png';
+import assetCatSitAR from '../assets/images/catalivesit.png';
+import assetCatSitAL from '../assets/images/catalivesit-l.png';
+import assetCatSitDR from '../assets/images/catdeadsit.png';
+import assetCatSitDL from '../assets/images/catdeadsit-l.png';
 import assetBoxFixe1 from '../assets/images/boxfixe01.png';
 import assetBoxFixe1d from '../assets/images/boxfixe01d.png';
 import assetPointLive from '../assets/images/pointlive.png';
@@ -29,6 +31,10 @@ import assetBoxBackground2D from '../assets/images/framed2.png';
 import assetBoxBackground3D from '../assets/images/framed3.png';
 import assetBoxBackground4D from '../assets/images/framed4.png';
 import assetBoxBackground5D from '../assets/images/framed5.png';
+import assetKeyLeftRight from '../assets/images/touches_lr.png';
+import assetKeyJump from '../assets/images/touches_jump.png';
+import assetKeySwitch from '../assets/images/touches_switch.png';
+
 //sounds
 import { SoundManager } from '../classes/soundManager';
 import assetFond from '../assets/images/fond.png';
@@ -85,14 +91,20 @@ export class GameScene extends Phaser.Scene {
   setSoundManager(soundManager: SoundManager){
     this.soundManager = soundManager;
   }
+
   preload() {
     this.soundManager = new SoundManager();
     this.load.json('levelData', level1);
     this.load.image('ground', assetPlatform);
     this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 250, frameHeight : 157});
     this.load.spritesheet('catdead', assetCatAnimD, {frameWidth : 250, frameHeight : 157});
-    this.load.spritesheet('cataliveSit', assetCatSitA, {frameWidth : 250, frameHeight : 157});
-    this.load.spritesheet('catdeadSit', assetCatSitD, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('cataliveSitR', assetCatSitAR, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('cataliveSitL', assetCatSitAL, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('catdeadSitR', assetCatSitDR, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('catdeadSitL', assetCatSitDL, {frameWidth : 250, frameHeight : 157});
+    this.load.image('keyLeftRight', assetKeyLeftRight);
+    this.load.image('keyJump', assetKeyJump);
+    this.load.image('keySwitch', assetKeySwitch);
     this.load.image('blockNtrAlive', assetBoxFixe1);
     this.load.image('blockNtrDead', assetBoxFixe1d);
     this.load.image('switchAlive', assetPointLive);
@@ -119,7 +131,6 @@ export class GameScene extends Phaser.Scene {
     this.currentGroundPositionY = 0;
     this.targetGroundPositionY = 0;
 
-    console.log(this.input)
     this.levelLoader = new LevelLoader(this);
 
     this.cameras.main.centerOn(constants.GAME_WIDTH/2, 0);
@@ -197,6 +208,10 @@ export class GameScene extends Phaser.Scene {
     wallR.setDepth(-1);
     wallR.setVisible(false);
 
+    this.add.image(30, -constants.GAMEAREA_HEIGHT/4-constants.BLOCKH/2-10, 'keyLeftRight').setAlpha(0.8).setMask(this.gameAreaMask);
+    this.add.image(30, -constants.GAMEAREA_HEIGHT/4-constants.BLOCKH/2+25, 'keyJump').setAlpha(0.8).setMask(this.gameAreaMask);
+    this.add.image(30 + constants.BLOCKW*9, -constants.GAMEAREA_HEIGHT/4-constants.BLOCKH/2, 'keySwitch').setAlpha(0.8).setMask(this.gameAreaMask);
+
     //Generate background
     const fondImages = [];
     for (let x = 0; x < this.level.levelWidth; x += 1600) {
@@ -225,95 +240,7 @@ export class GameScene extends Phaser.Scene {
       this.scene.launch('PauseScreen');
     }, this);
 
-    // ANIMATIONS CATALIVE
-    this.anims.create({
-      key: 'sit-alive',
-      frames: this.anims.generateFrameNumbers('cataliveSit', {start: 0, end: 0}),
-      frameRate: 1,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: 'left-alive',
-      frames: this.anims.generateFrameNumbers('catalive', {start: 0, end: 9}),
-      frameRate: 10,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: 'idle-alive-left',
-      frames: [ {key: 'catalive', frame: 9} ],
-      frameRate: 20
-    });
-    this.anims.create({
-      key: 'idle-alive-right',
-      frames: [ {key: 'catalive', frame: 10} ],
-      frameRate: 20
-    });
-
-    this.anims.create({
-      key: 'right-alive',
-      frames: this.anims.generateFrameNumbers('catalive', {start: 10, end: 19}),
-      frameRate: 10,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: 'jump-alive-left',
-      frames: [ {key: 'catalive', frame: 6} ],
-      frameRate: 10,
-    });
-    this.anims.create({
-      key: 'jump-alive-right',
-      frames: [ {key: 'catalive', frame: 14} ],
-      frameRate: 10,
-    });
-
-    // ANIMATIONS CATDEAD
-    this.anims.create({
-      key: 'sit-dead',
-      frames: this.anims.generateFrameNumbers('catdeadSit', {start: 0, end: 0}),
-      frameRate: 1,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: 'left-dead',
-      frames: this.anims.generateFrameNumbers('catdead', {start: 0, end: 9}),
-      frameRate: 10,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: 'idle-dead-left',
-      frames: [ {key: 'catdead', frame: 9} ],
-      frameRate: 20
-    });
-
-    this.anims.create({
-      key: 'idle-dead-right',
-      frames: [ {key: 'catdead', frame: 10} ],
-      frameRate: 20
-    });
-
-    this.anims.create({
-      key: 'right-dead',
-      frames: this.anims.generateFrameNumbers('catdead', {start: 10, end: 19}),
-      frameRate: 10,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: 'jump-dead-left',
-      frames: [ {key: 'catdead', frame: 6} ],
-      frameRate: 10,
-    });
-
-    this.anims.create({
-      key: 'jump-dead-right',
-      frames: [ {key: 'catdead', frame: 14} ],
-      frameRate: 10,
-    });
+    this.createAnimations();
 
     this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], [ground, floor, ceil, wallL, wallR]);
     this.physics.add.collider(this.playerAlive.gameObject, this.playerDead.gameObject);
@@ -358,12 +285,10 @@ export class GameScene extends Phaser.Scene {
       //Un chat est écrasé par le plafond
       this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
       //Le chrono est terminé
-      var timerEvent;
-      timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
+      let timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
 
       //Conditions de victoire
       this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
-
 
       //Debug GameOver (touche suppr)
       // var keyDel = this.input.keyboard.addKey('delete');
@@ -372,9 +297,112 @@ export class GameScene extends Phaser.Scene {
       //   console.log('gameIsOver');
       // }, this);
 
+    this.soundManager.updateMusicRatio(0);
   }
 
+  createAnimations() {
+    // ANIMATIONS CATALIVE
+    this.anims.create({
+      key: 'sit-alive-right',
+      frames: this.anims.generateFrameNumbers('cataliveSitR', {start: 0, end: 0}),
+      frameRate: 1,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'sit-alive-left',
+      frames: this.anims.generateFrameNumbers('cataliveSitL', {start: 0, end: 0}),
+      frameRate: 1,
+      repeat: -1
+    });
 
+    this.anims.create({
+      key: 'left-alive',
+      frames: this.anims.generateFrameNumbers('catalive', {start: 0, end: 9}),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'idle-alive-left',
+      frames: [ {key: 'catalive', frame: 9} ],
+      frameRate: 20
+    });
+    this.anims.create({
+      key: 'idle-alive-right',
+      frames: [ {key: 'catalive', frame: 10} ],
+      frameRate: 20
+    });
+
+    this.anims.create({
+      key: 'right-alive',
+      frames: this.anims.generateFrameNumbers('catalive', {start: 10, end: 19}),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'jump-alive-left',
+      frames: [ {key: 'catalive', frame: 6} ],
+      frameRate: 10,
+    });
+    this.anims.create({
+      key: 'jump-alive-right',
+      frames: [ {key: 'catalive', frame: 14} ],
+      frameRate: 10,
+    });
+
+    // ANIMATIONS CATDEAD
+    this.anims.create({
+      key: 'sit-dead-right',
+      frames: this.anims.generateFrameNumbers('catdeadSitR', {start: 0, end: 0}),
+      frameRate: 1,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'sit-alive-left',
+      frames: this.anims.generateFrameNumbers('catdeadSitL', {start: 0, end: 0}),
+      frameRate: 1,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'left-dead',
+      frames: this.anims.generateFrameNumbers('catdead', {start: 0, end: 9}),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'idle-dead-left',
+      frames: [ {key: 'catdead', frame: 9} ],
+      frameRate: 20
+    });
+
+    this.anims.create({
+      key: 'idle-dead-right',
+      frames: [ {key: 'catdead', frame: 10} ],
+      frameRate: 20
+    });
+
+    this.anims.create({
+      key: 'right-dead',
+      frames: this.anims.generateFrameNumbers('catdead', {start: 10, end: 19}),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: 'jump-dead-left',
+      frames: [ {key: 'catdead', frame: 6} ],
+      frameRate: 10,
+    });
+
+    this.anims.create({
+      key: 'jump-dead-right',
+      frames: [ {key: 'catdead', frame: 14} ],
+      frameRate: 10,
+    });
+  }
 
   updateFixedImages(boxOffset){
     var lineWidth = this.lineImage.displayWidth;
@@ -428,12 +456,13 @@ export class GameScene extends Phaser.Scene {
 
   update(time, delta) {
     this.inputManager.updateInputData();
+    clearDebugText();
     if (!this.gameStarted) {
+      addDebugText("NOT STARTED");
       return;
     }
 
     const inputData = this.inputManager.handleInputs();
-    clearDebugText();
 
     const boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
     this.updateFixedImages(boxOffset);
