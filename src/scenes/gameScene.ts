@@ -337,7 +337,7 @@ export class GameScene extends Phaser.Scene {
       repeat: -1
     });
     this.anims.create({
-      key: 'sit-alive-left',
+      key: 'sit-dead-left',
       frames: this.anims.generateFrameNumbers('catdeadSitL', {start: 0, end: 0}),
       frameRate: 1,
       repeat: -1
