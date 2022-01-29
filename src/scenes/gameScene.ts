@@ -247,7 +247,7 @@ export class GameScene extends Phaser.Scene {
 
     this.physics.add.collider(
         [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-        this.level.blockGroup);
+        this.level.collisionGroup);
 
         this.physics.add.overlap(
             [ this.playerAlive.gameObject, this.playerDead.gameObject ],
