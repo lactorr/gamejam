@@ -39,12 +39,6 @@ let ground;
 let ceil;
 let floor;
 let wallL, wallR;
-let cursors;
-let platform;
-let box1;
-let box1d;
-let t = 0;
-
 
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
@@ -57,7 +51,6 @@ export class GameScene extends Phaser.Scene {
   private currentGroundPositionY: number = 0;
   private levelLoader: LevelLoader;
   // Line images
-  private fondImage: Phaser.GameObjects.Image;
   private fondGroup: Phaser.GameObjects.Group;
   private gameStarted: boolean = false;
   private gameIsOver: boolean = false;
@@ -209,13 +202,13 @@ export class GameScene extends Phaser.Scene {
     this.controlledPlayer = this.playerAlive;
 
     //Restart
-    var keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
+    let keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
     keyObj.on('up', function() {
       this.scene.restart();
     }, this);
 
     //Pause
-    var keyEnter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+    let keyEnter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     keyEnter.on('up', function() {
       console.log('pause');
       this.scene.pause();
@@ -430,9 +423,6 @@ export class GameScene extends Phaser.Scene {
       this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.blockGroup, ceil, floor], cPerdu);
       //Un chat est écrasé par le plafond
       this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
-      //Le chrono est terminé
-      var timerEvent;
-      timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
 
 
       //Debug GameOver (touche suppr)
@@ -461,7 +451,7 @@ export class GameScene extends Phaser.Scene {
     this.gameAreaMask.geometryMask.x = boxOffset;
     // this.lineImage.x = boxOffset;
     // this.doorImage.x = boxOffset + (lineWidth/2);
-    var completePercent = ( boxOffset / Number(this.level.levelWidth));
+    // let completePercent = ( boxOffset / Number(this.level.levelWidth));
     // this.boxImage.x = this.scientistImage.x + lineWidth*completePercent;
     ground.x = boxOffset;
     floor.x = boxOffset;
@@ -526,8 +516,7 @@ export class GameScene extends Phaser.Scene {
     this.fondGroup.setY(this.currentGroundPositionY);
     //this.fondGroup.setX(boxOffset * 0.5);
     let fondChildren = this.fondGroup.getChildren();
-    for (var i = 0; i < fondChildren.length; i++)
-    {
+    for (let i = 0; i < fondChildren.length; i++) {
         let backgroundElement = fondChildren[i] as any;
         backgroundElement.x = (boxOffset*constants.PARALLAX) + i * backgroundElement.width;
     }
