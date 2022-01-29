@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level1 from '../assets/levels/level0.json';
+import level1 from '../assets/levels/level1.json';
 //images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -17,10 +17,6 @@ import assetBoxFixe1 from '../assets/images/boxfixe01.png';
 import assetBoxFixe1d from '../assets/images/boxfixe01d.png';
 import assetPointLive from '../assets/images/pointlive.png';
 import assetPointDeath from '../assets/images/pointdeath.png';
-import assetBoxLine from '../assets/images/boxline.png';
-import assetBoxDoorLine from '../assets/images/doorline.png';
-import assetScientist from '../assets/images/scientistline.png';
-import assetLine from '../assets/images/line.png';
 import assetBoxBackground9 from '../assets/images/box-9.png';
 import assetBoxBackground8 from '../assets/images/box-8.png';
 import assetBoxBackground7 from '../assets/images/box-7.png';
@@ -105,7 +101,6 @@ export class GameScene extends Phaser.Scene {
     this.load.image('blockNtrDead', assetBoxFixe1d);
     this.load.image('switchAlive', assetPointLive);
     this.load.image('switchDead', assetPointDeath);
-
 
     this.load.image('boxBackground9', assetBoxBackground9);
     this.load.image('boxBackground8', assetBoxBackground8);
@@ -476,7 +471,7 @@ export class GameScene extends Phaser.Scene {
     //Bouger la tête du scientifique
 
   //   var timeline = this.tweens.createTimeline();
-    
+
   //   timeline.add ({
   //       targets: this.scientistImage,
   //       x: 650,
@@ -502,7 +497,7 @@ export class GameScene extends Phaser.Scene {
 
     const boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
     this.updateFixedImages(boxOffset);
-    this.cameras.main.setScroll( boxOffset - constants.GAME_WIDTH/2, -300);
+    this.cameras.main.setScroll( boxOffset - constants.GAME_WIDTH/2, -constants.GAME_HEIGHT/2+50);
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
 
 
