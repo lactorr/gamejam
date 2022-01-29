@@ -21,16 +21,15 @@ import assetBoxLine from '../assets/images/boxline.png';
 import assetBoxDoorLine from '../assets/images/doorline.png';
 import assetScientist from '../assets/images/scientistline.png';
 import assetLine from '../assets/images/line.png';
-import assetBoxBackground1A from '../assets/images/framea1.png';
-import assetBoxBackground2A from '../assets/images/framea2.png';
-import assetBoxBackground3A from '../assets/images/framea3.png';
-import assetBoxBackground4A from '../assets/images/framea4.png';
-import assetBoxBackground5A from '../assets/images/framea5.png';
-import assetBoxBackground1D from '../assets/images/framed1.png';
-import assetBoxBackground2D from '../assets/images/framed2.png';
-import assetBoxBackground3D from '../assets/images/framed3.png';
-import assetBoxBackground4D from '../assets/images/framed4.png';
-import assetBoxBackground5D from '../assets/images/framed5.png';
+import assetBoxBackground9 from '../assets/images/box-9.png';
+import assetBoxBackground8 from '../assets/images/box-8.png';
+import assetBoxBackground7 from '../assets/images/box-7.png';
+import assetBoxBackground6 from '../assets/images/box-6.png';
+import assetBoxBackground5 from '../assets/images/box-5.png';
+import assetBoxBackground4 from '../assets/images/box-4.png';
+import assetBoxBackground3 from '../assets/images/box-3.png';
+import assetBoxBackground2 from '../assets/images/box-2.png';
+import assetBoxBackground1 from '../assets/images/box-1.png';
 import assetKeyLeftRight from '../assets/images/touches_lr.png';
 import assetKeyJump from '../assets/images/touches_jump.png';
 import assetKeySwitch from '../assets/images/touches_switch.png';
@@ -72,7 +71,6 @@ export class GameScene extends Phaser.Scene {
   private soundManager: SoundManager;
 
   private boxBackgroundA: Phaser.GameObjects.Image[];
-  private boxBackgroundD: Phaser.GameObjects.Image[];
   private gameAreaMask: Phaser.Display.Masks.GeometryMask;
 
   constructor () {
@@ -113,16 +111,15 @@ export class GameScene extends Phaser.Scene {
     this.load.image('doorline', assetBoxDoorLine);
     this.load.image('scientistline', assetScientist);
     this.load.image('line', assetLine);
-    this.load.image('boxBackground1A', assetBoxBackground1A);
-    this.load.image('boxBackground2A', assetBoxBackground2A);
-    this.load.image('boxBackground3A', assetBoxBackground3A);
-    this.load.image('boxBackground4A', assetBoxBackground4A);
-    this.load.image('boxBackground5A', assetBoxBackground5A);
-    this.load.image('boxBackground1D', assetBoxBackground1D);
-    this.load.image('boxBackground2D', assetBoxBackground2D);
-    this.load.image('boxBackground3D', assetBoxBackground3D);
-    this.load.image('boxBackground4D', assetBoxBackground4D);
-    this.load.image('boxBackground5D', assetBoxBackground5D);
+    this.load.image('boxBackground9', assetBoxBackground9);
+    this.load.image('boxBackground8', assetBoxBackground8);
+    this.load.image('boxBackground7', assetBoxBackground7);
+    this.load.image('boxBackground6', assetBoxBackground6);
+    this.load.image('boxBackground5', assetBoxBackground5);
+    this.load.image('boxBackground4', assetBoxBackground4);
+    this.load.image('boxBackground3', assetBoxBackground3);
+    this.load.image('boxBackground2', assetBoxBackground2);
+    this.load.image('boxBackground1', assetBoxBackground1);
     this.load.image('fond', assetFond);
   }
 
@@ -158,18 +155,11 @@ export class GameScene extends Phaser.Scene {
 
     // GAME AREA
     this.boxBackgroundA = [];
-    for (let i=1; i!=6; ++i) {
-      this.boxBackgroundA[i] = this.add.image(0, 0, `boxBackground${6-i}A`).setOrigin(0.5, 1);
+    for (let i=1; i<10; ++i) {
+      this.boxBackgroundA[i] = this.add.image(0, 0, `boxBackground${i}`).setOrigin(0.5, 0.5);
       this.boxBackgroundA[i].setDepth(-2);
-      this.boxBackgroundA[i].setDisplaySize(957, 280);
+      this.boxBackgroundA[i].setDisplaySize(957, 560);
       //this.boxBackgroundA[i].setVisible(false);
-    }
-    this.boxBackgroundD = [];
-    for (let i=1; i!=6; ++i) {
-      this.boxBackgroundD[i] = this.add.image(0, 0, `boxBackground${i}D`).setOrigin(0.5, 0);
-      this.boxBackgroundD[i].setDepth(-2);
-      this.boxBackgroundD[i].setDisplaySize(957, 280);
-      //this.boxBackgroundD[i].setVisible(false);
     }
     /*this.boxBackground1D = this.add.image(0, 0, 'boxBackground1D').setOrigin(0.5, 0);
     this.boxBackground1D.setDepth(-2);
@@ -408,29 +398,16 @@ export class GameScene extends Phaser.Scene {
     var lineWidth = this.lineImage.displayWidth;
     this.scientistImage.x = boxOffset - (lineWidth/2);
     let groundIndex = Math.ceil(this.currentGroundPositionY / constants.BLOCKH) + 5;
-    for (let i=0; i!=6; ++i) {
+    for (let i=1; i!=10; ++i) {
       if (this.boxBackgroundA[i]) {
         this.boxBackgroundA[i].x = boxOffset;
         this.boxBackgroundA[i].setVisible(false);
       }
-      if (this.boxBackgroundD[i]) {
-        this.boxBackgroundD[i].x = boxOffset;
-        this.boxBackgroundD[i].setVisible(false);
-      }
-      /*this.boxBackgroundA[1].x = boxOffset;
-      this.boxBackgroundA[2].x = boxOffset;
-      this.boxBackgroundA[3].x = boxOffset;
-      this.boxBackgroundA[4].x = boxOffset;*/
     }
     addDebugText(groundIndex);
-    const groundIndexA = Math.min(5, groundIndex);
-    const groundIndexD = Math.max(1, Math.min(5, groundIndex-4));
+    const groundIndexA = Math.min(9, groundIndex);
     addDebugText(groundIndexA);
-    addDebugText(groundIndexD);
     this.boxBackgroundA[groundIndexA].setVisible(true);
-    this.boxBackgroundD[groundIndexD].setVisible(true);
-    //this.boxBackgroundA[groundIndex].setVisible(true);
-    //this.boxBackground1D.x = boxOffset;
     this.gameAreaMask.geometryMask.x = boxOffset;
     this.lineImage.x = boxOffset;
     this.doorImage.x = boxOffset + (lineWidth/2);
@@ -443,7 +420,7 @@ export class GameScene extends Phaser.Scene {
     wallR.x = boxOffset + constants.GAMEAREA_WIDTH/2;
 
     //Bouger la tête du scientifique
-    var timeline = this.tweens.timeline({
+    let timeline = this.tweens.timeline({
       tweens: [{
         targets: this.scientistImage,
         x: 650,
