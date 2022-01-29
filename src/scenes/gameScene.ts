@@ -132,19 +132,19 @@ export class GameScene extends Phaser.Scene {
     this.physics.world.setBounds(-1000, -1000, 10000, 2000);
 
     // LIGNE DU POURSUIVANT
-    this.lineImage = this.add.image(50, 250, 'line')
+    this.lineImage = this.add.image(50, 370, 'line')
         .setOrigin(0.5, 0.5)
         .setSize(2219, 49)
         .setDisplaySize(2219 * 0.3, 49 * 0.3);
-    this.boxImage = this.add.image(100, 250, 'boxline')
+    this.boxImage = this.add.image(100, 370, 'boxline')
         .setOrigin(0.5, 0.5)
         .setSize(207, 109)
         .setDisplaySize(207 * 0.4, 109 * 0.4);
-    this.doorImage = this.add.image(680, 250, 'doorline')
+    this.doorImage = this.add.image(680, 370, 'doorline')
         .setOrigin(0.5, 0.5)
         .setSize(197, 240)
         .setDisplaySize(197 * 0.3, 240 * 0.3);
-    this.scientistImage = this.add.image(30, 250, 'scientistline')
+    this.scientistImage = this.add.image(30, 370, 'scientistline')
         .setOrigin(0.5, 0.5)
         .setSize(178, 249)
         .setDisplaySize(178 * 0.4, 249 * 0.4);
