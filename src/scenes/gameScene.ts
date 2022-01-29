@@ -29,6 +29,8 @@ import assetBoxBackground1 from '../assets/images/box-1.png';
 import assetKeyLeftRight from '../assets/images/touches_lr.png';
 import assetKeyJump from '../assets/images/touches_jump.png';
 import assetKeySwitch from '../assets/images/touches_switch.png';
+import assetKeyReset from '../assets/images/touches_reset.png';
+import assetKeyPause from '../assets/images/touches_pause.png';
 
 //sounds
 import { SoundManager } from '../classes/soundManager';
@@ -90,6 +92,8 @@ export class GameScene extends Phaser.Scene {
     this.load.image('keyLeftRight', assetKeyLeftRight);
     this.load.image('keyJump', assetKeyJump);
     this.load.image('keySwitch', assetKeySwitch);
+    this.load.image('keyReset', assetKeyReset);
+    this.load.image('keyPause', assetKeyPause);
     this.load.image('blockNtrAlive', assetBoxFixe1);
     this.load.image('blockNtrDead', assetBoxFixe1d);
     this.load.image('switchAlive', assetPointLive);
@@ -188,6 +192,8 @@ export class GameScene extends Phaser.Scene {
     this.add.image(30, -constants.GAMEAREA_HEIGHT/4-constants.BLOCKH/2-10, 'keyLeftRight').setAlpha(0.8).setMask(this.gameAreaMask);
     this.add.image(30, -constants.GAMEAREA_HEIGHT/4-constants.BLOCKH/2+25, 'keyJump').setAlpha(0.8).setMask(this.gameAreaMask);
     this.add.image(30 + constants.BLOCKW*9, -constants.GAMEAREA_HEIGHT/4-constants.BLOCKH/2, 'keySwitch').setAlpha(0.8).setMask(this.gameAreaMask);
+    this.add.image(30 + constants.BLOCKW*17, -constants.GAMEAREA_HEIGHT/4-2*constants.BLOCKH/2-15, 'keyReset').setAlpha(0.8).setMask(this.gameAreaMask);
+    this.add.image(30 + constants.BLOCKW*17, -constants.GAMEAREA_HEIGHT/4-constants.BLOCKH/2+20, 'keyPause').setAlpha(0.8).setMask(this.gameAreaMask);
 
     //Generate background
     const fondImages = [];
