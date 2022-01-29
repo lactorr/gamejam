@@ -2,48 +2,41 @@ import music_loop_synth  from '../assets/sounds/loop_synth.mp3';
 import music_loop_metal  from '../assets/sounds/loop_metal.mp3';
 import constants from '../constants';
 
+const audio = new AudioContext();
+
 function loadSound(path, volume) {
-  const audio = path;
-  const aCtx = new AudioContext();
-  let source = aCtx.createBufferSource();
+  const gainNode = audio.createGain();
+  let source = audio.createBufferSource();
   let buf;
-  fetch(audio) // can be XHR as well
+  fetch(path)
     .then(resp => resp.arrayBuffer())
-    .then(buf => aCtx.decodeAudioData(buf)) // can be callback as well
+    .then(buf => audio.decodeAudioData(buf))
     .then(decoded => {
       source.buffer = buf = decoded;
       source.loop = true;
-      source.connect(aCtx.destination);
-    //  check.disabled = false;
+      source.connect(gainNode);
+      gainNode.gain.setValueAtTime(0, audio.currentTime);
+      gainNode.connect(audio.destination);
     });
-    /*check.onchange = e => {
-      if (check.checked) {
-        source.start(0); // start our bufferSource
-      } else {
-        source.stop(0); // this destroys the buffer source
-        source = aCtx.createBufferSource(); // so we need to create a new one
-        source.buffer = buf;
-        source.loop = true;
-        source.connect(aCtx.destination);
-      }
-    };*/
-  audio.volume = volume; //default
-  return audio;
+    return {source, gainNode};
 }
 
 const musicSynth = loadSound(music_loop_synth, 0.5);
 const musicMetal = loadSound(music_loop_metal, 0.5);
 
 export class SoundManager {
+  private musicStarted: boolean = false;
+
   startMusic() {
-    this.startSound(musicMetal);
-    this.startSound(musicSynth);
+    if(!this.musicStarted){
+      this.startSound(musicSynth.source);
+      this.startSound(musicMetal.source);
+      this.musicStarted = true;
+    }
   }
 
   startSound(audio){
-    audio.muted = false;
-    audio.loop = true;
-    audio.play();
+    audio.start();
   }
 
   muteSound(audio){
@@ -68,7 +61,7 @@ export class SoundManager {
 
   updateMusicRatio(ratio){
     let convertedRatio = (ratio+5)/10;
-    musicSynth.volume = Math.max(0,Math.min(1,convertedRatio * constants.MUSIC_VOL));
-    musicMetal.volume = Math.max(0, Math.min(1, (1 - convertedRatio) * constants.MUSIC_VOL));
+    musicSynth.gainNode.gain.setTargetAtTime(Math.max(0,Math.min(1,convertedRatio * constants.MUSIC_VOL)), audio.currentTime, 0.015);
+    musicMetal.gainNode.gain.setTargetAtTime(Math.max(0, Math.min(1, (1 - convertedRatio) * constants.MUSIC_VOL)), audio.currentTime, 0.015);
   }
 }
