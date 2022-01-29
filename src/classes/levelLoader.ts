@@ -38,12 +38,10 @@ export class LevelLoader {
           case "#":
           // ... On est sur une boite
           var k = 0;
-          var red = "";
           if((y<=1) || (blocks[y-1][x]!="#")) // Si le bloc du dessus n'est pas une boite
           {
             while((blocks[y+k][x]=="#")) // Tant que block+1 est une boite
             {
-              red += ""+blocks[y+k][x]
               k++;
             }
             this.level.elements.push({x: x , y: y - 5, w:1, h:k, type: "blockCollision"});
