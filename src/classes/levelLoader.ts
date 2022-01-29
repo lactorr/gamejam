@@ -80,7 +80,7 @@ export class LevelLoader {
           .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
           .setMask(mask);
 
-        block.body.debugShowBody = false;
+          //block.body.debugShowBody = false;
         break;
         case "blockNtrDead":
           this.level.blockGroup.create(ex, ey, element.type)

@@ -281,7 +281,7 @@ export class GameScene extends Phaser.Scene {
 
       //Conditions de défaite
       //Un chat est écrasé par une boite
-      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.blockGroup, ceil, floor], cPerdu);
+      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.collisionGroup, ceil, floor], cPerdu);
       //Un chat est écrasé par le plafond
       this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
       //Le chrono est terminé
