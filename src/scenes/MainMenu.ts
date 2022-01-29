@@ -28,10 +28,10 @@ export class MainMenuScene extends Phaser.Scene {
 
     create() {
         this.clicplay = this.add.image(0, 0, 'clicplay').setOrigin(0,0);
-        this.catalivesitplay = this.add.sprite(290, 220, 'catalivesit').setOrigin(0,0).setInteractive();
-        this.catalivesitabout = this.add.sprite(320, 380, 'catalivesit').setOrigin(0,0).setInteractive();
-        this.catdeadsitplay = this.add.image(290, 220, 'catdeadsit').setOrigin(0,0).setVisible(false).setFlipY(true)
-        this.catdeadsitabout = this.add.image(320, 380, 'catdeadsit').setOrigin(0,0).setVisible(false).setFlipY(true)
+        this.catalivesitplay = this.add.sprite(290, 240, 'catalivesit').setOrigin(0,0).setInteractive();
+        this.catalivesitabout = this.add.sprite(320, 390, 'catalivesit').setOrigin(0,0).setInteractive();
+        this.catdeadsitplay = this.add.image(290, 240, 'catdeadsit').setOrigin(0,0).setVisible(false).setFlipY(true)
+        this.catdeadsitabout = this.add.image(320, 390, 'catdeadsit').setOrigin(0,0).setVisible(false).setFlipY(true)
 
         //Changer le chat quand on passe dessus
         this.catalivesitplay.on('pointerover', function(){
@@ -56,7 +56,7 @@ export class MainMenuScene extends Phaser.Scene {
                 (this.game.scene.getScene('GameScene') as GameScene).startGame();
                 this.scene.launch('GameScene');
                 this.scene.setVisible(false, 'MainMenuScene');
-            }            
+            }
         }, this)
 
         //Lancer l'écran About quand on clique sur le catdeadsit
@@ -64,7 +64,7 @@ export class MainMenuScene extends Phaser.Scene {
             if(this.scene.isVisible('MainMenuScene') === true){
                 this.scene.launch('About');
                 this.scene.setVisible(false, 'MainMenuScene');
-            }            
+            }
         }, this)
     }
 

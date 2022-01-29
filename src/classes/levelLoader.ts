@@ -8,7 +8,10 @@ export class LevelLoader {
 
   constructor( scene:Phaser.Scene ) {
     this.scene = scene;
-    this.level.blockGroup = this.scene.physics.add.group({
+    this.level.blockGroup = this.scene.add.group({
+      defaultKey : 'blockNtrAlive',
+    }).setOrigin(0, 0);
+    this.level.collisionGroup = this.scene.physics.add.group({
       immovable : true,
       defaultKey : 'blockNtrAlive',
     }).setOrigin(0, 0);
@@ -26,19 +29,29 @@ export class LevelLoader {
     console.log(json);
     this.level.elements = [];
     var blocks = json.blocks;
-    for( var i in blocks){
-      for( var j in blocks[i])
+    for( var y =0; y< blocks.length; y++){
+      for( var x =0; x< blocks[y].length; x++)
       {
-        var block = blocks[i][j];
+        var block = blocks[y][x];
         switch(block){
           case "#":
-            this.level.elements.push({x: Number(j) , y: Number(i) - 5, w:1, h:1, type: "blockNtrAlive"});
+          // ... On est sur une boite
+          var k = 0;
+          if((y<=1) || (blocks[y-1][x]!="#")) // Si le bloc du dessus n'est pas une boite
+          {
+            while(y+k < blocks.length && (blocks[y+k][x]=="#")) // Tant que block+1 est une boite
+            {
+              k++;
+            }
+            this.level.elements.push({x: x , y: y - 5, w:1, h:k, type: "blockCollision"});
+          }
+          this.level.elements.push({x: x , y: y - 5, w:1, h:1, type: "blockNtrAlive"});
           break
           case "+":
-            this.level.elements.push({x: Number(j) , y: Number(i) - 5, w:1, h:1, type: "switchAlive"});
+          this.level.elements.push({x: x , y: y - 5, w:1, h:1, type: "switchAlive"});
           break
           case "-":
-            this.level.elements.push({x: Number(j) , y: Number(i) - 5, w:1, h:1, type: "switchDead"});
+          this.level.elements.push({x: x , y: y - 5, w:1, h:1, type: "switchDead"});
           break
           default:
 
@@ -46,46 +59,53 @@ export class LevelLoader {
         }
       }
     }
-    this.level.levelWidth = Number(j) * Constants.BLOCKW;
+    this.level.levelWidth = x * Constants.BLOCKW;
     console.log(this.level.elements)
     this.level.elements.map((element) => {
       var ex = element.x * Constants.BLOCKW ;
       var ey =  element.y * Constants.BLOCKH ;
 
       switch (element.type) {
-      case "blockNtrAlive":
-        const block = this.level.blockGroup.create(ex, ey, element.type)
+        case "blockCollision":
+          this.level.collisionGroup.create(ex, ey, element.type)
           .setOrigin(0, 0)
           .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
           .setMask(mask);
 
-        block.body.debugShowBody = false;
         break;
-      case "blockNtrDead":
-        this.level.blockGroup.create(ex, ey, element.type)
+        case "blockNtrAlive":
+          const block = this.level.blockGroup.create(ex, ey, element.type)
+          .setOrigin(0, 0)
+          .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
+          .setMask(mask);
+
+          //block.body.debugShowBody = false;
+        break;
+        case "blockNtrDead":
+          this.level.blockGroup.create(ex, ey, element.type)
           .setOrigin(0, 0)
           .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
           .setMask(mask);
         break;
-      case "switchAlive":
-        this.level.switchAliveGroup
+        case "switchAlive":
+          this.level.switchAliveGroup
           .create(ex + (Constants.BLOCKW - Constants.SWITCH_SIZE) * 0.5,
-                  ey + (Constants.BLOCKH - Constants.SWITCH_SIZE) * 0.5,
-                  element.type)
+          ey + (Constants.BLOCKH - Constants.SWITCH_SIZE) * 0.5,
+          element.type)
           .setOrigin(0, 0)
           .setDisplaySize(element.w * Constants.SWITCH_SIZE, element.h * Constants.SWITCH_SIZE)
           .setMask(mask);
         break;
-      case "switchDead":
-        this.level.switchDeadGroup
+        case "switchDead":
+          this.level.switchDeadGroup
           .create(ex + (Constants.BLOCKW - Constants.SWITCH_SIZE) * 0.5,
-                  ey + (Constants.BLOCKH - Constants.SWITCH_SIZE) * 0.5,
-                  element.type)
+          ey + (Constants.BLOCKH - Constants.SWITCH_SIZE) * 0.5,
+          element.type)
           .setOrigin(0, 0)
           .setDisplaySize(element.w * Constants.SWITCH_SIZE, element.h * Constants.SWITCH_SIZE)
           .setMask(mask);
         break;
-      default:
+        default:
         console.log("Type doesn't exists");
         break;
       }
@@ -94,4 +114,4 @@ export class LevelLoader {
 
   }
 }
- // this.level = Level();
+// this.level = Level();

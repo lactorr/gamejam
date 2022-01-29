@@ -9,8 +9,10 @@ import level1 from '../assets/levels/level0.json';
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
 import assetCatAnimD from '../assets/images/cat_anim_d.png';
-import assetCatSitA from '../assets/images/catalivesit.png';
-import assetCatSitD from '../assets/images/catdeadsit.png';
+import assetCatSitAR from '../assets/images/catalivesit.png';
+import assetCatSitAL from '../assets/images/catalivesit-l.png';
+import assetCatSitDR from '../assets/images/catdeadsit.png';
+import assetCatSitDL from '../assets/images/catdeadsit-l.png';
 import assetBoxFixe1 from '../assets/images/boxfixe01.png';
 import assetBoxFixe1d from '../assets/images/boxfixe01d.png';
 import assetPointLive from '../assets/images/pointlive.png';
@@ -19,16 +21,19 @@ import assetBoxLine from '../assets/images/boxline.png';
 import assetBoxDoorLine from '../assets/images/doorline.png';
 import assetScientist from '../assets/images/scientistline.png';
 import assetLine from '../assets/images/line.png';
-import assetBoxBackground1A from '../assets/images/framea1.png';
-import assetBoxBackground2A from '../assets/images/framea2.png';
-import assetBoxBackground3A from '../assets/images/framea3.png';
-import assetBoxBackground4A from '../assets/images/framea4.png';
-import assetBoxBackground5A from '../assets/images/framea5.png';
-import assetBoxBackground1D from '../assets/images/framed1.png';
-import assetBoxBackground2D from '../assets/images/framed2.png';
-import assetBoxBackground3D from '../assets/images/framed3.png';
-import assetBoxBackground4D from '../assets/images/framed4.png';
-import assetBoxBackground5D from '../assets/images/framed5.png';
+import assetBoxBackground9 from '../assets/images/box-9.png';
+import assetBoxBackground8 from '../assets/images/box-8.png';
+import assetBoxBackground7 from '../assets/images/box-7.png';
+import assetBoxBackground6 from '../assets/images/box-6.png';
+import assetBoxBackground5 from '../assets/images/box-5.png';
+import assetBoxBackground4 from '../assets/images/box-4.png';
+import assetBoxBackground3 from '../assets/images/box-3.png';
+import assetBoxBackground2 from '../assets/images/box-2.png';
+import assetBoxBackground1 from '../assets/images/box-1.png';
+import assetKeyLeftRight from '../assets/images/touches_lr.png';
+import assetKeyJump from '../assets/images/touches_jump.png';
+import assetKeySwitch from '../assets/images/touches_switch.png';
+
 //sounds
 import { SoundManager } from '../classes/soundManager';
 import assetFond from '../assets/images/fond.png';
@@ -63,7 +68,6 @@ export class GameScene extends Phaser.Scene {
   private soundManager: SoundManager;
 
   private boxBackgroundA: Phaser.GameObjects.Image[];
-  private boxBackgroundD: Phaser.GameObjects.Image[];
   private gameAreaMask: Phaser.Display.Masks.GeometryMask;
 
   constructor () {
@@ -83,32 +87,36 @@ export class GameScene extends Phaser.Scene {
   setSoundManager(soundManager: SoundManager){
     this.soundManager = soundManager;
   }
+
   preload() {
     this.soundManager = new SoundManager();
     this.load.json('levelData', level1);
     this.load.image('ground', assetPlatform);
     this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 250, frameHeight : 157});
     this.load.spritesheet('catdead', assetCatAnimD, {frameWidth : 250, frameHeight : 157});
-    this.load.spritesheet('cataliveSit', assetCatSitA, {frameWidth : 250, frameHeight : 157});
-    this.load.spritesheet('catdeadSit', assetCatSitD, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('cataliveSitR', assetCatSitAR, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('cataliveSitL', assetCatSitAL, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('catdeadSitR', assetCatSitDR, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('catdeadSitL', assetCatSitDL, {frameWidth : 250, frameHeight : 157});
+    this.load.image('keyLeftRight', assetKeyLeftRight);
+    this.load.image('keyJump', assetKeyJump);
+    this.load.image('keySwitch', assetKeySwitch);
     this.load.image('blockNtrAlive', assetBoxFixe1);
     this.load.image('blockNtrDead', assetBoxFixe1d);
     this.load.image('switchAlive', assetPointLive);
     this.load.image('switchDead', assetPointDeath);
-    // this.load.image('boxline', assetBoxLine);
-    // this.load.image('doorline', assetBoxDoorLine);
-    // this.load.image('scientistline', assetScientist);
-    // this.load.image('line', assetLine);
-    this.load.image('boxBackground1A', assetBoxBackground1A);
-    this.load.image('boxBackground2A', assetBoxBackground2A);
-    this.load.image('boxBackground3A', assetBoxBackground3A);
-    this.load.image('boxBackground4A', assetBoxBackground4A);
-    this.load.image('boxBackground5A', assetBoxBackground5A);
-    this.load.image('boxBackground1D', assetBoxBackground1D);
-    this.load.image('boxBackground2D', assetBoxBackground2D);
-    this.load.image('boxBackground3D', assetBoxBackground3D);
-    this.load.image('boxBackground4D', assetBoxBackground4D);
-    this.load.image('boxBackground5D', assetBoxBackground5D);
+
+
+    this.load.image('boxBackground9', assetBoxBackground9);
+    this.load.image('boxBackground8', assetBoxBackground8);
+    this.load.image('boxBackground7', assetBoxBackground7);
+    this.load.image('boxBackground6', assetBoxBackground6);
+    this.load.image('boxBackground5', assetBoxBackground5);
+    this.load.image('boxBackground4', assetBoxBackground4);
+    this.load.image('boxBackground3', assetBoxBackground3);
+    this.load.image('boxBackground2', assetBoxBackground2);
+    this.load.image('boxBackground1', assetBoxBackground1);
+
     this.load.image('fond', assetFond);
   }
 
@@ -118,8 +126,6 @@ export class GameScene extends Phaser.Scene {
     this.targetGroundPositionY = 0;
 
     console.log('on create la gamescene');
-
-
     console.log(this.input);
     this.levelLoader = new LevelLoader(this);
 
@@ -148,18 +154,11 @@ export class GameScene extends Phaser.Scene {
 
     // GAME AREA
     this.boxBackgroundA = [];
-    for (let i=1; i!=6; ++i) {
-      this.boxBackgroundA[i] = this.add.image(0, 0, `boxBackground${6-i}A`).setOrigin(0.5, 1);
+    for (let i=1; i<10; ++i) {
+      this.boxBackgroundA[i] = this.add.image(0, 0, `boxBackground${i}`).setOrigin(0.5, 0.5);
       this.boxBackgroundA[i].setDepth(-2);
-      this.boxBackgroundA[i].setDisplaySize(957, 280);
+      this.boxBackgroundA[i].setDisplaySize(957, 560);
       //this.boxBackgroundA[i].setVisible(false);
-    }
-    this.boxBackgroundD = [];
-    for (let i=1; i!=6; ++i) {
-      this.boxBackgroundD[i] = this.add.image(0, 0, `boxBackground${i}D`).setOrigin(0.5, 0);
-      this.boxBackgroundD[i].setDepth(-2);
-      this.boxBackgroundD[i].setDisplaySize(957, 280);
-      //this.boxBackgroundD[i].setVisible(false);
     }
     /*this.boxBackground1D = this.add.image(0, 0, 'boxBackground1D').setOrigin(0.5, 0);
     this.boxBackground1D.setDepth(-2);
@@ -198,6 +197,10 @@ export class GameScene extends Phaser.Scene {
     wallR.setDepth(-1);
     wallR.setVisible(false);
 
+    this.add.image(30, -constants.GAMEAREA_HEIGHT/4-constants.BLOCKH/2-10, 'keyLeftRight').setAlpha(0.8).setMask(this.gameAreaMask);
+    this.add.image(30, -constants.GAMEAREA_HEIGHT/4-constants.BLOCKH/2+25, 'keyJump').setAlpha(0.8).setMask(this.gameAreaMask);
+    this.add.image(30 + constants.BLOCKW*9, -constants.GAMEAREA_HEIGHT/4-constants.BLOCKH/2, 'keySwitch').setAlpha(0.8).setMask(this.gameAreaMask);
+
     //Generate background
     const fondImages = [];
     for (let x = 0; x < this.level.levelWidth; x += 1600) {
@@ -226,10 +229,77 @@ export class GameScene extends Phaser.Scene {
       this.scene.launch('PauseScreen');
     }, this);
 
+    this.createAnimations();
+
+    this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], [ground, floor, ceil, wallL, wallR]);
+    this.physics.add.collider(this.playerAlive.gameObject, this.playerDead.gameObject);
+
+    this.physics.add.collider(
+        [ this.playerAlive.gameObject, this.playerDead.gameObject ],
+        this.level.collisionGroup);
+
+        this.physics.add.overlap(
+            [ this.playerAlive.gameObject, this.playerDead.gameObject ],
+            this.level.switchAliveGroup, (player, switchAlive: any) => {
+              switchAlive.disableBody(true, true);
+              this.targetGroundPositionY += constants.BLOCKH;
+            }, null, this
+        );
+
+        this.physics.add.overlap(
+            [ this.playerAlive.gameObject, this.playerDead.gameObject ],
+            this.level.switchDeadGroup, (player, switchAlive: any) => {
+              switchAlive.disableBody(true, true);
+              this.targetGroundPositionY -= constants.BLOCKH;
+            }, null, this
+        );
+
+
+      const cPerdu = () =>{
+        console.log('ca touche');
+        this.gameIsOver = true;
+        console.log(this.gameIsOver)
+      }
+
+      const cGagne = () =>{
+        console.log('cest la win');
+        this.scene.sleep();
+        this.scene.sleep('HUDScene');
+        this.scene.launch('Victory');
+      }
+
+      //Conditions de défaite
+      //Un chat est écrasé par une boite
+      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.collisionGroup, ceil, floor], cPerdu);
+      //Un chat est écrasé par le plafond
+      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
+      //Le chrono est terminé
+      let timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
+
+      //Conditions de victoire
+      this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
+
+      //Debug GameOver (touche suppr)
+      // var keyDel = this.input.keyboard.addKey('delete');
+      // keyDel.on('up', function() {
+      //   this.gameIsOver = true;
+      //   console.log('gameIsOver');
+      // }, this);
+
+    this.soundManager.updateMusicRatio(0);
+  }
+
+  createAnimations() {
     // ANIMATIONS CATALIVE
     this.anims.create({
-      key: 'sit-alive',
-      frames: this.anims.generateFrameNumbers('cataliveSit', {start: 0, end: 0}),
+      key: 'sit-alive-right',
+      frames: this.anims.generateFrameNumbers('cataliveSitR', {start: 0, end: 0}),
+      frameRate: 1,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'sit-alive-left',
+      frames: this.anims.generateFrameNumbers('cataliveSitL', {start: 0, end: 0}),
       frameRate: 1,
       repeat: -1
     });
@@ -272,8 +342,14 @@ export class GameScene extends Phaser.Scene {
 
     // ANIMATIONS CATDEAD
     this.anims.create({
-      key: 'sit-dead',
-      frames: this.anims.generateFrameNumbers('catdeadSit', {start: 0, end: 0}),
+      key: 'sit-dead-right',
+      frames: this.anims.generateFrameNumbers('catdeadSitR', {start: 0, end: 0}),
+      frameRate: 1,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'sit-alive-left',
+      frames: this.anims.generateFrameNumbers('catdeadSitL', {start: 0, end: 0}),
       frameRate: 1,
       repeat: -1
     });
@@ -346,7 +422,12 @@ export class GameScene extends Phaser.Scene {
         console.log(this.gameIsOver)
       }
 
-
+      const cGagne = () =>{
+        console.log('cest la win');
+        this.scene.sleep();
+        this.scene.sleep('HUDScene');
+        this.scene.launch('Victory');
+      }
 
       //Conditions de défaite
       //Un chat est écrasé par une boite
@@ -356,6 +437,9 @@ export class GameScene extends Phaser.Scene {
       //Le chrono est terminé
       var timerEvent;
       timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
+
+      //Conditions de victoire
+      this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
 
 
       //Debug GameOver (touche suppr)
@@ -367,35 +451,20 @@ export class GameScene extends Phaser.Scene {
 
   }
 
-
-
   updateFixedImages(boxOffset){
     // var lineWidth = this.lineImage.displayWidth;
     // this.scientistImage.x = boxOffset - (lineWidth/2);
     let groundIndex = Math.ceil(this.currentGroundPositionY / constants.BLOCKH) + 5;
-    for (let i=0; i!=6; ++i) {
+    for (let i=1; i!=10; ++i) {
       if (this.boxBackgroundA[i]) {
         this.boxBackgroundA[i].x = boxOffset;
         this.boxBackgroundA[i].setVisible(false);
       }
-      if (this.boxBackgroundD[i]) {
-        this.boxBackgroundD[i].x = boxOffset;
-        this.boxBackgroundD[i].setVisible(false);
-      }
-      /*this.boxBackgroundA[1].x = boxOffset;
-      this.boxBackgroundA[2].x = boxOffset;
-      this.boxBackgroundA[3].x = boxOffset;
-      this.boxBackgroundA[4].x = boxOffset;*/
     }
     addDebugText(groundIndex);
-    const groundIndexA = Math.min(5, groundIndex);
-    const groundIndexD = Math.max(1, Math.min(5, groundIndex-4));
+    const groundIndexA = Math.min(9, groundIndex);
     addDebugText(groundIndexA);
-    addDebugText(groundIndexD);
     this.boxBackgroundA[groundIndexA].setVisible(true);
-    this.boxBackgroundD[groundIndexD].setVisible(true);
-    //this.boxBackgroundA[groundIndex].setVisible(true);
-    //this.boxBackground1D.x = boxOffset;
     this.gameAreaMask.geometryMask.x = boxOffset;
     // this.lineImage.x = boxOffset;
     // this.doorImage.x = boxOffset + (lineWidth/2);
@@ -408,6 +477,7 @@ export class GameScene extends Phaser.Scene {
     wallR.x = boxOffset + constants.GAMEAREA_WIDTH/2;
 
     //Bouger la tête du scientifique
+
   //   var timeline = this.tweens.createTimeline();
     
   //   timeline.add ({
@@ -420,16 +490,18 @@ export class GameScene extends Phaser.Scene {
   //       timeline.play();
   //       console.log(timeline);
 
+
   }
 
   update(time, delta) {
     this.inputManager.updateInputData();
+    clearDebugText();
     if (!this.gameStarted) {
+      addDebugText("NOT STARTED");
       return;
     }
 
     const inputData = this.inputManager.handleInputs();
-    clearDebugText();
 
     const boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
     this.updateFixedImages(boxOffset);
@@ -459,6 +531,13 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.fondGroup.setY(this.currentGroundPositionY);
+    //this.fondGroup.setX(boxOffset * 0.5);
+    let fondChildren = this.fondGroup.getChildren();
+    for (var i = 0; i < fondChildren.length; i++)
+    {
+        let backgroundElement = fondChildren[i] as any;
+        backgroundElement.x = (boxOffset*constants.PARALLAX) + i * backgroundElement.width;
+    }
 
     // CAT precalc useful values
     let mult = 1;
@@ -524,7 +603,7 @@ export class GameScene extends Phaser.Scene {
     }
 
       // Conditions de victoire
-      
+
       if((this.playerAlive.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))
         && (this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))){
         console.log('Tadaaa');

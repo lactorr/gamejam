@@ -27,7 +27,7 @@ const Constants = {
     JUMP_VELOCITY : 250,
     PLAYER_GRAVITY : 500,
     PLAYER_XVELOCITY : 100,
-
+    PARALLAX: 0.7,
     MUSIC_VOL : 0.8,
 
     TIMER : 400000, //temps pour réaliser le niveau, en ms
