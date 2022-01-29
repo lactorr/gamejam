@@ -39,7 +39,7 @@ export class LevelLoader {
           var k = 0;
           if((y<=1) || (blocks[y-1][x]!="#")) // Si le bloc du dessus n'est pas une boite
           {
-            while((blocks[y+k][x]=="#")) // Tant que block+1 est une boite
+            while(y+k < blocks.length && (blocks[y+k][x]=="#")) // Tant que block+1 est une boite
             {
               k++;
             }
