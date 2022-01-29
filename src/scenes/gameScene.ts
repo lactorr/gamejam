@@ -231,55 +231,56 @@ export class GameScene extends Phaser.Scene {
 
     this.physics.add.collider(
         [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-        this.level.collisionGroup);
+        this.level.collisionGroup
+    );
 
-        this.physics.add.overlap(
-            [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-            this.level.switchAliveGroup, (player, switchAlive: any) => {
-              switchAlive.disableBody(true, true);
-              this.targetGroundPositionY += constants.BLOCKH;
-            }, null, this
-        );
+    this.physics.add.overlap(
+        [ this.playerAlive.gameObject, this.playerDead.gameObject ],
+        this.level.switchAliveGroup, (player, switchAlive: any) => {
+          switchAlive.disableBody(true, true);
+          this.targetGroundPositionY += constants.BLOCKH;
+        }, null, this
+    );
 
-        this.physics.add.overlap(
-            [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-            this.level.switchDeadGroup, (player, switchAlive: any) => {
-              switchAlive.disableBody(true, true);
-              this.targetGroundPositionY -= constants.BLOCKH;
-            }, null, this
-        );
+    this.physics.add.overlap(
+        [ this.playerAlive.gameObject, this.playerDead.gameObject ],
+        this.level.switchDeadGroup, (player, switchAlive: any) => {
+          switchAlive.disableBody(true, true);
+          this.targetGroundPositionY -= constants.BLOCKH;
+        }, null, this
+    );
 
 
-      const cPerdu = () =>{
-        console.log('ca touche');
-        this.gameIsOver = true;
-        console.log(this.gameIsOver)
-      }
+    const cPerdu = () =>{
+      console.log('ca touche');
+      this.gameIsOver = true;
+      console.log(this.gameIsOver)
+    }
 
-      const cGagne = () =>{
-        console.log('cest la win');
-        this.scene.sleep();
-        this.scene.sleep('HUDScene');
-        this.scene.launch('Victory');
-      }
+    const cGagne = () =>{
+      console.log('cest la win');
+      this.scene.sleep();
+      this.scene.sleep('HUDScene');
+      this.scene.launch('Victory');
+    }
 
-      //Conditions de défaite
-      //Un chat est écrasé par une boite
-      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.collisionGroup, ceil, floor], cPerdu);
-      //Un chat est écrasé par le plafond
-      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
-      //Le chrono est terminé
-      let timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
+    //Conditions de défaite
+    //Un chat est écrasé par une boite
+    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.collisionGroup, ceil, floor], cPerdu);
+    //Un chat est écrasé par le plafond
+    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
+    //Le chrono est terminé
+    let timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
 
-      //Conditions de victoire
-      // this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
+    //Conditions de victoire
+    // this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
 
-      //Debug GameOver (touche suppr)
-      // var keyDel = this.input.keyboard.addKey('delete');
-      // keyDel.on('up', function() {
-      //   this.gameIsOver = true;
-      //   console.log('gameIsOver');
-      // }, this);
+    //Debug GameOver (touche suppr)
+    // var keyDel = this.input.keyboard.addKey('delete');
+    // keyDel.on('up', function() {
+    //   this.gameIsOver = true;
+    //   console.log('gameIsOver');
+    // }, this);
 
     this.soundManager.updateMusicRatio(0);
   }
