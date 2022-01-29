@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level1 from '../assets/levels/level1.json';
+import level1 from '../assets/levels/level0.json';
 //images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -349,12 +349,7 @@ export class GameScene extends Phaser.Scene {
         console.log(this.gameIsOver)
       }
 
-      const cGagne = () =>{
-        console.log('cest la win');
-        this.scene.sleep();
-        this.scene.sleep('HUDScene');
-        this.scene.launch('Victory');
-      }
+
 
       //Conditions de défaite
       //Un chat est écrasé par une boite
@@ -364,9 +359,6 @@ export class GameScene extends Phaser.Scene {
       //Le chrono est terminé
       var timerEvent;
       timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
-
-      //Conditions de victoire
-      // this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
 
 
       //Debug GameOver (touche suppr)
@@ -531,7 +523,15 @@ export class GameScene extends Phaser.Scene {
       this.scene.launch('GameOver');
     }
 
-
+      // Conditions de victoire
+      
+      if((this.playerAlive.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))
+        && (this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))){
+        console.log('Tadaaa');
+        this.scene.sleep();
+        this.scene.sleep('HUDScene');
+        this.scene.launch('Victory');
+      }
 
     // Avancée du scientist de 650 en constants.TIMER ms
     // this.scientistImage.setX = 30 + 650/timerEvent;

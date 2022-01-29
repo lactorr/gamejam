@@ -9,5 +9,5 @@ export type Level = {
   blockGroup?: Phaser.GameObjects.Group;
   switchAliveGroup?: Phaser.GameObjects.Group;
   switchDeadGroup?: Phaser.GameObjects.Group;
-  levelWidth?:Number;
+  levelWidth?:number;
 }
