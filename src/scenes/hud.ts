@@ -83,9 +83,9 @@ export class HUDScene extends Phaser.Scene {
         // LIGNE DU POURSUIVANT
         const lineY = constants.GAME_HEIGHT - 80;
         this.lineImage = this.add.image(constants.GAME_WIDTH/2, lineY, 'line');
-        this.boxImage = this.add.image((constants.GAME_WIDTH - 1024), lineY, 'boxline');
-        this.doorImage = this.add.image(1024 + (constants.GAME_WIDTH - 1024) / 2 - 20, lineY, 'doorline');
-        this.scientistImage = this.add.image((constants.GAME_WIDTH - 1024) / 2, lineY, 'scientistline');
+        this.boxImage = this.add.image((constants.GAME_WIDTH - this.lineImage.width), lineY, 'boxline');
+        this.doorImage = this.add.image(this.lineImage.width + (constants.GAME_WIDTH - this.lineImage.width) / 2 - 20, lineY, 'doorline');
+        this.scientistImage = this.add.image((constants.GAME_WIDTH - this.lineImage.width) / 2, lineY, 'scientistline');
 
         // var timeline = this.tweens.createTimeline();
 
@@ -112,8 +112,9 @@ export class HUDScene extends Phaser.Scene {
         if (gamescene.playerAlive && gamescene.playerDead) {
             const lineWidth = this.lineImage.displayWidth;
             const boxOffset = (gamescene.playerAlive.gameObject.x + gamescene.playerDead.gameObject.x)*.5;
-            const completePercent = ( boxOffset / Number(gamescene.level.levelWidth));
-            this.boxImage.x = this.scientistImage.x + lineWidth*completePercent;
+            const completePercent = (boxOffset / Number(gamescene.level.levelWidth));
+            const boxImageInitX = (constants.GAME_WIDTH - this.lineImage.width)/2;
+            this.boxImage.x = Math.min(this.lineImage.width - (constants.GAME_WIDTH - this.lineImage.width)/2, boxImageInitX + lineWidth*completePercent);
         }
     }
 }
