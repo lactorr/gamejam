@@ -26,8 +26,7 @@ export class Victory extends Phaser.Scene {
         var keyEnter = this.input.keyboard.addKey('backspace');
         keyEnter.on('up', function() {
           // this.scene.pause();
-        this.scene.launch('GameScene');
-        this.scene.launch('HUDScene');
+        this.scene.launch('About');
         this.scene.sleep('Victory');
         console.log('on restart le level');
         }, this);

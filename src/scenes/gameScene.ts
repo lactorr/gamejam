@@ -44,21 +44,18 @@ let box1;
 let box1d;
 let t = 0;
 
+
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
   private inputManager: InputManager;
-  private playerAlive: Player;
-  private playerDead: Player;
-  private level: Level;
+  public playerAlive: Player;
+  public playerDead: Player;
+  public level: Level;
   private controlledPlayer: Player;
   private targetGroundPositionY: number = 0;
   private currentGroundPositionY: number = 0;
   private levelLoader: LevelLoader;
   // Line images
-  private lineImage: Phaser.GameObjects.Image;
-  private boxImage: Phaser.GameObjects.Image;
-  private doorImage: Phaser.GameObjects.Image;
-  private scientistImage: Phaser.GameObjects.Image;
   private fondImage: Phaser.GameObjects.Image;
   private fondGroup: Phaser.GameObjects.Group;
   private gameStarted: boolean = false;
@@ -98,10 +95,10 @@ export class GameScene extends Phaser.Scene {
     this.load.image('blockNtrDead', assetBoxFixe1d);
     this.load.image('switchAlive', assetPointLive);
     this.load.image('switchDead', assetPointDeath);
-    this.load.image('boxline', assetBoxLine);
-    this.load.image('doorline', assetBoxDoorLine);
-    this.load.image('scientistline', assetScientist);
-    this.load.image('line', assetLine);
+    // this.load.image('boxline', assetBoxLine);
+    // this.load.image('doorline', assetBoxDoorLine);
+    // this.load.image('scientistline', assetScientist);
+    // this.load.image('line', assetLine);
     this.load.image('boxBackground1A', assetBoxBackground1A);
     this.load.image('boxBackground2A', assetBoxBackground2A);
     this.load.image('boxBackground3A', assetBoxBackground3A);
@@ -132,22 +129,22 @@ export class GameScene extends Phaser.Scene {
     this.physics.world.setBounds(-1000, -1000, 10000, 2000);
 
     // LIGNE DU POURSUIVANT
-    this.lineImage = this.add.image(50, 370, 'line')
-        .setOrigin(0.5, 0.5)
-        .setSize(2219, 49)
-        .setDisplaySize(2219 * 0.3, 49 * 0.3);
-    this.boxImage = this.add.image(100, 370, 'boxline')
-        .setOrigin(0.5, 0.5)
-        .setSize(207, 109)
-        .setDisplaySize(207 * 0.4, 109 * 0.4);
-    this.doorImage = this.add.image(680, 370, 'doorline')
-        .setOrigin(0.5, 0.5)
-        .setSize(197, 240)
-        .setDisplaySize(197 * 0.3, 240 * 0.3);
-    this.scientistImage = this.add.image(30, 370, 'scientistline')
-        .setOrigin(0.5, 0.5)
-        .setSize(178, 249)
-        .setDisplaySize(178 * 0.4, 249 * 0.4);
+    // this.lineImage = this.add.image(50, 370, 'line')
+    //     .setOrigin(0.5, 0.5)
+    //     .setSize(2219, 49)
+    //     .setDisplaySize(2219 * 0.3, 49 * 0.3);
+    // this.boxImage = this.add.image(100, 370, 'boxline')
+    //     .setOrigin(0.5, 0.5)
+    //     .setSize(207, 109)
+    //     .setDisplaySize(207 * 0.4, 109 * 0.4);
+    // this.doorImage = this.add.image(680, 370, 'doorline')
+    //     .setOrigin(0.5, 0.5)
+    //     .setSize(197, 240)
+    //     .setDisplaySize(197 * 0.3, 240 * 0.3);
+    // this.scientistImage = this.add.image(30, 370, 'scientistline')
+    //     .setOrigin(0.5, 0.5)
+    //     .setSize(178, 249)
+    //     .setDisplaySize(178 * 0.4, 249 * 0.4);
 
     // GAME AREA
     this.boxBackgroundA = [];
@@ -373,8 +370,8 @@ export class GameScene extends Phaser.Scene {
 
 
   updateFixedImages(boxOffset){
-    var lineWidth = this.lineImage.displayWidth;
-    this.scientistImage.x = boxOffset - (lineWidth/2);
+    // var lineWidth = this.lineImage.displayWidth;
+    // this.scientistImage.x = boxOffset - (lineWidth/2);
     let groundIndex = Math.ceil(this.currentGroundPositionY / constants.BLOCKH) + 5;
     for (let i=0; i!=6; ++i) {
       if (this.boxBackgroundA[i]) {
@@ -400,10 +397,10 @@ export class GameScene extends Phaser.Scene {
     //this.boxBackgroundA[groundIndex].setVisible(true);
     //this.boxBackground1D.x = boxOffset;
     this.gameAreaMask.geometryMask.x = boxOffset;
-    this.lineImage.x = boxOffset;
-    this.doorImage.x = boxOffset + (lineWidth/2);
+    // this.lineImage.x = boxOffset;
+    // this.doorImage.x = boxOffset + (lineWidth/2);
     var completePercent = ( boxOffset / Number(this.level.levelWidth));
-    this.boxImage.x = this.scientistImage.x + lineWidth*completePercent;
+    // this.boxImage.x = this.scientistImage.x + lineWidth*completePercent;
     ground.x = boxOffset;
     floor.x = boxOffset;
     ceil.x = boxOffset;
@@ -411,15 +408,18 @@ export class GameScene extends Phaser.Scene {
     wallR.x = boxOffset + constants.GAMEAREA_WIDTH/2;
 
     //Bouger la tête du scientifique
-    var timeline = this.tweens.timeline({
-      tweens: [{
-        targets: this.scientistImage,
-        x: 650,
-        ease: 'Linear',
-        duration: constants.TIMER
-      },]
-    });
-    // console.log(timeline);
+  //   var timeline = this.tweens.createTimeline();
+    
+  //   timeline.add ({
+  //       targets: this.scientistImage,
+  //       x: 650,
+  //       ease: 'Linear',
+  //       duration: constants.TIMER
+  //   });
+
+  //       timeline.play();
+  //       console.log(timeline);
+
   }
 
   update(time, delta) {

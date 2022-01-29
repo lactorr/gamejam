@@ -5,7 +5,13 @@ import assetCartonAliveHaut from '../assets/images/cartonalivehaut.png';
 import assetCartonDeadBas from '../assets/images/cartondeadbas.png';
 import assetCartonDeadHaut from '../assets/images/cartondeadhaut.png';
 import assetKeys from '../assets/images/touches.png';
-//import { inputsEventsCenter } from './dungeon-map';
+import assetBoxLine from '../assets/images/boxline.png';
+import assetBoxDoorLine from '../assets/images/doorline.png';
+import assetScientist from '../assets/images/scientistline.png';
+import assetLine from '../assets/images/line.png';
+import level1 from '../assets/levels/level0.json';
+import {Player} from '../classes/player';
+import {GameScene} from '../scenes/gameScene';
 
 let px = 0, py = 0;
 let rx = 0, ry = 0;
@@ -42,6 +48,14 @@ export class HUDScene extends Phaser.Scene {
     private cartonAliveHaut: Phaser.GameObjects.Image;
     private cartonDeadBas: Phaser.GameObjects.Image;
     private cartonDeadHaut: Phaser.GameObjects.Image;
+    private lineImage: Phaser.GameObjects.Image;
+    private boxImage: Phaser.GameObjects.Image;
+    private doorImage: Phaser.GameObjects.Image;
+    private scientistImage: Phaser.GameObjects.Image;
+    private gameAreaMask: Phaser.Display.Masks.GeometryMask;
+
+
+
 
     constructor () {
         super('HUD');
@@ -53,6 +67,10 @@ export class HUDScene extends Phaser.Scene {
         this.load.image('cartonDeadBas', assetCartonDeadBas);
         this.load.image('cartonDeadHaut', assetCartonDeadHaut);
         this.load.image('keys', assetKeys);
+        this.load.image('boxline', assetBoxLine);
+        this.load.image('doorline', assetBoxDoorLine);
+        this.load.image('scientistline', assetScientist);
+        this.load.image('line', assetLine);
     }
 
     create() {
@@ -81,6 +99,46 @@ export class HUDScene extends Phaser.Scene {
             this.isDebugVisible = !this.isDebugVisible;
             this.debugPadText.setVisible(this.isDebugVisible);
         });*/
+
+    // LIGNE DU POURSUIVANT
+    this.lineImage = this.add.image(250, 370, 'line')
+        .setOrigin(0.5, 0.5)
+        .setSize(2219, 49)
+        .setDisplaySize(2219 * 0.3, 49 * 0.3);
+    this.boxImage = this.add.image(300, 370, 'boxline')
+        .setOrigin(0.5, 0.5)
+        .setSize(207, 109)
+        .setDisplaySize(207 * 0.4, 109 * 0.4);
+    this.doorImage = this.add.image(880, 370, 'doorline')
+        .setOrigin(0.5, 0.5)
+        .setSize(197, 240)
+        .setDisplaySize(197 * 0.3, 240 * 0.3);
+    this.scientistImage = this.add.image(230, 370, 'scientistline')
+        .setOrigin(0.5, 0.5)
+        .setSize(178, 249)
+        .setDisplaySize(178 * 0.4, 249 * 0.4);
+
+        // Mouvement de la box
+        const gamescene = this.game.scene.getScene('GameScene') as GameScene;
+        var lineWidth = this.lineImage.displayWidth;
+
+        const boxOffset = (gamescene.playerAlive.gameObject.x + gamescene.playerDead.gameObject.x)*.5;
+        const shape1 = (this.make.graphics as any)().fillStyle(0xffffff).fillRect(
+            -constants.GAMEAREA_WIDTH/2, -constants.GAMEAREA_HEIGHT/2, constants.GAMEAREA_WIDTH, constants.GAMEAREA_HEIGHT);
+        this.gameAreaMask = shape1.createGeometryMask();
+        this.gameAreaMask.geometryMask.x = boxOffset;
+        var completePercent = ( boxOffset / Number(gamescene.level.levelWidth));
+        this.boxImage.x = this.scientistImage.x + lineWidth*completePercent;
+
+        // var timeline = this.tweens.createTimeline();
+    
+        // timeline.add ({
+        //     targets: this.scientistImage,
+        //     x: 650,
+        //     ease: 'Linear',
+        //     duration: constants.TIMER
+        // });
+
     }
 
     update(time, delta) {
