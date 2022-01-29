@@ -8,8 +8,7 @@ export class LevelLoader {
 
   constructor( scene:Phaser.Scene ) {
     this.scene = scene;
-    this.level.blockGroup = this.scene.physics.add.group({
-      immovable : true,
+    this.level.blockGroup = this.scene.add.group({
       defaultKey : 'blockNtrAlive',
     }).setOrigin(0, 0);
     this.level.collisionGroup = this.scene.physics.add.group({
