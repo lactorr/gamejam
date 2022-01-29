@@ -1,5 +1,9 @@
 //setting game configuration and loading the assets for the loading screen
 import constants from '../constants';
+import assetCartonAliveBas from '../assets/images/cartonalivebas.png';
+import assetCartonAliveHaut from '../assets/images/cartonalivehaut.png';
+import assetCartonDeadBas from '../assets/images/cartondeadbas.png';
+import assetCartonDeadHaut from '../assets/images/cartondeadhaut.png';
 import assetKeys from '../assets/images/touches.png';
 import assetBoxLine from '../assets/images/boxline.png';
 import assetBoxDoorLine from '../assets/images/doorline.png';
@@ -58,6 +62,10 @@ export class HUDScene extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image('cartonAliveBas', assetCartonAliveBas);
+        this.load.image('cartonAliveHaut', assetCartonAliveHaut);
+        this.load.image('cartonDeadBas', assetCartonDeadBas);
+        this.load.image('cartonDeadHaut', assetCartonDeadHaut);
         this.load.image('keys', assetKeys);
         this.load.image('boxline', assetBoxLine);
         this.load.image('doorline', assetBoxDoorLine);
@@ -77,7 +85,11 @@ export class HUDScene extends Phaser.Scene {
         this.debugPadText.setVisible(this.isDebugVisible);
         //this.physics.config.debug = true;
 
-        //this.add.image(0, constants.GAME_HEIGHT, 'keys').setOrigin(0, 1);
+        this.cartonAliveHaut  = this.add.image(0, -30, 'cartonAliveHaut').setOrigin(0, 0);
+        this.cartonDeadHaut = this.add.image(0, -20, 'cartonDeadHaut').setOrigin(0, 0).setVisible(false);
+        this.cartonAliveBas = this.add.image(0, constants.GAME_HEIGHT, 'cartonAliveBas').setOrigin(0, 1);
+        this.cartonDeadBas  = this.add.image(0, constants.GAME_HEIGHT, 'cartonDeadBas').setOrigin(0, 1).setVisible(false);
+        this.add.image(0, constants.GAME_HEIGHT, 'keys').setOrigin(0, 1);
         //this.add.image(0, -30, 'cartonDeadBas').setOrigin(0, 0);
         //this.add.image(0, -300, 'cartonAliveBas');
         //this.add.image(0, 0, 'cartonAliveBas');
@@ -89,19 +101,19 @@ export class HUDScene extends Phaser.Scene {
         });*/
 
     // LIGNE DU POURSUIVANT
-    this.lineImage = this.add.image(250, 370, 'line')
+    this.lineImage = this.add.image(50, 370, 'line')
         .setOrigin(0.5, 0.5)
         .setSize(2219, 49)
         .setDisplaySize(2219 * 0.3, 49 * 0.3);
-    this.boxImage = this.add.image(300, 370, 'boxline')
+    this.boxImage = this.add.image(100, 370, 'boxline')
         .setOrigin(0.5, 0.5)
         .setSize(207, 109)
         .setDisplaySize(207 * 0.4, 109 * 0.4);
-    this.doorImage = this.add.image(880, 370, 'doorline')
+    this.doorImage = this.add.image(680, 370, 'doorline')
         .setOrigin(0.5, 0.5)
         .setSize(197, 240)
         .setDisplaySize(197 * 0.3, 240 * 0.3);
-    this.scientistImage = this.add.image(230, 370, 'scientistline')
+    this.scientistImage = this.add.image(30, 370, 'scientistline')
         .setOrigin(0.5, 0.5)
         .setSize(178, 249)
         .setDisplaySize(178 * 0.4, 249 * 0.4);
@@ -109,7 +121,6 @@ export class HUDScene extends Phaser.Scene {
         // Mouvement de la box
         const gamescene = this.game.scene.getScene('GameScene') as GameScene;
         var lineWidth = this.lineImage.displayWidth;
-
         const boxOffset = (gamescene.playerAlive.gameObject.x + gamescene.playerDead.gameObject.x)*.5;
         const shape1 = (this.make.graphics as any)().fillStyle(0xffffff).fillRect(
             -constants.GAMEAREA_WIDTH/2, -constants.GAMEAREA_HEIGHT/2, constants.GAMEAREA_WIDTH, constants.GAMEAREA_HEIGHT);
@@ -131,6 +142,19 @@ export class HUDScene extends Phaser.Scene {
 
     update(time, delta) {
         const gameScene: any = this.game.scene.getScene('GameScene');
+
+        if (gameScene.controlledPlayer === gameScene.playerAlive) {
+            this.cartonAliveBas.setVisible(true);
+            this.cartonAliveHaut.setVisible(false);
+            this.cartonDeadBas.setVisible(false);
+            this.cartonDeadHaut.setVisible(false);
+        }
+        else {
+            this.cartonAliveBas.setVisible(false);
+            this.cartonAliveHaut.setVisible(false);
+            this.cartonDeadBas.setVisible(true);
+            this.cartonDeadHaut.setVisible(false);
+        }
 
         let debug = [];
 

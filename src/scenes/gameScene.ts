@@ -277,7 +277,7 @@ export class GameScene extends Phaser.Scene {
       let timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
 
       //Conditions de victoire
-      this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
+      // this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
 
       //Debug GameOver (touche suppr)
       // var keyDel = this.input.keyboard.addKey('delete');
@@ -437,9 +437,6 @@ export class GameScene extends Phaser.Scene {
       //Le chrono est terminé
       var timerEvent;
       timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
-
-      //Conditions de victoire
-      this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
 
 
       //Debug GameOver (touche suppr)
