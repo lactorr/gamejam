@@ -1,10 +1,32 @@
-import music_loop_synth  from '../assets/sounds/music_loop_synth.mp3';
-import music_loop_metal  from '../assets/sounds/music_loop_metal.mp3';
+import music_loop_synth  from '../assets/sounds/loop_synth.mp3';
+import music_loop_metal  from '../assets/sounds/loop_metal.mp3';
 import constants from '../constants';
 
 function loadSound(path, volume) {
-  const audio = new Audio(path);
-  audio.loop = true;
+  const audio = path;
+  const aCtx = new AudioContext();
+  let source = aCtx.createBufferSource();
+  let buf;
+  fetch(audio) // can be XHR as well
+    .then(resp => resp.arrayBuffer())
+    .then(buf => aCtx.decodeAudioData(buf)) // can be callback as well
+    .then(decoded => {
+      source.buffer = buf = decoded;
+      source.loop = true;
+      source.connect(aCtx.destination);
+    //  check.disabled = false;
+    });
+    /*check.onchange = e => {
+      if (check.checked) {
+        source.start(0); // start our bufferSource
+      } else {
+        source.stop(0); // this destroys the buffer source
+        source = aCtx.createBufferSource(); // so we need to create a new one
+        source.buffer = buf;
+        source.loop = true;
+        source.connect(aCtx.destination);
+      }
+    };*/
   audio.volume = volume; //default
   return audio;
 }
@@ -20,6 +42,7 @@ export class SoundManager {
 
   startSound(audio){
     audio.muted = false;
+    audio.loop = true;
     audio.play();
   }
 
