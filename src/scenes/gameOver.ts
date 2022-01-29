@@ -23,8 +23,8 @@ export class GameOver extends Phaser.Scene {
 
         this.add.image(0, constants.GAME_HEIGHT, 'gameoverScreen').setOrigin(0, 1);
         
-        var keyEnter = this.input.keyboard.addKey('backspace');
-        keyEnter.on('up', function() {
+        var keybackSpace = this.input.keyboard.addKey('backspace');
+        keybackSpace.on('up', function() {
           // this.scene.pause();
         this.scene.launch('GameScene');
         this.scene.launch('HUDScene');

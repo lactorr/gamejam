@@ -24,7 +24,7 @@ export class About extends Phaser.Scene {
         this.add.image(0, constants.GAME_HEIGHT, 'aboutScreen').setOrigin(0, 1);
         
         var keyEnter = this.input.keyboard.addKey('enter');
-        keyEnter.on('up', function() {
+        this.input.keyboard.on('keyup', function() {
         this.scene.launch('MainMenuScene');
         this.scene.sleep('About');
         console.log('on retourne au menu');

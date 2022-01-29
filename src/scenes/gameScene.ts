@@ -76,6 +76,7 @@ export class GameScene extends Phaser.Scene {
   startGame() {
     this.gameStarted = true;
     this.soundManager.startMusic();
+    console.log('on start le game')
   }
 
   setInputManager(inputManager: InputManager) {
@@ -119,7 +120,10 @@ export class GameScene extends Phaser.Scene {
     this.currentGroundPositionY = 0;
     this.targetGroundPositionY = 0;
 
-    console.log(this.input)
+    console.log('on create la gamescene');
+
+
+    console.log(this.input);
     this.levelLoader = new LevelLoader(this);
 
     this.cameras.main.centerOn(constants.GAME_WIDTH/2, 0);
@@ -362,7 +366,7 @@ export class GameScene extends Phaser.Scene {
       timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
 
       //Conditions de victoire
-      this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
+      // this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
 
 
       //Debug GameOver (touche suppr)
