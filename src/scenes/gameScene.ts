@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level1 from '../assets/levels/level1.json';
+import level1 from '../assets/levels/level0.json';
 //images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -80,6 +80,7 @@ export class GameScene extends Phaser.Scene {
   startGame() {
     this.gameStarted = true;
     this.soundManager.startMusic();
+    console.log('on start le game')
   }
 
   setInputManager(inputManager: InputManager) {
@@ -128,6 +129,8 @@ export class GameScene extends Phaser.Scene {
     this.currentGroundPositionY = 0;
     this.targetGroundPositionY = 0;
 
+    console.log('on create la gamescene');
+    console.log(this.input);
     this.levelLoader = new LevelLoader(this);
 
     this.cameras.main.centerOn(constants.GAME_WIDTH/2, 0);
@@ -136,19 +139,19 @@ export class GameScene extends Phaser.Scene {
     this.physics.world.setBounds(-1000, -1000, 10000, 2000);
 
     // LIGNE DU POURSUIVANT
-    this.lineImage = this.add.image(50, 250, 'line')
+    this.lineImage = this.add.image(50, 370, 'line')
         .setOrigin(0.5, 0.5)
         .setSize(2219, 49)
         .setDisplaySize(2219 * 0.3, 49 * 0.3);
-    this.boxImage = this.add.image(100, 250, 'boxline')
+    this.boxImage = this.add.image(100, 370, 'boxline')
         .setOrigin(0.5, 0.5)
         .setSize(207, 109)
         .setDisplaySize(207 * 0.4, 109 * 0.4);
-    this.doorImage = this.add.image(680, 250, 'doorline')
+    this.doorImage = this.add.image(680, 370, 'doorline')
         .setOrigin(0.5, 0.5)
         .setSize(197, 240)
         .setDisplaySize(197 * 0.3, 240 * 0.3);
-    this.scientistImage = this.add.image(30, 250, 'scientistline')
+    this.scientistImage = this.add.image(30, 370, 'scientistline')
         .setOrigin(0.5, 0.5)
         .setSize(178, 249)
         .setDisplaySize(178 * 0.4, 249 * 0.4);
@@ -392,6 +395,64 @@ export class GameScene extends Phaser.Scene {
       frames: [ {key: 'catdead', frame: 14} ],
       frameRate: 10,
     });
+
+    this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], [ground, floor, ceil, wallL, wallR]);
+    this.physics.add.collider(this.playerAlive.gameObject, this.playerDead.gameObject);
+
+    this.physics.add.collider(
+        [ this.playerAlive.gameObject, this.playerDead.gameObject ],
+        this.level.blockGroup);
+
+        this.physics.add.overlap(
+            [ this.playerAlive.gameObject, this.playerDead.gameObject ],
+            this.level.switchAliveGroup, (player, switchAlive: any) => {
+              switchAlive.disableBody(true, true);
+              this.targetGroundPositionY += constants.BLOCKH;
+            }, null, this
+        );
+
+        this.physics.add.overlap(
+            [ this.playerAlive.gameObject, this.playerDead.gameObject ],
+            this.level.switchDeadGroup, (player, switchAlive: any) => {
+              switchAlive.disableBody(true, true);
+              this.targetGroundPositionY -= constants.BLOCKH;
+            }, null, this
+        );
+
+
+      const cPerdu = () =>{
+        console.log('ca touche');
+        this.gameIsOver = true;
+        console.log(this.gameIsOver)
+      }
+
+      const cGagne = () =>{
+        console.log('cest la win');
+        this.scene.sleep();
+        this.scene.sleep('HUDScene');
+        this.scene.launch('Victory');
+      }
+
+      //Conditions de défaite
+      //Un chat est écrasé par une boite
+      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.blockGroup, ceil, floor], cPerdu);
+      //Un chat est écrasé par le plafond
+      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
+      //Le chrono est terminé
+      var timerEvent;
+      timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
+
+      //Conditions de victoire
+      this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
+
+
+      //Debug GameOver (touche suppr)
+      // var keyDel = this.input.keyboard.addKey('delete');
+      // keyDel.on('up', function() {
+      //   this.gameIsOver = true;
+      //   console.log('gameIsOver');
+      // }, this);
+
   }
 
   updateFixedImages(boxOffset){
@@ -533,7 +594,15 @@ export class GameScene extends Phaser.Scene {
       this.scene.launch('GameOver');
     }
 
+      // Conditions de victoire
 
+      if((this.playerAlive.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))
+        && (this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))){
+        console.log('Tadaaa');
+        this.scene.sleep();
+        this.scene.sleep('HUDScene');
+        this.scene.launch('Victory');
+      }
 
     // Avancée du scientist de 650 en constants.TIMER ms
     // this.scientistImage.setX = 30 + 650/timerEvent;

@@ -52,24 +52,20 @@ export class MainMenuScene extends Phaser.Scene {
 
         //Lancer le jeu quand on clique sur le chat alive Play
         this.catalivesitplay.on('pointerdown', function(){
-            this.clicplay.setVisible(false);
-            this.catalivesitplay.setVisible(false);
-            this.catalivesitabout.setVisible(false);
-            this.catdeadsitplay.setVisible(false);
-            this.catdeadsitabout.setVisible(false);
-            (this.game.scene.getScene('GameScene') as GameScene).startGame();
+            if(this.scene.isVisible('MainMenuScene') === true){
+                (this.game.scene.getScene('GameScene') as GameScene).startGame();
+                this.scene.launch('GameScene');
+                this.scene.setVisible(false, 'MainMenuScene');
+            }
         }, this)
 
         //Lancer l'écran About quand on clique sur le catdeadsit
         this.catalivesitabout.on('pointerdown', function(){
-            this.clicplay.setVisible(false);
-            this.catalivesitplay.setVisible(false);
-            this.catalivesitabout.setVisible(false);
-            this.catdeadsitplay.setVisible(false);
-            this.catdeadsitabout.setVisible(false);
-            this.scene.launch('About');
+            if(this.scene.isVisible('MainMenuScene') === true){
+                this.scene.launch('About');
+                this.scene.setVisible(false, 'MainMenuScene');
+            }
         }, this)
-
     }
 
     update(time, delta) {
@@ -79,13 +75,9 @@ export class MainMenuScene extends Phaser.Scene {
         // - Regarder si la touche space est appuyée
         // - Si oui, envoyer un message à GameScene pour lancer le jeu
 
-        if (inputData.jumpDown) {
-            this.clicplay.setVisible(false);
-            this.catalivesitplay.setVisible(false);
-            this.catalivesitabout.setVisible(false);
-            this.catdeadsitplay.setVisible(false);
-            this.catdeadsitabout.setVisible(false);
-            (this.game.scene.getScene('GameScene') as GameScene).startGame();
-        }
+        // if (inputData.jumpDown) {
+        //     (this.game.scene.getScene('GameScene') as GameScene).startGame();
+        //     this.scene.setVisible(false, 'MainMenuScene');
+        // }
     }
 }

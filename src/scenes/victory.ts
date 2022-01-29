@@ -28,7 +28,7 @@ export class Victory extends Phaser.Scene {
           // this.scene.pause();
         this.scene.launch('GameScene');
         this.scene.launch('HUDScene');
-        this.scene.sleep('GameOver');
+        this.scene.sleep('Victory');
         console.log('on restart le level');
         }, this);
 

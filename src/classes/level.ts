@@ -10,5 +10,5 @@ export type Level = {
   collisionGroup?: Phaser.GameObjects.Group;
   switchAliveGroup?: Phaser.GameObjects.Group;
   switchDeadGroup?: Phaser.GameObjects.Group;
-  levelWidth?:Number;
+  levelWidth?:number;
 }
