@@ -60,16 +60,16 @@ export class LevelLoader {
       }
     }
     this.level.levelWidth = x * Constants.BLOCKW;
-    console.log(this.level.elements)
     this.level.elements.map((element) => {
-      var ex = element.x * Constants.BLOCKW ;
-      var ey =  element.y * Constants.BLOCKH ;
+      let ex = element.x * Constants.BLOCKW ;
+      let ey = element.y * Constants.BLOCKH ;
 
       switch (element.type) {
         case "blockCollision":
           this.level.collisionGroup.create(ex, ey, element.type)
           .setOrigin(0, 0)
           .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
+          .setVisible(false)
           .setMask(mask);
 
         break;
