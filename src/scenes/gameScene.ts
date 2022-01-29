@@ -530,6 +530,13 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.fondGroup.setY(this.currentGroundPositionY);
+    //this.fondGroup.setX(boxOffset * 0.5);
+    let fondChildren = this.fondGroup.getChildren();
+    for (var i = 0; i < fondChildren.length; i++)
+    {
+        let backgroundElement = fondChildren[i] as any;
+        backgroundElement.x = (boxOffset*constants.PARALLAX) + i * backgroundElement.width;
+    }
 
     // CAT precalc useful values
     let mult = 1;
