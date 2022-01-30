@@ -22,16 +22,17 @@ export class GameOver extends Phaser.Scene {
         //     constants.SIDEBAR_W, constants.ROOM_H, 0x111111);
 
         this.add.image(0, constants.GAME_HEIGHT, 'gameoverScreen').setOrigin(0, 1);
-        
+
         var keybackSpace = this.input.keyboard.addKey('backspace');
         keybackSpace.on('up', function() {
           // this.scene.pause();
-        // this.game.restart;
-        // this.scene.launch(['GameScene', 'HUDScene']);
-        this.scene.run('HUD');
-        this.scene.run('GameScene');
-        this.scene.sleep('GameOver');
-        console.log('on restart le level');
+            // this.game.restart;
+            // this.scene.launch(['GameScene', 'HUDScene']);
+            this.scene.run('HUD');
+            this.scene.run('GameScene');
+            this.scene.sleep('GameOver');
+            (this.game.scene.getScene('GameScene') as GameScene).resetGameState();
+            console.log('on restart le level');
         }, this);
 
     }

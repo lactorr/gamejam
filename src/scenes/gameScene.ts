@@ -276,6 +276,13 @@ export class GameScene extends Phaser.Scene {
     this.level.switchAliveGroup.getChildren().forEach(setSwitchState);
   }
 
+  resetGameState() {
+    this.lastGameState = {
+      groundPositionY: 0,
+      catsPositionX: 0,
+    };
+  }
+
   createAnimations() {
     // ANIMATIONS CATALIVE
     this.anims.create({
