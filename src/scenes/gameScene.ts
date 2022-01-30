@@ -69,6 +69,8 @@ export class GameScene extends Phaser.Scene {
     this.gameStarted = true;
     this.soundManager.startMusic();
     console.log('on start le game')
+    this.gameIsOver = false;
+    console.log(this.gameIsOver)
   }
 
   setInputManager(inputManager: InputManager) {
@@ -251,16 +253,9 @@ export class GameScene extends Phaser.Scene {
 
 
     const cPerdu = () =>{
-      console.log('ca touche');
+      console.log('ça touche');
+      this.scene.restart();
       this.gameIsOver = true;
-      console.log(this.gameIsOver)
-    }
-
-    const cGagne = () =>{
-      console.log('cest la win');
-      this.scene.sleep();
-      this.scene.sleep('HUDScene');
-      this.scene.launch('Victory');
     }
 
     //Conditions de défaite
@@ -271,8 +266,6 @@ export class GameScene extends Phaser.Scene {
     //Le chrono est terminé
     let timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
 
-    //Conditions de victoire
-    // this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
 
     //Debug GameOver (touche suppr)
     // var keyDel = this.input.keyboard.addKey('delete');
@@ -411,24 +404,24 @@ export class GameScene extends Phaser.Scene {
         );
 
 
-      const cPerdu = () =>{
-        console.log('ca touche');
-        this.gameIsOver = true;
-        console.log(this.gameIsOver)
-      }
+      // const cPerdu = () =>{
+      //   console.log('ca touche');
+      //   this.gameIsOver = true;
+      //   console.log(this.gameIsOver)
+      // }
 
-      const cGagne = () =>{
-        console.log('cest la win');
-        this.scene.sleep();
-        this.scene.sleep('HUDScene');
-        this.scene.launch('Victory');
-      }
+      // const cGagne = () =>{
+      //   console.log('cest la win');
+      //   this.scene.sleep();
+      //   this.scene.sleep('HUDScene');
+      //   this.scene.launch('Victory');
+      // }
 
       //Conditions de défaite
       //Un chat est écrasé par une boite
-      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.blockGroup, ceil, floor], cPerdu);
+      // this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.blockGroup, ceil, floor], cPerdu);
       //Un chat est écrasé par le plafond
-      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
+      // this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
 
 
       //Debug GameOver (touche suppr)
@@ -464,20 +457,6 @@ export class GameScene extends Phaser.Scene {
     ceil.x = boxOffset;
     wallL.x = boxOffset - constants.GAMEAREA_WIDTH/2;
     wallR.x = boxOffset + constants.GAMEAREA_WIDTH/2;
-
-    //Bouger la tête du scientifique
-
-  //   var timeline = this.tweens.createTimeline();
-
-  //   timeline.add ({
-  //       targets: this.scientistImage,
-  //       x: 650,
-  //       ease: 'Linear',
-  //       duration: constants.TIMER
-  //   });
-
-  //       timeline.play();
-  //       console.log(timeline);
 
 
   }
@@ -599,9 +578,6 @@ export class GameScene extends Phaser.Scene {
         this.scene.sleep('HUDScene');
         this.scene.launch('Victory');
       }
-
-    // Avancée du scientist de 650 en constants.TIMER ms
-    // this.scientistImage.setX = 30 + 650/timerEvent;
 
   }
 }

@@ -23,8 +23,8 @@ export class Victory extends Phaser.Scene {
 
         this.add.image(0, constants.GAME_HEIGHT, 'winScreen').setOrigin(0, 1);
         
-        var keyEnter = this.input.keyboard.addKey('backspace');
-        keyEnter.on('up', function() {
+        var keyEnter = this.input.keyboard.addKey('enter');
+        keyEnter.on('enter', function() {
           // this.scene.pause();
         this.scene.launch('About');
         this.scene.sleep('Victory');

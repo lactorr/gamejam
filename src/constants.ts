@@ -30,7 +30,7 @@ const Constants = {
     PARALLAX: 0.7,
     MUSIC_VOL : 0.8,
 
-    TIMER : 4000000, //temps pour réaliser le niveau, en ms
+    TIMER : 40000, //temps pour réaliser le niveau, en ms
 }
 
 export default Constants;
