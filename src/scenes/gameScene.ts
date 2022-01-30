@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level1 from '../assets/levels/level1.json';
+import level0 from '../assets/levels/level0.json';
 //images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -73,6 +73,9 @@ export class GameScene extends Phaser.Scene {
   private boxBackgroundA: Phaser.GameObjects.Image[];
   private gameAreaMask: Phaser.Display.Masks.GeometryMask;
 
+  private winAnimation: boolean = false;
+  private isWin: boolean = true;
+
   constructor () {
     super('GameScene');
   }
@@ -80,7 +83,7 @@ export class GameScene extends Phaser.Scene {
   startGame() {
     this.gameStarted = true;
     this.soundManager.startMusic();
-    console.log('on start le game')
+    this.gameIsOver = false;
   }
 
   setInputManager(inputManager: InputManager) {
@@ -93,7 +96,7 @@ export class GameScene extends Phaser.Scene {
 
   preload() {
     this.soundManager = new SoundManager();
-    this.load.json('levelData', level1);
+    this.load.json('levelData', level0);
     this.load.image('ground', assetPlatform);
     this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 250, frameHeight : 157});
     this.load.spritesheet('catdead', assetCatAnimD, {frameWidth : 250, frameHeight : 157});
@@ -128,11 +131,9 @@ export class GameScene extends Phaser.Scene {
 
   create() {
     this.gameIsOver = false;
+    this.winAnimation = false;
     this.currentGroundPositionY = 0;
     this.targetGroundPositionY = 0;
-
-    console.log('on create la gamescene');
-    console.log(this.input);
     this.levelLoader = new LevelLoader(this);
 
     this.cameras.main.centerOn(constants.GAME_WIDTH/2, 0);
@@ -199,23 +200,19 @@ export class GameScene extends Phaser.Scene {
     this.playerAlive = new Player(this, true);
     this.playerDead = new Player(this, false);
     this.controlledPlayer = this.playerAlive;
+    this.isWin = true;
 
     //Restart
     let keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
     keyObj.on('up', function() {
-      //this.scene.restart();
-
       this.resetToCheckpoint();
-
     }, this);
 
     //Pause
     let keyEnter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     keyEnter.on('up', function() {
-      console.log('pause');
       this.scene.pause();
       this.scene.sleep('HUDScene');
-      console.log('HUD enlevé');
       this.scene.launch('PauseScreen');
     }, this);
 
@@ -246,9 +243,8 @@ export class GameScene extends Phaser.Scene {
     );
 
     const cPerdu = () =>{
-      console.log('ca touche');
+      this.scene.restart();
       this.gameIsOver = true;
-      console.log(this.gameIsOver)
     }
 
     //Conditions de défaite
@@ -258,14 +254,6 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
     //Le chrono est terminé
     let timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
-
-    //Debug GameOver (touche suppr)
-    // var keyDel = this.input.keyboard.addKey('delete');
-    // keyDel.on('up', function() {
-    //   this.gameIsOver = true;
-    //   console.log('gameIsOver');
-    // }, this);
-
     this.soundManager.updateMusicRatio(0);
   }
 
@@ -416,22 +404,6 @@ export class GameScene extends Phaser.Scene {
     ceil.x = boxOffset;
     wallL.x = boxOffset - constants.GAMEAREA_WIDTH/2;
     wallR.x = boxOffset + constants.GAMEAREA_WIDTH/2;
-
-    //Bouger la tête du scientifique
-
-  //   var timeline = this.tweens.createTimeline();
-
-  //   timeline.add ({
-  //       targets: this.scientistImage,
-  //       x: 650,
-  //       ease: 'Linear',
-  //       duration: constants.TIMER
-  //   });
-
-  //       timeline.play();
-  //       console.log(timeline);
-
-
   }
 
   update(time, delta) {
@@ -508,7 +480,6 @@ export class GameScene extends Phaser.Scene {
 
     // SWITCH
     if (inputData.switchPressed) {
-      console.log('SWITCH PRESSED');
       if(this.controlledPlayer === this.playerAlive) {
         this.controlledPlayer.gameObject.setVelocityX(0);
         this.controlledPlayer = this.playerDead;
@@ -527,28 +498,46 @@ export class GameScene extends Phaser.Scene {
 
     // DEBUG
     if (inputData.goLifePressed) {
-      console.log('LIFE PRESSED');
       this.targetGroundPositionY += constants.BLOCKH;
     }
     else if (inputData.goDeathPressed) {
-      console.log('DEATH PRESSED');
       this.targetGroundPositionY -= constants.BLOCKH;
     }
     //Scène de GameOver
     if(this.gameIsOver){
-      console.log('on charge le gameover');
       this.scene.sleep();
       this.scene.sleep('HUDScene');
       this.scene.launch('GameOver');
     }
 
-    // Conditions de victoire
-    if((this.playerAlive.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))
-      && (this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))){
-      console.log('Tadaaa');
-      this.scene.sleep();
-      this.scene.sleep('HUDScene');
-      this.scene.launch('Victory');
+    if(this.controlledPlayer.gameObject.x >= (this.level.levelWidth + (constants.BLOCKW) * 2)){
+      this.controlledPlayer.gameObject.setVelocityX(0);
+
+      if(this.controlledPlayer === this.playerAlive) {
+        if(this.playerDead.gameObject.x < (this.level.levelWidth + (constants.BLOCKW) * 2)){
+          this.controlledPlayer = this.playerDead;
+        } else{
+          this.winAnimation = true;
+        }
+      }
+      else{
+        if(this.playerAlive.gameObject.x < (this.level.levelWidth + (constants.BLOCKW) * 2)){
+          this.controlledPlayer = this.playerAlive;
+        } else{
+          this.winAnimation = true;
+        }
+      }
+    }
+    //animation de victoire
+    if(this.winAnimation === true){
+      this.playerAlive.gameObject.setVelocityX(constants.PLAYER_XVELOCITY*2);
+      this.playerDead.gameObject.setVelocityX(constants.PLAYER_XVELOCITY*2);
+      if(this.isWin && this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 8)){
+        this.scene.sleep();
+        this.scene.sleep('HUDScene');
+        this.scene.launch('Victory');
+        this.isWin = false;
+      }
     }
 
     // Checkpoints

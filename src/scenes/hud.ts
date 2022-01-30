@@ -87,14 +87,23 @@ export class HUDScene extends Phaser.Scene {
         this.doorImage = this.add.image(this.lineImage.width + (constants.GAME_WIDTH - this.lineImage.width) / 2 - 20, lineY, 'doorline');
         this.scientistImage = this.add.image((constants.GAME_WIDTH - this.lineImage.width) / 2, lineY, 'scientistline');
 
-        // var timeline = this.tweens.createTimeline();
 
-        // timeline.add ({
-        //     targets: this.scientistImage,
-        //     x: 650,
-        //     ease: 'Linear',
-        //     duration: constants.TIMER
-        // });
+        //tête du scientifique qui bouge
+        var timeline = this.tweens.createTimeline();
+        timeline.add ({
+            targets: this.scientistImage,
+            x: (constants.GAME_WIDTH - this.lineImage.width) / 2,
+            ease: 'Linear',
+            duration: constants.DELAI
+        });
+        timeline.add ({
+            targets: this.scientistImage,
+            x: this.lineImage.width,
+            ease: 'Linear',
+            duration: constants.TIMER
+        });
+
+        timeline.play();
     }
 
     update(time, delta) {
