@@ -34,7 +34,7 @@ export class Game {
     //this.gameScene = new GameScene();
 
     let config = {
-        type: Phaser.AUTO,
+        type: Phaser.CANVAS,
         width: constants.GAME_WIDTH,
         height: constants.GAME_HEIGHT,
         physics: {
@@ -44,20 +44,15 @@ export class Game {
                 debug: false,
             }
         },
-        scene: [ GameScene, HUDScene, MainMenuScene, PauseScreen, GameOver, Victory, About ]
+        scene: [ MainMenuScene, GameScene, HUDScene, PauseScreen, GameOver, Victory, About ]
     };
     const phaser = new Phaser.Game(config);
     phaser.events.on('ready', () => {
         //TODO ca ressemble pas à une façon logique de faire. Il doit y avoir un autre moyen
         this.gameScene = phaser.scene.getScene('GameScene') as GameScene;
-        const mainMenuScene = phaser.scene.getScene('MainMenuScene');
 
-        this.inputManager = new InputManager(mainMenuScene);
         this.gameScene.setInputManager(this.inputManager);
-        phaser.scene.run('HUD');
-        phaser.scene.run('MainMenuScene');
-
-        (mainMenuScene as MainMenuScene).setInputManager(this.inputManager);
+        //phaser.scene.run('HUDScene');
 
         console.log('GAME READY, GL HF');
     });

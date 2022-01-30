@@ -30,7 +30,9 @@ const Constants = {
     JUMP_ANGLE_MAX: 0.5,
     JUMP_ANGLE_STEPS: 50,
     PARALLAX: 0.7,
-    MUSIC_VOL : 0.8,
+    MUSIC_METAL_VOL : 0.2,
+    MUSIC_SYNTH_VOL : 0.3,
+    RONRON_VOL : 0.5,
 
     TIMER : 240000, //temps pour réaliser le niveau, en ms
     DELAI : 5000 // délai avant que la tête du scientifique démarre, en ms

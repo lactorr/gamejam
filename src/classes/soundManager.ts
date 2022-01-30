@@ -1,10 +1,11 @@
-import music_loop_synth  from '../assets/sounds/loop_synth.mp3';
-import music_loop_metal  from '../assets/sounds/loop_metal.mp3';
+import music_loop_synth from '../assets/sounds/miaou_Synth_boucle.mp3';
+import music_loop_metal from '../assets/sounds/miaou_metal_boucle.mp3';
+import sound_ronron from '../assets/sounds/ronron.mp3';
 import constants from '../constants';
 
 const audio = new AudioContext();
 
-function loadSound(path, volume) {
+function loadSound(path) {
   const gainNode = audio.createGain();
   let source = audio.createBufferSource();
   let buf;
@@ -21,47 +22,58 @@ function loadSound(path, volume) {
     return {source, gainNode};
 }
 
-const musicSynth = loadSound(music_loop_synth, 0.5);
-const musicMetal = loadSound(music_loop_metal, 0.5);
+const musicSynth = loadSound(music_loop_synth);
+const musicMetal = loadSound(music_loop_metal);
+const ronron = loadSound(sound_ronron);
 
-export class SoundManager {
+class SoundManager {
   private musicStarted: boolean = false;
+  private ronronStarted: boolean = false;
 
   startMusic() {
-    if(!this.musicStarted){
-      this.startSound(musicSynth.source);
-      this.startSound(musicMetal.source);
+    if(!this.musicStarted) {
+      setTimeout(() => {
+        this.startSound(musicSynth.source);
+        this.startSound(musicMetal.source);
+      }, 100)
       this.musicStarted = true;
     }
   }
 
-  startSound(audio){
+  startSound(audio) {
     audio.start();
   }
 
-  muteSound(audio){
-    audio.muted= true;
+  startRonron() {
+    ronron.gainNode.gain.setTargetAtTime(constants.RONRON_VOL, audio.currentTime, 0.015);
+    musicSynth.gainNode.gain.setTargetAtTime(0, audio.currentTime, 1.0);
+    musicMetal.gainNode.gain.setTargetAtTime(0, audio.currentTime, 1.0);
+    if(!this.ronronStarted) {
+      setTimeout(() => {
+        this.startSound(ronron.source);
+      }, 50);
+      this.ronronStarted = true;
+    }
   }
 
-  unmuteSound(audio){
-    audio.muted = false;
+  stopRonron() {
+    if(this.ronronStarted) {
+      ronron.gainNode.gain.setTargetAtTime(0, audio.currentTime, 0.015);
+    }
   }
 
-  pauseSound(audio){
+  pauseSound(audio) {
     audio.pause = true;
   }
 
-  restartSound(audio) {
-    audio.currentTime = 0;
-  }
-
-  resumeSound(audio){
-    audio.suspend().then();
-  }
-
-  updateMusicRatio(ratio){
+  updateMusicRatio(ratio) {
     let convertedRatio = (ratio+5)/10;
-    musicSynth.gainNode.gain.setTargetAtTime(Math.max(0,Math.min(1,convertedRatio * constants.MUSIC_VOL)), audio.currentTime, 0.015);
-    musicMetal.gainNode.gain.setTargetAtTime(Math.max(0, Math.min(1, (1 - convertedRatio) * constants.MUSIC_VOL)), audio.currentTime, 0.015);
+    ronron.gainNode.gain.setTargetAtTime(0, audio.currentTime, 0.015);
+    musicSynth.gainNode.gain.setTargetAtTime(Math.max(0,Math.min(1,convertedRatio * constants.MUSIC_SYNTH_VOL)), audio.currentTime, 0.015);
+    musicMetal.gainNode.gain.setTargetAtTime(Math.max(0, Math.min(1, (1 - convertedRatio) * constants.MUSIC_METAL_VOL)), audio.currentTime, 0.015);
   }
 }
+
+const soundManager = new SoundManager();
+
+export { soundManager };
