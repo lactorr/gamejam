@@ -32,6 +32,7 @@ import assetKeySwitch from '../assets/images/touches_switch.png';
 import assetKeyReset from '../assets/images/touches_reset.png';
 import assetKeyPause from '../assets/images/touches_pause.png';
 import assetCheckpoint from '../assets/images/checkpoint.png';
+import assetCheckpointValidated from '../assets/images/checkpointValidated.png';
 
 //sounds
 import { SoundManager } from '../classes/soundManager';
@@ -43,8 +44,6 @@ let ground;
 let ceil;
 let floor;
 let wallL, wallR;
-
-const TMP_CHECKPOINT_X = 12 * constants.BLOCKW;
 
 type GameState = {
   groundPositionY: number,
@@ -112,6 +111,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('switchAlive', assetPointLive);
     this.load.image('switchDead', assetPointDeath);
     this.load.image('checkpoint', assetCheckpoint);
+    this.load.image('checkpointValidated', assetCheckpointValidated);
 
     this.load.image('boxBackground9', assetBoxBackground9);
     this.load.image('boxBackground8', assetBoxBackground8);
@@ -552,11 +552,22 @@ export class GameScene extends Phaser.Scene {
     }
 
     // Checkpoints
-    if (this.playerAlive.gameObject.body.x >= TMP_CHECKPOINT_X && this.playerDead.gameObject.body.x >= TMP_CHECKPOINT_X && this.lastGameState.catsPositionX < TMP_CHECKPOINT_X) {
-      console.log('CHECKPOINT reached !');
-      this.lastGameState.groundPositionY = 0;
-      this.lastGameState.catsPositionX = TMP_CHECKPOINT_X;
-      console.log(this.lastGameState);
-    }
+    this.level.checkpoints.forEach((checkPointX) => {
+      if (this.lastGameState.catsPositionX < checkPointX && this.playerAlive.gameObject.body.x >= checkPointX && this.playerDead.gameObject.body.x >= checkPointX) {
+        console.log('CHECKPOINT reached at', checkPointX);
+        this.lastGameState.groundPositionY = 0;
+        this.lastGameState.catsPositionX = checkPointX + constants.BLOCKW;
+        this.level.checkpointGroup.getChildren().forEach((checkPointObject:any) => {
+          if (checkPointObject.x < this.lastGameState.catsPositionX) {
+            checkPointObject.setVisible(false);
+          }
+        });
+        this.level.checkpointValidatedGroup.getChildren().forEach((checkPointObject:any) => {
+          if (checkPointObject.x < this.lastGameState.catsPositionX) {
+            checkPointObject.setVisible(true);
+          }
+        });
+      }
+    });
   }
 }

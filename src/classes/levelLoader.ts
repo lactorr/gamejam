@@ -14,6 +14,9 @@ export class LevelLoader {
     this.level.checkpointGroup = this.scene.add.group({
       defaultKey : 'checkpoint',
     }).setOrigin(0, 0);
+    this.level.checkpointValidatedGroup = this.scene.add.group({
+      defaultKey : 'checkpointValidated',
+    }).setOrigin(0, 0);
     this.level.collisionGroup = this.scene.physics.add.group({
       immovable : true,
       defaultKey : 'blockNtrAlive',
@@ -97,9 +100,16 @@ export class LevelLoader {
         break;
         case "checkpoint":
           this.level.checkpoints.push(ex);
-          this.level.checkpointGroup.create(ex, ey, element.type)
+          this.level.checkpointGroup.create(ex, ey)
           .setOrigin(0, 0)
           .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
+          .setDepth(-2)
+          .setMask(mask);
+          this.level.checkpointValidatedGroup.create(ex, ey)
+          .setOrigin(0, 0)
+          .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
+          .setDepth(-1)
+          .setVisible(false)
           .setMask(mask);
         break;
         case "switchAlive":
