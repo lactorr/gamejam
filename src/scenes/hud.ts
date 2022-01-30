@@ -40,6 +40,7 @@ export function clearDebugText() {
 }
 
 export class HUDScene extends Phaser.Scene {
+    private debugFPSText: Phaser.GameObjects.Text;
     private debugPadText: Phaser.GameObjects.Text;
     private isDebugVisible: boolean;
     private lineImage: Phaser.GameObjects.Image;
@@ -68,12 +69,19 @@ export class HUDScene extends Phaser.Scene {
         //     constants.ROOM_W + constants.SIDEBAR_W/2, constants.ROOM_H/2,
         //     constants.SIDEBAR_W, constants.ROOM_H, 0x111111);
 
-        this.debugPadText = this.add.text(10, 30, '', { font: '20px Courier', color: '#ffffff' });
+        this.debugPadText = this.add.text(10, 35, '', { font: '20px Courier', color: '#ffffff' });
+        this.debugFPSText = this.add.text(10, 10, '', { font: '20px Courier', color: '#ffffff' });
         this.debugPadText.setText('waiting for gamepad');
         this.debugPadText.setDepth(constants.Z_HUD_DEBUG);
-        this.isDebugVisible = true;
+        this.isDebugVisible = false;
         this.debugPadText.setVisible(this.isDebugVisible);
         //this.physics.config.debug = true;
+
+        const keyM = this.input.keyboard.addKey('M');
+        keyM.on('up', function() {
+            this.isDebugVisible = !this.isDebugVisible;
+            this.debugPadText.setVisible(this.isDebugVisible);
+        }, this);
 
         /*inputsEventsCenter.on('debugPressed', () => {
             this.isDebugVisible = !this.isDebugVisible;
@@ -94,8 +102,8 @@ export class HUDScene extends Phaser.Scene {
         let debug = [];
 
         const fps = Math.round(1000/delta * 100)/100;
-        debug.push('FPS:' + fps);
         debug.push('debug:\n' + debugText);
+        this.debugFPSText.setText('FPS:' + fps);
         this.debugPadText.setText(debug);
 
         const lineWidth = this.lineImage.displayWidth;
