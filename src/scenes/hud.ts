@@ -94,7 +94,7 @@ export class HUDScene extends Phaser.Scene {
             targets: this.scientistImage,
             x: (constants.GAME_WIDTH - this.lineImage.width) / 2,
             ease: 'Linear',
-            duration: 5000
+            duration: constants.DELAI
         });
         timeline.add ({
             targets: this.scientistImage,

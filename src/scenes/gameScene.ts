@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level1 from '../assets/levels/level1.json';
+import level0 from '../assets/levels/level0.json';
 //images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -61,6 +61,8 @@ export class GameScene extends Phaser.Scene {
   private boxBackgroundA: Phaser.GameObjects.Image[];
   private gameAreaMask: Phaser.Display.Masks.GeometryMask;
 
+  private winAnimation: boolean = false;
+
   constructor () {
     super('GameScene');
   }
@@ -83,7 +85,7 @@ export class GameScene extends Phaser.Scene {
 
   preload() {
     this.soundManager = new SoundManager();
-    this.load.json('levelData', level1);
+    this.load.json('levelData', level0);
     this.load.image('ground', assetPlatform);
     this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 250, frameHeight : 157});
     this.load.spritesheet('catdead', assetCatAnimD, {frameWidth : 250, frameHeight : 157});
@@ -116,6 +118,7 @@ export class GameScene extends Phaser.Scene {
 
   create() {
     this.gameIsOver = false;
+    this.winAnimation = false;
     this.currentGroundPositionY = 0;
     this.targetGroundPositionY = 0;
 
@@ -213,6 +216,7 @@ export class GameScene extends Phaser.Scene {
     let keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
     keyObj.on('up', function() {
       this.scene.restart();
+      this.scene.restart('HUDScene')
     }, this);
 
     //Pause
@@ -423,14 +427,12 @@ export class GameScene extends Phaser.Scene {
       //Un chat est écrasé par le plafond
       // this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
 
-
       //Debug GameOver (touche suppr)
       // var keyDel = this.input.keyboard.addKey('delete');
       // keyDel.on('up', function() {
       //   this.gameIsOver = true;
       //   console.log('gameIsOver');
       // }, this);
-
   }
 
   updateFixedImages(boxOffset){
@@ -457,8 +459,6 @@ export class GameScene extends Phaser.Scene {
     ceil.x = boxOffset;
     wallL.x = boxOffset - constants.GAMEAREA_WIDTH/2;
     wallR.x = boxOffset + constants.GAMEAREA_WIDTH/2;
-
-
   }
 
   update(time, delta) {
@@ -570,14 +570,27 @@ export class GameScene extends Phaser.Scene {
     }
 
       // Conditions de victoire
-
       if((this.playerAlive.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))
         && (this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))){
         console.log('Tadaaa');
-        this.scene.sleep();
-        this.scene.sleep('HUDScene');
-        this.scene.launch('Victory');
-      }
+    //animation de victoire
+        this.controlledPlayer.gameObject.setVelocityX(constants.PLAYER_XVELOCITY);
+        if(this.playerAlive.gameObject.x === this.playerDead.gameObject.x){
+          this.winAnimation = true;
+          console.log(this.winAnimation)
+        }
+      } 
 
+          //animation de victoire
+    if(this.winAnimation === true){
+      this.playerAlive.gameObject.setVelocity(constants.PLAYER_XVELOCITY*2);
+      this.playerDead.gameObject.setVelocity(constants.PLAYER_XVELOCITY*2);
+    }
+
+
+        // this.scene.sleep();
+        // this.scene.sleep('HUDScene');
+        // this.scene.launch('Victory');
+      }
   }
-}
+
