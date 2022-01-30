@@ -31,6 +31,7 @@ import assetKeyJump from '../assets/images/touches_jump.png';
 import assetKeySwitch from '../assets/images/touches_switch.png';
 import assetKeyReset from '../assets/images/touches_reset.png';
 import assetKeyPause from '../assets/images/touches_pause.png';
+import assetCheckpoint from '../assets/images/checkpoint.png';
 
 //sounds
 import { SoundManager } from '../classes/soundManager';
@@ -110,6 +111,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('blockNtrDead', assetBoxFixe1d);
     this.load.image('switchAlive', assetPointLive);
     this.load.image('switchDead', assetPointDeath);
+    this.load.image('checkpoint', assetCheckpoint);
 
     this.load.image('boxBackground9', assetBoxBackground9);
     this.load.image('boxBackground8', assetBoxBackground8);
@@ -147,6 +149,7 @@ export class GameScene extends Phaser.Scene {
       //this.boxBackgroundA[i].setVisible(false);
     }
 
+    //checkpoint = game.add.tileSprite(0, 0, 800, 600, 'checkpointTile');
     const shape1 = (this.make.graphics as any)().fillStyle(0xffffff).fillRect(
       -constants.GAMEAREA_WIDTH/2, -constants.GAMEAREA_HEIGHT/2, constants.GAMEAREA_WIDTH, constants.GAMEAREA_HEIGHT);
     this.gameAreaMask = shape1.createGeometryMask();
