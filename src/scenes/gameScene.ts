@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level0 from '../assets/levels/level0.json';
+import level0 from '../assets/levels/level1.json';
 //images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
