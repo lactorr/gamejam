@@ -27,6 +27,9 @@ const Constants = {
     JUMP_VELOCITY : 250,
     PLAYER_GRAVITY : 500,
     PLAYER_XVELOCITY : 100,
+    JUMP_ANGLE_OFFSET: 0.2,
+    JUMP_ANGLE_MAX: 0.5,
+    JUMP_ANGLE_STEPS: 50,
     PARALLAX: 0.7,
     MUSIC_VOL : 0.8,
 

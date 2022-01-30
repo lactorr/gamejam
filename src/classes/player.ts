@@ -1,11 +1,15 @@
 import { InputData } from './inputManager';
 import constants from '../constants';
 
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
 export class Player {
     public gameObject: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     public currentDirection: number = 1;
     private readonly isAlive: boolean;
     private readonly animType: string;
+    private rotationTarget: number = 0;
+    private rotation: number = 0;
 
     constructor(gameScene: Phaser.Scene, isAlive: boolean) {
         const x = 40;
@@ -34,6 +38,7 @@ export class Player {
 
     updateAnimation(isControlled: boolean, inputData: InputData, isTouchingFloor: boolean) {
         if (!isControlled) {
+            this.gameObject.setRotation(0);
             if (this.currentDirection === -1) {
                 this.gameObject.anims.play(`sit-${this.animType}-left`, true);
             }
@@ -56,12 +61,24 @@ export class Player {
             }
 
             if (!isTouchingFloor) {
+              let velocityY = this.gameObject.body.velocity.y;
+                this.rotationTarget = clamp((constants.JUMP_ANGLE_OFFSET-(velocityY/constants.JUMP_VELOCITY)), -constants.JUMP_ANGLE_MAX, constants.JUMP_ANGLE_MAX);
+                  this.rotation += ( this.rotationTarget - this.rotation) / ((Math.abs(velocityY)>1)?2:constants.JUMP_ANGLE_STEPS);
+
                 if (this.currentDirection === -1) {
+                    if(Math.abs(velocityY)>0)
+                      this.gameObject.setRotation(this.rotation);
                     this.gameObject.anims.play(`jump-${this.animType}-left`, true);
                 }
                 else {
+                  if(Math.abs(velocityY)>0)
+                    this.gameObject.setRotation(-this.rotation);
                     this.gameObject.anims.play(`jump-${this.animType}-right`, true);
                 }
+            }
+            else
+            {
+              this.gameObject.setRotation(0);
             }
         }
     }
