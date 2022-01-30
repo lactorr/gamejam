@@ -569,8 +569,18 @@ export class GameScene extends Phaser.Scene {
       this.scene.launch('GameOver');
     }
 
+    if(this.controlledPlayer.gameObject.x >=  (this.level.levelWidth + (constants.BLOCKW) * 2)){
+      this.controlledPlayer.gameObject.setVelocityX(0);
+      if(this.controlledPlayer === this.playerAlive) {
+        this.controlledPlayer = this.playerDead;
+      }
+      else {
+        this.controlledPlayer = this.playerAlive;
+      }
+    }
+
       // Conditions de victoire
-      if((this.playerAlive.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))
+      /*if((this.playerAlive.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))
         && (this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))){
         console.log('Tadaaa');
     //animation de victoire
@@ -579,7 +589,7 @@ export class GameScene extends Phaser.Scene {
           this.winAnimation = true;
           console.log(this.winAnimation)
         }
-      } 
+      } */
 
           //animation de victoire
     if(this.winAnimation === true){
@@ -593,4 +603,3 @@ export class GameScene extends Phaser.Scene {
         // this.scene.launch('Victory');
       }
   }
-
