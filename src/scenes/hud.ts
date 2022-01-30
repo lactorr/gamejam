@@ -86,28 +86,10 @@ export class HUDScene extends Phaser.Scene {
         this.boxImage = this.add.image((constants.GAME_WIDTH - this.lineImage.width), lineY, 'boxline');
         this.doorImage = this.add.image(this.lineImage.width + (constants.GAME_WIDTH - this.lineImage.width) / 2 - 20, lineY, 'doorline');
         this.scientistImage = this.add.image((constants.GAME_WIDTH - this.lineImage.width) / 2, lineY, 'scientistline');
-
-
-        //tête du scientifique qui bouge
-        var timeline = this.tweens.createTimeline();
-        timeline.add ({
-            targets: this.scientistImage,
-            x: (constants.GAME_WIDTH - this.lineImage.width) / 2,
-            ease: 'Linear',
-            duration: constants.DELAI
-        });
-        timeline.add ({
-            targets: this.scientistImage,
-            x: this.lineImage.width,
-            ease: 'Linear',
-            duration: constants.TIMER
-        });
-
-        timeline.play();
     }
 
     update(time, delta) {
-        const gameScene: any = this.game.scene.getScene('GameScene');
+        const gameScene = this.game.scene.getScene('GameScene') as GameScene;
 
         let debug = [];
 
@@ -116,14 +98,24 @@ export class HUDScene extends Phaser.Scene {
         debug.push('debug:\n' + debugText);
         this.debugPadText.setText(debug);
 
+        const lineWidth = this.lineImage.displayWidth;
         // Mouvement de la box
-        const gamescene = this.game.scene.getScene('GameScene') as GameScene;
-        if (gamescene.playerAlive && gamescene.playerDead) {
-            const lineWidth = this.lineImage.displayWidth;
-            const boxOffset = (gamescene.playerAlive.gameObject.x + gamescene.playerDead.gameObject.x)*.5;
-            const completePercent = (boxOffset / Number(gamescene.level.levelWidth));
+        if (gameScene.playerAlive && gameScene.playerDead) {
+            const boxOffset = (gameScene.playerAlive.gameObject.x + gameScene.playerDead.gameObject.x)*.5;
+            const completePercent = (boxOffset / Number(gameScene.level.levelWidth));
             const boxImageInitX = (constants.GAME_WIDTH - this.lineImage.width)/2;
             this.boxImage.x = Math.min(this.lineImage.width - (constants.GAME_WIDTH - this.lineImage.width)/2, boxImageInitX + lineWidth*completePercent);
+        }
+
+        //Mouvement du scientifique
+        if (gameScene.gameStarted && !gameScene.gamePaused) {
+            const scientistSpeed = lineWidth / constants.TIMER;
+            this.scientistImage.x += delta * scientistSpeed;
+        }
+
+        // Le scientifique a rattrapé la boite
+        if (this.boxImage.x <= this.scientistImage.x) {
+            gameScene.gameOver();
         }
     }
 }

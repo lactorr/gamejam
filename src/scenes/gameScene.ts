@@ -62,7 +62,8 @@ export class GameScene extends Phaser.Scene {
   private levelLoader: LevelLoader;
   // Line images
   private fondGroup: Phaser.GameObjects.Group;
-  private gameStarted: boolean = false;
+  public gameStarted: boolean = false;
+  public gamePaused: boolean = false;
   private gameIsOver: boolean = false;
   private soundManager: SoundManager;
   private lastGameState: GameState = {
@@ -211,6 +212,7 @@ export class GameScene extends Phaser.Scene {
     //Pause
     let keyEnter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     keyEnter.on('up', function() {
+      this.gamePaused = true;
       this.scene.pause();
       this.scene.sleep('HUDScene');
       this.scene.launch('PauseScreen');
@@ -242,19 +244,17 @@ export class GameScene extends Phaser.Scene {
         }, null, this
     );
 
-    const cPerdu = () =>{
-      this.scene.restart();
-      this.gameIsOver = true;
-    }
-
     //Conditions de défaite
     //Un chat est écrasé par une boite
-    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.collisionGroup, ceil, floor], cPerdu);
+    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.collisionGroup, ceil, floor], this.gameOver.bind(this));
     //Un chat est écrasé par le plafond
-    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
-    //Le chrono est terminé
-    let timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
+    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , this.gameOver.bind(this));
+
     this.soundManager.updateMusicRatio(0);
+  }
+
+  gameOver() {
+    this.gameIsOver = true;
   }
 
   resetToCheckpoint() {
