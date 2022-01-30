@@ -569,32 +569,30 @@ export class GameScene extends Phaser.Scene {
       this.scene.launch('GameOver');
     }
 
-    if(this.controlledPlayer.gameObject.x >=  (this.level.levelWidth + (constants.BLOCKW) * 2)){
+    if(this.controlledPlayer.gameObject.x >= (this.level.levelWidth + (constants.BLOCKW) * 2)){
       this.controlledPlayer.gameObject.setVelocityX(0);
+
       if(this.controlledPlayer === this.playerAlive) {
-        this.controlledPlayer = this.playerDead;
+        if(this.playerDead.gameObject.x < (this.level.levelWidth + (constants.BLOCKW) * 2)){
+          this.controlledPlayer = this.playerDead;
+        } else{
+          this.winAnimation = true;
+        }
+
       }
-      else {
-        this.controlledPlayer = this.playerAlive;
+      else{
+        if(this.playerAlive.gameObject.x < (this.level.levelWidth + (constants.BLOCKW) * 2)){
+          this.controlledPlayer = this.playerAlive;
+        } else{
+          this.winAnimation = true;
+        }
       }
     }
 
-      // Conditions de victoire
-      /*if((this.playerAlive.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))
-        && (this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))){
-        console.log('Tadaaa');
-    //animation de victoire
-        this.controlledPlayer.gameObject.setVelocityX(constants.PLAYER_XVELOCITY);
-        if(this.playerAlive.gameObject.x === this.playerDead.gameObject.x){
-          this.winAnimation = true;
-          console.log(this.winAnimation)
-        }
-      } */
-
           //animation de victoire
     if(this.winAnimation === true){
-      this.playerAlive.gameObject.setVelocity(constants.PLAYER_XVELOCITY*2);
-      this.playerDead.gameObject.setVelocity(constants.PLAYER_XVELOCITY*2);
+      this.playerAlive.gameObject.setVelocityX(constants.PLAYER_XVELOCITY*2);
+      this.playerDead.gameObject.setVelocityX(constants.PLAYER_XVELOCITY*2);
     }
 
 
