@@ -399,6 +399,7 @@ export class GameScene extends Phaser.Scene {
             this.level.switchAliveGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
               this.targetGroundPositionY += constants.BLOCKH;
+              console.log(switchAlive.bonusId);
             }, null, this
         );
 
@@ -407,6 +408,7 @@ export class GameScene extends Phaser.Scene {
             this.level.switchDeadGroup, (player, switchAlive: any) => {
               switchAlive.disableBody(true, true);
               this.targetGroundPositionY -= constants.BLOCKH;
+              console.log(switchAlive.bonusId);
             }, null, this
         );
 

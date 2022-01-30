@@ -60,10 +60,11 @@ export class LevelLoader {
       }
     }
     this.level.levelWidth = x * Constants.BLOCKW;
+    let bonusId = 0;
+    let gameSwitch;
     this.level.elements.map((element) => {
       let ex = element.x * Constants.BLOCKW ;
       let ey = element.y * Constants.BLOCKH ;
-
       switch (element.type) {
         case "blockCollision":
           this.level.collisionGroup.create(ex, ey, element.type)
@@ -88,22 +89,26 @@ export class LevelLoader {
           .setMask(mask);
         break;
         case "switchAlive":
-          this.level.switchAliveGroup
+          gameSwitch = this.level.switchAliveGroup
           .create(ex + (Constants.BLOCKW - Constants.SWITCH_SIZE) * 0.5,
           ey + (Constants.BLOCKH - Constants.SWITCH_SIZE) * 0.5,
           element.type)
           .setOrigin(0, 0)
           .setDisplaySize(element.w * Constants.SWITCH_SIZE, element.h * Constants.SWITCH_SIZE)
           .setMask(mask);
+          gameSwitch.bonusId = bonusId++;
+
         break;
         case "switchDead":
-          this.level.switchDeadGroup
+          gameSwitch = this.level.switchDeadGroup
           .create(ex + (Constants.BLOCKW - Constants.SWITCH_SIZE) * 0.5,
           ey + (Constants.BLOCKH - Constants.SWITCH_SIZE) * 0.5,
           element.type)
           .setOrigin(0, 0)
           .setDisplaySize(element.w * Constants.SWITCH_SIZE, element.h * Constants.SWITCH_SIZE)
           .setMask(mask);
+          gameSwitch.bonusId = bonusId++;
+
         break;
         default:
         console.log("Type doesn't exists");
