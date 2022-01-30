@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level0 from '../assets/levels/level0.json';
+import level0 from '../assets/levels/level_debug.json';
 //images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -67,7 +67,7 @@ export class GameScene extends Phaser.Scene {
   private soundManager: SoundManager;
   private lastGameState: GameState = {
     groundPositionY: 0,
-    catsPositionX: 0,
+    catsPositionX: 40,
   };
 
   private boxBackgroundA: Phaser.GameObjects.Image[];
@@ -499,8 +499,10 @@ export class GameScene extends Phaser.Scene {
 
 
     // ANIMATIONS
-    this.playerAlive.updateAnimation(this.controlledPlayer === this.playerAlive, inputData, isTouchingFloor);
-    this.playerDead.updateAnimation(this.controlledPlayer === this.playerDead, inputData, isTouchingFloor);
+    if(this.winAnimation === false) {
+      this.playerAlive.updateAnimation(this.controlledPlayer === this.playerAlive, inputData, isTouchingFloor);
+      this.playerDead.updateAnimation(this.controlledPlayer === this.playerDead, inputData, isTouchingFloor);
+    }
 
 
     // DEBUG
@@ -535,10 +537,13 @@ export class GameScene extends Phaser.Scene {
         }
       }
     }
+
     //animation de victoire
     if(this.winAnimation === true){
       this.playerAlive.gameObject.setVelocityX(constants.PLAYER_XVELOCITY*2);
       this.playerDead.gameObject.setVelocityX(constants.PLAYER_XVELOCITY*2);
+      this.playerAlive.gameObject.anims.play(`right-alive`, true);
+      this.playerDead.gameObject.anims.play(`right-dead`, true);
       if(this.isWin && this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 8)){
         this.scene.sleep();
         this.scene.sleep('HUDScene');
