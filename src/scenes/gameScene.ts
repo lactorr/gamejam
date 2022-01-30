@@ -62,6 +62,7 @@ export class GameScene extends Phaser.Scene {
   private gameAreaMask: Phaser.Display.Masks.GeometryMask;
 
   private winAnimation: boolean = false;
+  private isWin: boolean = true;
 
   constructor () {
     super('GameScene');
@@ -70,9 +71,7 @@ export class GameScene extends Phaser.Scene {
   startGame() {
     this.gameStarted = true;
     this.soundManager.startMusic();
-    console.log('on start le game')
     this.gameIsOver = false;
-    console.log(this.gameIsOver)
   }
 
   setInputManager(inputManager: InputManager) {
@@ -121,9 +120,6 @@ export class GameScene extends Phaser.Scene {
     this.winAnimation = false;
     this.currentGroundPositionY = 0;
     this.targetGroundPositionY = 0;
-
-    console.log('on create la gamescene');
-    console.log(this.input);
     this.levelLoader = new LevelLoader(this);
 
     this.cameras.main.centerOn(constants.GAME_WIDTH/2, 0);
@@ -211,6 +207,7 @@ export class GameScene extends Phaser.Scene {
     this.playerAlive = new Player(this, true);
     this.playerDead = new Player(this, false);
     this.controlledPlayer = this.playerAlive;
+    this.isWin = true;
 
     //Restart
     let keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
@@ -222,10 +219,8 @@ export class GameScene extends Phaser.Scene {
     //Pause
     let keyEnter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     keyEnter.on('up', function() {
-      console.log('pause');
       this.scene.pause();
       this.scene.sleep('HUDScene');
-      console.log('HUD enlevé');
       this.scene.launch('PauseScreen');
     }, this);
 
@@ -257,7 +252,6 @@ export class GameScene extends Phaser.Scene {
 
 
     const cPerdu = () =>{
-      console.log('ça touche');
       this.scene.restart();
       this.gameIsOver = true;
     }
@@ -269,15 +263,6 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
     //Le chrono est terminé
     let timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
-
-
-    //Debug GameOver (touche suppr)
-    // var keyDel = this.input.keyboard.addKey('delete');
-    // keyDel.on('up', function() {
-    //   this.gameIsOver = true;
-    //   console.log('gameIsOver');
-    // }, this);
-
     this.soundManager.updateMusicRatio(0);
   }
 
@@ -408,19 +393,6 @@ export class GameScene extends Phaser.Scene {
         );
 
 
-      // const cPerdu = () =>{
-      //   console.log('ca touche');
-      //   this.gameIsOver = true;
-      //   console.log(this.gameIsOver)
-      // }
-
-      // const cGagne = () =>{
-      //   console.log('cest la win');
-      //   this.scene.sleep();
-      //   this.scene.sleep('HUDScene');
-      //   this.scene.launch('Victory');
-      // }
-
       //Conditions de défaite
       //Un chat est écrasé par une boite
       // this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.blockGroup, ceil, floor], cPerdu);
@@ -535,7 +507,6 @@ export class GameScene extends Phaser.Scene {
 
     // SWITCH
     if (inputData.switchPressed) {
-      console.log('SWITCH PRESSED');
       if(this.controlledPlayer === this.playerAlive) {
         this.controlledPlayer.gameObject.setVelocityX(0);
         this.controlledPlayer = this.playerDead;
@@ -554,16 +525,13 @@ export class GameScene extends Phaser.Scene {
 
     // DEBUG
     if (inputData.goLifePressed) {
-      console.log('LIFE PRESSED');
       this.targetGroundPositionY += constants.BLOCKH;
     }
     else if (inputData.goDeathPressed) {
-      console.log('DEATH PRESSED');
       this.targetGroundPositionY -= constants.BLOCKH;
     }
     //Scène de GameOver
     if(this.gameIsOver){
-      console.log('on charge le gameover');
       this.scene.sleep();
       this.scene.sleep('HUDScene');
       this.scene.launch('GameOver');
@@ -578,7 +546,6 @@ export class GameScene extends Phaser.Scene {
         } else{
           this.winAnimation = true;
         }
-
       }
       else{
         if(this.playerAlive.gameObject.x < (this.level.levelWidth + (constants.BLOCKW) * 2)){
@@ -588,16 +555,16 @@ export class GameScene extends Phaser.Scene {
         }
       }
     }
-
-          //animation de victoire
+    //animation de victoire
     if(this.winAnimation === true){
       this.playerAlive.gameObject.setVelocityX(constants.PLAYER_XVELOCITY*2);
       this.playerDead.gameObject.setVelocityX(constants.PLAYER_XVELOCITY*2);
-    }
-
-
-        // this.scene.sleep();
-        // this.scene.sleep('HUDScene');
-        // this.scene.launch('Victory');
+      if(this.isWin && this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 8)){
+        this.scene.sleep();
+        this.scene.sleep('HUDScene');
+        this.scene.launch('Victory');
+        this.isWin = false;
       }
+    }
   }
+}
