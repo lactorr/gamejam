@@ -36,11 +36,18 @@ import assetKeyPause from '../assets/images/touches_pause.png';
 import { SoundManager } from '../classes/soundManager';
 import assetFond from '../assets/images/fond.png';
 import {addDebugText, clearDebugText} from './hud';
+import GameObject = Phaser.GameObjects.GameObject;
 
 let ground;
 let ceil;
 let floor;
 let wallL, wallR;
+
+type GameState = {
+  groundPositionY: number,
+  catsPositionX: number,
+  bonusStates: { [index: number]: boolean; },
+};
 
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
@@ -57,6 +64,11 @@ export class GameScene extends Phaser.Scene {
   private gameStarted: boolean = false;
   private gameIsOver: boolean = false;
   private soundManager: SoundManager;
+  private lastGameState: GameState = {
+    groundPositionY: 0,
+    catsPositionX: 12 * constants.BLOCKW,
+    bonusStates: {},
+  };
 
   private boxBackgroundA: Phaser.GameObjects.Image[];
   private gameAreaMask: Phaser.Display.Masks.GeometryMask;
@@ -126,24 +138,6 @@ export class GameScene extends Phaser.Scene {
     this.cameras.main.setBounds(-1000, -1000, 10000, 2000);
     this.physics.world.setBounds(-1000, -1000, 10000, 2000);
 
-    // LIGNE DU POURSUIVANT
-    // this.lineImage = this.add.image(50, 370, 'line')
-    //     .setOrigin(0.5, 0.5)
-    //     .setSize(2219, 49)
-    //     .setDisplaySize(2219 * 0.3, 49 * 0.3);
-    // this.boxImage = this.add.image(100, 370, 'boxline')
-    //     .setOrigin(0.5, 0.5)
-    //     .setSize(207, 109)
-    //     .setDisplaySize(207 * 0.4, 109 * 0.4);
-    // this.doorImage = this.add.image(680, 370, 'doorline')
-    //     .setOrigin(0.5, 0.5)
-    //     .setSize(197, 240)
-    //     .setDisplaySize(197 * 0.3, 240 * 0.3);
-    // this.scientistImage = this.add.image(30, 370, 'scientistline')
-    //     .setOrigin(0.5, 0.5)
-    //     .setSize(178, 249)
-    //     .setDisplaySize(178 * 0.4, 249 * 0.4);
-
     // GAME AREA
     this.boxBackgroundA = [];
     for (let i=1; i<10; ++i) {
@@ -152,16 +146,21 @@ export class GameScene extends Phaser.Scene {
       this.boxBackgroundA[i].setDisplaySize(957, 560);
       //this.boxBackgroundA[i].setVisible(false);
     }
-    /*this.boxBackground1D = this.add.image(0, 0, 'boxBackground1D').setOrigin(0.5, 0);
-    this.boxBackground1D.setDepth(-2);
-    this.boxBackground1D.setDisplaySize(957, 280);   */
-    //this.boxBackground1D.setRotation(Math.PI);
 
     const shape1 = (this.make.graphics as any)().fillStyle(0xffffff).fillRect(
       -constants.GAMEAREA_WIDTH/2, -constants.GAMEAREA_HEIGHT/2, constants.GAMEAREA_WIDTH, constants.GAMEAREA_HEIGHT);
     this.gameAreaMask = shape1.createGeometryMask();
 
     this.level = this.levelLoader.parse( this.cache.json.get('levelData'), this.gameAreaMask);
+
+    //Populate initial gameState
+    this.level.switchDeadGroup.getChildren().forEach((switchElement: GameObject & {bonusId: number}) => {
+      this.lastGameState.bonusStates[switchElement.bonusId] = true;
+    });
+    this.level.switchAliveGroup.getChildren().forEach((switchElement: GameObject & {bonusId: number}) => {
+      this.lastGameState.bonusStates[switchElement.bonusId] = true;
+    });
+    console.log(this.lastGameState);
 
     ground = this.physics.add.image(0, 0, 'ground').setDisplaySize(constants.GAME_WIDTH, 12);
     ground.setImmovable(true);
@@ -210,7 +209,10 @@ export class GameScene extends Phaser.Scene {
     //Restart
     let keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
     keyObj.on('up', function() {
-      this.scene.restart();
+      //this.scene.restart();
+
+      this.resetToCheckpoint();
+
     }, this);
 
     //Pause
@@ -282,6 +284,25 @@ export class GameScene extends Phaser.Scene {
     // }, this);
 
     this.soundManager.updateMusicRatio(0);
+  }
+
+  resetToCheckpoint() {
+    this.playerAlive.gameObject.setPosition(this.lastGameState.catsPositionX, this.lastGameState.groundPositionY - 10);
+    this.playerAlive.currentDirection = 1;
+    this.playerDead.gameObject.setPosition(this.lastGameState.catsPositionX, this.lastGameState.groundPositionY + 10);
+    this.playerDead.currentDirection = 1;
+
+    this.targetGroundPositionY = this.lastGameState.groundPositionY;
+    this.currentGroundPositionY = this.lastGameState.groundPositionY;
+    ground.y = this.currentGroundPositionY;
+
+    const setSwitchState = (switchElement: any) => {
+      if (switchElement.body.x >= this.lastGameState.catsPositionX) {
+        switchElement.enableBody(false, switchElement.body.x, switchElement.body.y, true, true);
+      }
+    }
+    this.level.switchDeadGroup.getChildren().forEach(setSwitchState);
+    this.level.switchAliveGroup.getChildren().forEach(setSwitchState);
   }
 
   createAnimations() {
