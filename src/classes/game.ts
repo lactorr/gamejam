@@ -34,7 +34,7 @@ export class Game {
     //this.gameScene = new GameScene();
 
     let config = {
-        type: Phaser.CANVAS,
+        type: Phaser.AUTO,
         width: constants.GAME_WIDTH,
         height: constants.GAME_HEIGHT,
         physics: {

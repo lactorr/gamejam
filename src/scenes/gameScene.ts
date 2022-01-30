@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level0 from '../assets/levels/level0.json';
+import level0 from '../assets/levels/level1.json';
 //images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -396,9 +396,7 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  updateFixedImages(boxOffset){
-    // var lineWidth = this.lineImage.displayWidth;
-    // this.scientistImage.x = boxOffset - (lineWidth/2);
+  updateFixedImages(boxOffset) {
     let groundIndex = Math.ceil(this.currentGroundPositionY / constants.BLOCKH) + 5;
     for (let i=1; i!=10; ++i) {
       if (this.boxBackgroundA[i]) {
@@ -412,15 +410,9 @@ export class GameScene extends Phaser.Scene {
         this.boxBackgroundA[i].setVisible(false);
       }
     }
-    addDebugText(groundIndex);
     const groundIndexA = Math.min(9, groundIndex);
-    addDebugText(groundIndexA);
     this.boxBackgroundA[groundIndexA].setVisible(true);
     this.gameAreaMask.geometryMask.x = boxOffset;
-    // this.lineImage.x = boxOffset;
-    // this.doorImage.x = boxOffset + (lineWidth/2);
-    // let completePercent = ( boxOffset / Number(this.level.levelWidth));
-    // this.boxImage.x = this.scientistImage.x + lineWidth*completePercent;
     ground.x = boxOffset;
     floor.x = boxOffset;
     ceil.x = boxOffset;
@@ -440,8 +432,9 @@ export class GameScene extends Phaser.Scene {
     addDebugText(JSON.stringify(inputData, null, '  '));
 
     const boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
+    const boxOffsetCapped = Math.min(this.level.levelWidth, boxOffset) - constants.GAME_WIDTH/2;
     this.updateFixedImages(boxOffset);
-    this.cameras.main.setScroll( boxOffset - constants.GAME_WIDTH/2, -constants.GAME_HEIGHT/2+50);
+    this.cameras.main.setScroll(boxOffsetCapped, -constants.GAME_HEIGHT/2+50);
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
 
     // UPDATE GROUND IF NEEDED
@@ -470,7 +463,7 @@ export class GameScene extends Phaser.Scene {
     let fondChildren = this.fondGroup.getChildren();
     for (let i = 0; i < fondChildren.length; i++) {
         let backgroundElement = fondChildren[i] as any;
-        backgroundElement.x = (boxOffset*constants.PARALLAX) + i * backgroundElement.width;
+        backgroundElement.x = (boxOffsetCapped*constants.PARALLAX) + i * backgroundElement.width;
     }
 
     // CAT precalc useful values
@@ -559,8 +552,7 @@ export class GameScene extends Phaser.Scene {
       this.playerDead.gameObject.setVelocityX(constants.PLAYER_XVELOCITY*2);
       this.playerAlive.gameObject.anims.play(`right-alive`, true);
       this.playerDead.gameObject.anims.play(`right-dead`, true);
-      if(this.isWin && this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 12)){
-        //this.scene.sleep();
+      if(this.isWin && this.playerDead.gameObject.x > (this.level.levelWidth + constants.GAME_WIDTH)){
         this.scene.stop('HUDScene');
         this.scene.stop('GameScene');
         this.scene.launch('Victory');
