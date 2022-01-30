@@ -11,6 +11,9 @@ export class LevelLoader {
     this.level.blockGroup = this.scene.add.group({
       defaultKey : 'blockNtrAlive',
     }).setOrigin(0, 0);
+    this.level.checkpointGroup = this.scene.add.group({
+      defaultKey : 'checkpoint',
+    }).setOrigin(0, 0);
     this.level.collisionGroup = this.scene.physics.add.group({
       immovable : true,
       defaultKey : 'blockNtrAlive',
@@ -47,6 +50,9 @@ export class LevelLoader {
           }
           this.level.elements.push({x: x , y: y - 5, w:1, h:1, type: "blockNtrAlive"});
           break
+          case "|":
+            this.level.elements.push({x: x , y: -5, w:1, h:blocks.length, type: "checkpoint"})
+          break
           case "+":
           this.level.elements.push({x: x , y: y - 5, w:1, h:1, type: "switchAlive"});
           break
@@ -59,6 +65,7 @@ export class LevelLoader {
         }
       }
     }
+    this.level.checkpoints = [];
     this.level.levelWidth = x * Constants.BLOCKW;
     let bonusId = 0;
     let gameSwitch;
@@ -84,6 +91,13 @@ export class LevelLoader {
         break;
         case "blockNtrDead":
           this.level.blockGroup.create(ex, ey, element.type)
+          .setOrigin(0, 0)
+          .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
+          .setMask(mask);
+        break;
+        case "checkpoint":
+          this.level.checkpoints.push(ex);
+          this.level.checkpointGroup.create(ex, ey, element.type)
           .setOrigin(0, 0)
           .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
           .setMask(mask);
@@ -115,6 +129,7 @@ export class LevelLoader {
         break;
       }
     });
+    console.log(this.level.checkpoints)
     return this.level;
 
   }
