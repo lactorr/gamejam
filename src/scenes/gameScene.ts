@@ -75,7 +75,7 @@ export class GameScene extends Phaser.Scene {
   private gameAreaMask: Phaser.Display.Masks.GeometryMask;
 
   private winAnimation: boolean = false;
-  public isWin: boolean = true;
+  public isWin: boolean = false;
 
   constructor () {
     super('GameScene');
@@ -208,7 +208,7 @@ export class GameScene extends Phaser.Scene {
     this.playerAlive = new Player(this, true);
     this.playerDead = new Player(this, false);
     this.controlledPlayer = this.playerAlive;
-    this.isWin = true;
+    this.isWin = false;
 
     //Restart
     let keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
@@ -550,11 +550,11 @@ export class GameScene extends Phaser.Scene {
       this.playerDead.gameObject.setVelocityX(constants.PLAYER_XVELOCITY*2);
       this.playerAlive.gameObject.anims.play(`right-alive`, true);
       this.playerDead.gameObject.anims.play(`right-dead`, true);
-      if(this.isWin && this.playerDead.gameObject.x > (this.level.levelWidth + constants.GAME_WIDTH)){
+      if(!this.isWin && this.playerDead.gameObject.x > (this.level.levelWidth + constants.GAME_WIDTH)){
         this.scene.stop('HUDScene');
         this.scene.stop('GameScene');
         this.scene.launch('Victory');
-        this.isWin = false;
+        this.isWin = true;
       }
     }
 
