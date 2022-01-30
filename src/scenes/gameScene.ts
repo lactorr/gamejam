@@ -38,12 +38,15 @@ import assetCheckpointValidated from '../assets/images/checkpointValidated.png';
 import { SoundManager } from '../classes/soundManager';
 import assetFond from '../assets/images/fond.png';
 import {addDebugText, clearDebugText} from './hud';
-import GameObject = Phaser.GameObjects.GameObject;
+import soundCheckpoint from '../assets/sounds/checkpoint.mp3';
 
 let ground;
 let ceil;
 let floor;
 let wallL, wallR;
+
+const audioCheckpoint = new Audio(soundCheckpoint);
+audioCheckpoint.volume = 0.9;
 
 type GameState = {
   groundPositionY: number,
@@ -556,6 +559,8 @@ export class GameScene extends Phaser.Scene {
     this.level.checkpoints.forEach((checkPointX) => {
       if (this.lastGameState.catsPositionX < checkPointX && this.playerAlive.gameObject.body.x >= checkPointX && this.playerDead.gameObject.body.x >= checkPointX) {
         console.log('CHECKPOINT reached at', checkPointX);
+        audioCheckpoint.currentTime = 0;
+        audioCheckpoint.play();
         this.lastGameState.groundPositionY = 0;
         this.lastGameState.catsPositionX = checkPointX + constants.BLOCKW;
         this.level.checkpointGroup.getChildren().forEach((checkPointObject:any) => {
