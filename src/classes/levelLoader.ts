@@ -108,7 +108,7 @@ export class LevelLoader {
           this.level.checkpointValidatedGroup.create(ex, ey)
           .setOrigin(0, 0)
           .setDisplaySize(element.w * Constants.BLOCKW, element.h * Constants.BLOCKH)
-          .setDepth(-1)
+          .setDepth(-2)
           .setVisible(false)
           .setMask(mask);
         break;

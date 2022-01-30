@@ -33,6 +33,7 @@ import assetKeyReset from '../assets/images/touches_reset.png';
 import assetKeyPause from '../assets/images/touches_pause.png';
 import assetCheckpoint from '../assets/images/checkpoint.png';
 import assetCheckpointValidated from '../assets/images/checkpointValidated.png';
+import assetCheckpointExit from '../assets/images/checkpointExit.png';
 
 //sounds
 import { SoundManager } from '../classes/soundManager';
@@ -119,6 +120,7 @@ export class GameScene extends Phaser.Scene {
     this.load.image('switchDead', assetPointDeath);
     this.load.image('checkpoint', assetCheckpoint);
     this.load.image('checkpointValidated', assetCheckpointValidated);
+    this.load.image('checkpointExit', assetCheckpointExit);
 
     this.load.image('boxBackground9', assetBoxBackground9);
     this.load.image('boxBackground8', assetBoxBackground8);
@@ -161,6 +163,10 @@ export class GameScene extends Phaser.Scene {
 
     this.level = this.levelLoader.parse( this.cache.json.get('levelData'), this.gameAreaMask);
 
+    this.add.image(this.level.levelWidth + constants.BLOCKW, 0, 'checkpointExit')
+      .setDisplaySize(constants.BLOCKH, constants.GAMEAREA_HEIGHT)
+      .setDepth(-2);
+
     ground = this.physics.add.image(0, 0, 'ground').setDisplaySize(constants.GAME_WIDTH, 12);
     ground.setImmovable(true);
     ground.setDepth(-1);
@@ -195,7 +201,7 @@ export class GameScene extends Phaser.Scene {
 
     //Generate background
     const fondImages = [];
-    for (let x = 0; x < this.level.levelWidth; x += 1600) {
+    for (let x = 0; x < this.level.levelWidth + 1600; x += 1600) {
       fondImages.push(this.add.image(x, 0, 'fond'));
     }
 
@@ -396,7 +402,13 @@ export class GameScene extends Phaser.Scene {
     let groundIndex = Math.ceil(this.currentGroundPositionY / constants.BLOCKH) + 5;
     for (let i=1; i!=10; ++i) {
       if (this.boxBackgroundA[i]) {
-        this.boxBackgroundA[i].x = boxOffset;
+        /*if (this.winAnimation) {
+          const diffFromLevel = boxOffset - this.level.levelWidth;
+          this.boxBackgroundA[i].x = boxOffset + diffFromLevel;
+        }
+        else */{
+          this.boxBackgroundA[i].x = boxOffset;
+        }
         this.boxBackgroundA[i].setVisible(false);
       }
     }
@@ -430,7 +442,6 @@ export class GameScene extends Phaser.Scene {
     this.updateFixedImages(boxOffset);
     this.cameras.main.setScroll( boxOffset - constants.GAME_WIDTH/2, -constants.GAME_HEIGHT/2+50);
     // ground.setPosition(0,Math.sin(delta/1000)*100+300);
-
 
     // UPDATE GROUND IF NEEDED
     const groundPositionDiff = this.targetGroundPositionY - this.currentGroundPositionY;
@@ -547,7 +558,7 @@ export class GameScene extends Phaser.Scene {
       this.playerDead.gameObject.setVelocityX(constants.PLAYER_XVELOCITY*2);
       this.playerAlive.gameObject.anims.play(`right-alive`, true);
       this.playerDead.gameObject.anims.play(`right-dead`, true);
-      if(this.isWin && this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 8)){
+      if(this.isWin && this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 12)){
         this.scene.sleep();
         this.scene.sleep('HUDScene');
         this.scene.launch('Victory');
