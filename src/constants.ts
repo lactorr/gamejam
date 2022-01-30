@@ -31,6 +31,7 @@ const Constants = {
     MUSIC_VOL : 0.8,
 
     TIMER : 40000, //temps pour réaliser le niveau, en ms
+    DELAI : 5000 // délai avant que la tête du scientifique démarre, en ms
 }
 
 export default Constants;

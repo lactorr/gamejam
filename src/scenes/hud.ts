@@ -92,6 +92,12 @@ export class HUDScene extends Phaser.Scene {
         var timeline = this.tweens.createTimeline();
         timeline.add ({
             targets: this.scientistImage,
+            x: (constants.GAME_WIDTH - this.lineImage.width) / 2,
+            ease: 'Linear',
+            duration: 5000
+        });
+        timeline.add ({
+            targets: this.scientistImage,
             x: this.lineImage.width,
             ease: 'Linear',
             duration: constants.TIMER
