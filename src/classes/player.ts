@@ -63,7 +63,7 @@ export class Player {
             if (!isTouchingFloor) {
               let velocityY = this.gameObject.body.velocity.y;
                 this.rotationTarget = clamp((constants.JUMP_ANGLE_OFFSET-(velocityY/constants.JUMP_VELOCITY)), -constants.JUMP_ANGLE_MAX, constants.JUMP_ANGLE_MAX);
-                  this.rotation += ( this.rotationTarget - this.rotation) / ((Math.abs(velocityY)>1)?2:constants.JUMP_ANGLE_STEPS);
+                this.rotation += ( this.rotationTarget - this.rotation) / ((Math.abs(velocityY)>1)?2:constants.JUMP_ANGLE_STEPS);
 
                 if (this.currentDirection === -1) {
                     if(Math.abs(velocityY)>0)
@@ -73,7 +73,7 @@ export class Player {
                 else {
                   if(Math.abs(velocityY)>0)
                     this.gameObject.setRotation(-this.rotation);
-                    this.gameObject.anims.play(`jump-${this.animType}-right`, true);
+                  this.gameObject.anims.play(`jump-${this.animType}-right`, true);
                 }
             }
             else
