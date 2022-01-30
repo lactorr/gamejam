@@ -28,7 +28,7 @@ export class GameOver extends Phaser.Scene {
           // this.scene.pause();
             // this.game.restart;
             // this.scene.launch(['GameScene', 'HUDScene']);
-            this.scene.run('HUD');
+            this.scene.run('HUDScene');
             this.scene.run('GameScene');
             this.scene.sleep('GameOver');
             (this.game.scene.getScene('GameScene') as GameScene).resetGameState();

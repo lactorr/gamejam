@@ -48,7 +48,7 @@ export class HUDScene extends Phaser.Scene {
     private scientistImage: Phaser.GameObjects.Image;
 
     constructor () {
-        super('HUD');
+        super('HUDScene');
     }
 
     preload() {
@@ -108,7 +108,7 @@ export class HUDScene extends Phaser.Scene {
         }
 
         //Mouvement du scientifique
-        if (gameScene.gameStarted && !gameScene.gamePaused && gameScene.lastGameState.catsPositionX > 40) {
+        if (gameScene.gameStarted && !gameScene.gamePaused && gameScene.lastGameState.catsPositionX > 40 && !gameScene.isWin) {
             const scientistSpeed = lineWidth / constants.TIMER;
             this.scientistImage.x += delta * scientistSpeed;
         }

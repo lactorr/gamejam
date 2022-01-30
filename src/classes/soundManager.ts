@@ -29,8 +29,10 @@ export class SoundManager {
 
   startMusic() {
     if(!this.musicStarted){
-      this.startSound(musicSynth.source);
-      this.startSound(musicMetal.source);
+      setTimeout(() => {
+        this.startSound(musicSynth.source);
+        this.startSound(musicMetal.source);
+      }, 100)
       this.musicStarted = true;
     }
   }

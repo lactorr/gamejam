@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level0 from '../assets/levels/level1.json';
+import level0 from '../assets/levels/level0.json';
 //images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -54,6 +54,8 @@ type GameState = {
   catsPositionX: number,
 };
 
+const soundManager = new SoundManager();
+
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
   private inputManager: InputManager;
@@ -69,38 +71,30 @@ export class GameScene extends Phaser.Scene {
   public gameStarted: boolean = false;
   public gamePaused: boolean = false;
   private gameIsOver: boolean = false;
-  private soundManager: SoundManager;
-  public lastGameState: GameState = {
-    groundPositionY: 0,
-    catsPositionX: 40,
-  };
+  public lastGameState: GameState;
 
   private boxBackgroundA: Phaser.GameObjects.Image[];
   private gameAreaMask: Phaser.Display.Masks.GeometryMask;
 
   private winAnimation: boolean = false;
-  private isWin: boolean = true;
+  public isWin: boolean = true;
 
   constructor () {
     super('GameScene');
   }
 
   startGame() {
+    console.log('START GAME');
     this.gameStarted = true;
-    this.soundManager.startMusic();
     this.gameIsOver = false;
+    soundManager.startMusic();
   }
 
   setInputManager(inputManager: InputManager) {
     this.inputManager = inputManager;
   }
 
-  setSoundManager(soundManager: SoundManager){
-    this.soundManager = soundManager;
-  }
-
   preload() {
-    this.soundManager = new SoundManager();
     this.load.json('levelData', level0);
     this.load.image('ground', assetPlatform);
     this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 62, frameHeight : 39});
@@ -141,6 +135,11 @@ export class GameScene extends Phaser.Scene {
     this.currentGroundPositionY = 0;
     this.targetGroundPositionY = 0;
     this.levelLoader = new LevelLoader(this);
+    this.inputManager = new InputManager(this);
+    this.lastGameState = {
+      groundPositionY: 0,
+      catsPositionX: 40,
+    };
 
     this.cameras.main.centerOn(constants.GAME_WIDTH/2, 0);
     // On peut pas avoir Y qui va vers le haut ca me tend T_T - xurei
@@ -260,7 +259,7 @@ export class GameScene extends Phaser.Scene {
     //Un chat est écrasé par le plafond
     this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , this.resetToCheckpoint.bind(this));
 
-    this.soundManager.updateMusicRatio(0);
+    soundManager.updateMusicRatio(0);
   }
 
   gameOver() {
@@ -438,6 +437,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     const inputData = this.inputManager.handleInputs();
+    addDebugText(JSON.stringify(inputData, null, '  '));
 
     const boxOffset = (this.playerAlive.gameObject.x + this.playerDead.gameObject.x)*.5;
     this.updateFixedImages(boxOffset);
@@ -456,7 +456,7 @@ export class GameScene extends Phaser.Scene {
         this.currentGroundPositionY = Math.min(this.currentGroundPositionY, this.targetGroundPositionY);
       }
       ground.y = this.currentGroundPositionY;
-      this.soundManager.updateMusicRatio(this.currentGroundPositionY/constants.BLOCKH);
+      soundManager.updateMusicRatio(this.currentGroundPositionY/constants.BLOCKH);
     }
     if (this.playerDead.gameObject.y < ground.y) {
       this.playerDead.gameObject.y = ground.y+10;
@@ -560,8 +560,9 @@ export class GameScene extends Phaser.Scene {
       this.playerAlive.gameObject.anims.play(`right-alive`, true);
       this.playerDead.gameObject.anims.play(`right-dead`, true);
       if(this.isWin && this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 12)){
-        this.scene.sleep();
-        this.scene.sleep('HUDScene');
+        //this.scene.sleep();
+        this.scene.stop('HUDScene');
+        this.scene.stop('GameScene');
         this.scene.launch('Victory');
         this.isWin = false;
       }
