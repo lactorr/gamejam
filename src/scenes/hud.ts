@@ -104,7 +104,7 @@ export class HUDScene extends Phaser.Scene {
             const boxOffset = (gameScene.playerAlive.gameObject.x + gameScene.playerDead.gameObject.x)*.5;
             const completePercent = (boxOffset / Number(gameScene.level.levelWidth));
             const boxImageInitX = (constants.GAME_WIDTH - this.lineImage.width)/2;
-            this.boxImage.x = Math.min(this.lineImage.width - (constants.GAME_WIDTH - this.lineImage.width)/2, boxImageInitX + lineWidth*completePercent);
+            this.boxImage.x = Math.min(this.lineImage.width + (constants.GAME_WIDTH - this.lineImage.width)/2, boxImageInitX + lineWidth*completePercent);
         }
 
         //Mouvement du scientifique
