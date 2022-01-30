@@ -165,6 +165,7 @@ export class GameScene extends Phaser.Scene {
 
     this.add.image(this.level.levelWidth + constants.BLOCKW, 0, 'checkpointExit')
       .setDisplaySize(constants.BLOCKH, constants.GAMEAREA_HEIGHT)
+      .setMask(this.gameAreaMask)
       .setDepth(-2);
 
     ground = this.physics.add.image(0, 0, 'ground').setDisplaySize(constants.GAME_WIDTH, 12);
