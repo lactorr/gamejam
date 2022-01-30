@@ -99,12 +99,12 @@ export class GameScene extends Phaser.Scene {
     this.soundManager = new SoundManager();
     this.load.json('levelData', level0);
     this.load.image('ground', assetPlatform);
-    this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 250, frameHeight : 157});
-    this.load.spritesheet('catdead', assetCatAnimD, {frameWidth : 250, frameHeight : 157});
-    this.load.spritesheet('cataliveSitR', assetCatSitAR, {frameWidth : 250, frameHeight : 157});
-    this.load.spritesheet('cataliveSitL', assetCatSitAL, {frameWidth : 250, frameHeight : 157});
-    this.load.spritesheet('catdeadSitR', assetCatSitDR, {frameWidth : 250, frameHeight : 157});
-    this.load.spritesheet('catdeadSitL', assetCatSitDL, {frameWidth : 250, frameHeight : 157});
+    this.load.spritesheet('catalive', assetCatAnimA, {frameWidth : 62, frameHeight : 39});
+    this.load.spritesheet('catdead', assetCatAnimD, {frameWidth : 62, frameHeight : 39});
+    this.load.spritesheet('cataliveSitR', assetCatSitAR, {frameWidth : 62, frameHeight : 39});
+    this.load.spritesheet('cataliveSitL', assetCatSitAL, {frameWidth : 62, frameHeight : 39});
+    this.load.spritesheet('catdeadSitR', assetCatSitDR, {frameWidth : 62, frameHeight : 39});
+    this.load.spritesheet('catdeadSitL', assetCatSitDL, {frameWidth : 62, frameHeight : 39});
     this.load.image('keyLeftRight', assetKeyLeftRight);
     this.load.image('keyJump', assetKeyJump);
     this.load.image('keySwitch', assetKeySwitch);

@@ -22,8 +22,8 @@ export class Player {
           gameScene.physics.add.sprite(x, y, isAlive ? 'catalive' : 'catdead')
             .setGravity(0, (isAlive ? 1 : -1) * constants.PLAYER_GRAVITY)
             .setMass(100)
-            .setBodySize(200, 157, false)
-            .setDisplaySize(250 * 0.25, 157 * 0.25)
+            .setBodySize(49, 39, false)
+            .setDisplaySize(62, 39)
         );
         this.gameObject.body.x = x + 200;
         this.gameObject.body.debugBodyColor = 0x00ff0000;
