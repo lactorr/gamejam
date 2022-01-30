@@ -56,7 +56,7 @@ export class SoundManager {
   }
 
   resumeSound(audio){
-    audio.pause = false;
+    audio.suspend().then();
   }
 
   updateMusicRatio(ratio){
