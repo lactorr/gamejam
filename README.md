@@ -9,7 +9,8 @@ We are a french streamers' team who wanted to make the Global Game Jam this year
 You can find replays of the creation process of the game on xurei's channel : [https://www.twitch.tv/xurei](https://www.twitch.tv/xurei).
 
 ## WE CONTINUE THE GAME HERE :
-- We release functional versions here [Vercel release](https://ggj2022.vercel.app)
+- We released a functional versions here [Vercel release](https://ggj2022.vercel.app)  
+  This version has been improved after the Game Jam. 
 - We have a public github there : [github](https://github.com/lactorr/gamejam)
 
 ## Team
@@ -24,7 +25,10 @@ You can find replays of the creation process of the game on xurei's channel : [h
 - Aldhissla LaForgeDesLords [twitch](https://www.twitch.tv/laforgedeslords)
 - WoodyLutherie [twitch](https://www.twitch.tv/woodylutherie)
 
-### Designers
+### Level Designer
+- Hippo_FabMaker [twitch](https://www.twitch.tv/hippo_fabmaker)
+
+### Graphical Designers
 - Hippo_FabMaker [twitch](https://www.twitch.tv/hippo_fabmaker)
 - Fibertooth [twitch](https://www.twitch.tv/fibertooth)
 - PrincessPirotess [twitch](https://www.twitch.tv/princesspirotess)
@@ -33,16 +37,16 @@ You can find replays of the creation process of the game on xurei's channel : [h
 Archie (Archibald Von Boulrouss), Aria, Mauka, Philippe, Anyel , Teal'c,
 Micha, Nala, Lucky, Irish, Kupo, Bouddha
 
-## Development
-- PhaserJS as game engine
+## Framework and Language
+- PhaserJS as game engine (https://www.phaser.io)
 - Javascript/TypeScript
 
 ## KNOWN BUGS
 
 - Sound bug : when restarting the game without a reload page, the soundManager crashes. -> WIP
-- UX bug : user have to double tap backspace to restart the game
+- UX bug : sometimes user have to double tap backspace to restart the game
 
-## TODOLIST (after the GameJam)
-- end level checkpoint (make a visual asset to mark the end of the level)
-- play sound when switch cat
+## TODOLIST (after the Game Jam)
+- play sound on switch cat
 - use procedural generation for levels
+- add extra tiles for richer gaming experience
