@@ -1,5 +1,5 @@
-import music_loop_synth  from '../assets/sounds/loop_synth.mp3';
-import music_loop_metal  from '../assets/sounds/loop_metal.mp3';
+import music_loop_synth  from '../assets/sounds/miaou_Synth_boucle.mp3';
+import music_loop_metal  from '../assets/sounds/miaou_metal_boucle.mp3';
 import constants from '../constants';
 
 const audio = new AudioContext();
@@ -61,7 +61,7 @@ export class SoundManager {
 
   updateMusicRatio(ratio){
     let convertedRatio = (ratio+5)/10;
-    musicSynth.gainNode.gain.setTargetAtTime(Math.max(0,Math.min(1,convertedRatio * constants.MUSIC_VOL)), audio.currentTime, 0.015);
-    musicMetal.gainNode.gain.setTargetAtTime(Math.max(0, Math.min(1, (1 - convertedRatio) * constants.MUSIC_VOL)), audio.currentTime, 0.015);
+    musicSynth.gainNode.gain.setTargetAtTime(Math.max(0,Math.min(1,convertedRatio * constants.MUSIC_SYNTH_VOL)), audio.currentTime, 0.015);
+    musicMetal.gainNode.gain.setTargetAtTime(Math.max(0, Math.min(1, (1 - convertedRatio) * constants.MUSIC_METAL_VOL)), audio.currentTime, 0.015);
   }
 }
