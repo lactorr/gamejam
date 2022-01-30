@@ -47,7 +47,7 @@ let floor;
 let wallL, wallR;
 
 const audioCheckpoint = new Audio(soundCheckpoint);
-audioCheckpoint.volume = 0.9;
+audioCheckpoint.volume = 0.6;
 
 type GameState = {
   groundPositionY: number,
