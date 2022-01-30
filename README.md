@@ -8,6 +8,12 @@ Pr. Erwin Schrödinger really did his cat's experiment ! But, the cat found the 
 We are a french streamers' team who wanted to make the Global Game Jam this year, for fun and challenge.
 You can find replays of the creation process of the game on xurei's channel : [https://www.twitch.tv/xurei](https://www.twitch.tv/xurei).
 
+## HOW TO BUILD:
+- REQUIREMENTS: npm & node must be installed
+- run `npm install`
+- run `npm start` to run the game locally then visit `localhost:8080` in your browser (Chrome)
+- To build : run `npm run build` for building prod version, packaged version will be in the /dist folder.
+
 ## WE CONTINUE THE GAME HERE :
 - We released a functional versions here [Vercel release](https://ggj2022.vercel.app)  
   This version has been improved after the Game Jam. 
