@@ -407,60 +407,6 @@ export class GameScene extends Phaser.Scene {
       frames: [ {key: 'catdead', frame: 14} ],
       frameRate: 10,
     });
-
-    this.physics.add.collider([this.playerAlive.gameObject, this.playerDead.gameObject], [ground, floor, ceil, wallL, wallR]);
-    this.physics.add.collider(this.playerAlive.gameObject, this.playerDead.gameObject);
-
-    this.physics.add.collider(
-        [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-        this.level.blockGroup);
-
-        this.physics.add.overlap(
-            [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-            this.level.switchAliveGroup, (player, switchAlive: any) => {
-              switchAlive.disableBody(true, true);
-              this.targetGroundPositionY += constants.BLOCKH;
-              console.log(switchAlive.bonusId);
-            }, null, this
-        );
-
-        this.physics.add.overlap(
-            [ this.playerAlive.gameObject, this.playerDead.gameObject ],
-            this.level.switchDeadGroup, (player, switchAlive: any) => {
-              switchAlive.disableBody(true, true);
-              this.targetGroundPositionY -= constants.BLOCKH;
-              console.log(switchAlive.bonusId);
-            }, null, this
-        );
-
-
-      const cPerdu = () =>{
-        console.log('ca touche');
-        this.gameIsOver = true;
-        console.log(this.gameIsOver)
-      }
-
-      const cGagne = () =>{
-        console.log('cest la win');
-        this.scene.sleep();
-        this.scene.sleep('HUDScene');
-        this.scene.launch('Victory');
-      }
-
-      //Conditions de défaite
-      //Un chat est écrasé par une boite
-      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.blockGroup, ceil, floor], cPerdu);
-      //Un chat est écrasé par le plafond
-      this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
-
-
-      //Debug GameOver (touche suppr)
-      // var keyDel = this.input.keyboard.addKey('delete');
-      // keyDel.on('up', function() {
-      //   this.gameIsOver = true;
-      //   console.log('gameIsOver');
-      // }, this);
-
   }
 
   updateFixedImages(boxOffset){
