@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level0 from '../assets/levels/level1.json';
+import level0 from '../assets/levels/level0.json';
 //images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -36,7 +36,7 @@ import assetCheckpointValidated from '../assets/images/checkpointValidated.png';
 import assetCheckpointExit from '../assets/images/checkpointExit.png';
 
 //sounds
-import { SoundManager } from '../classes/soundManager';
+import { soundManager } from '../classes/soundManager';
 import assetFond from '../assets/images/fond.png';
 import {addDebugText, clearDebugText} from './hud';
 import soundCheckpoint from '../assets/sounds/checkpoint.mp3';
@@ -53,8 +53,6 @@ type GameState = {
   groundPositionY: number,
   catsPositionX: number,
 };
-
-const soundManager = new SoundManager();
 
 // noinspection JSUnusedGlobalSymbols
 export class GameScene extends Phaser.Scene {
