@@ -43,10 +43,11 @@ let ceil;
 let floor;
 let wallL, wallR;
 
+const TMP_CHECKPOINT_X = 12 * constants.BLOCKW;
+
 type GameState = {
   groundPositionY: number,
   catsPositionX: number,
-  bonusStates: { [index: number]: boolean; },
 };
 
 // noinspection JSUnusedGlobalSymbols
@@ -66,8 +67,7 @@ export class GameScene extends Phaser.Scene {
   private soundManager: SoundManager;
   private lastGameState: GameState = {
     groundPositionY: 0,
-    catsPositionX: 12 * constants.BLOCKW,
-    bonusStates: {},
+    catsPositionX: 0,
   };
 
   private boxBackgroundA: Phaser.GameObjects.Image[];
@@ -152,15 +152,6 @@ export class GameScene extends Phaser.Scene {
     this.gameAreaMask = shape1.createGeometryMask();
 
     this.level = this.levelLoader.parse( this.cache.json.get('levelData'), this.gameAreaMask);
-
-    //Populate initial gameState
-    this.level.switchDeadGroup.getChildren().forEach((switchElement: GameObject & {bonusId: number}) => {
-      this.lastGameState.bonusStates[switchElement.bonusId] = true;
-    });
-    this.level.switchAliveGroup.getChildren().forEach((switchElement: GameObject & {bonusId: number}) => {
-      this.lastGameState.bonusStates[switchElement.bonusId] = true;
-    });
-    console.log(this.lastGameState);
 
     ground = this.physics.add.image(0, 0, 'ground').setDisplaySize(constants.GAME_WIDTH, 12);
     ground.setImmovable(true);
@@ -251,18 +242,10 @@ export class GameScene extends Phaser.Scene {
         }, null, this
     );
 
-
     const cPerdu = () =>{
       console.log('ca touche');
       this.gameIsOver = true;
       console.log(this.gameIsOver)
-    }
-
-    const cGagne = () =>{
-      console.log('cest la win');
-      this.scene.sleep();
-      this.scene.sleep('HUDScene');
-      this.scene.launch('Victory');
     }
 
     //Conditions de défaite
@@ -272,9 +255,6 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , cPerdu);
     //Le chrono est terminé
     let timerEvent = this.time.addEvent({ delay: constants.TIMER, callback: cPerdu, callbackScope: this});
-
-    //Conditions de victoire
-    // this.physics.add.overlap(this.boxImage, this.doorImage, cGagne);
 
     //Debug GameOver (touche suppr)
     // var keyDel = this.input.keyboard.addKey('delete');
@@ -559,18 +539,21 @@ export class GameScene extends Phaser.Scene {
       this.scene.launch('GameOver');
     }
 
-      // Conditions de victoire
+    // Conditions de victoire
+    if((this.playerAlive.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))
+      && (this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))){
+      console.log('Tadaaa');
+      this.scene.sleep();
+      this.scene.sleep('HUDScene');
+      this.scene.launch('Victory');
+    }
 
-      if((this.playerAlive.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))
-        && (this.playerDead.gameObject.x > (this.level.levelWidth + (constants.BLOCKW) * 2))){
-        console.log('Tadaaa');
-        this.scene.sleep();
-        this.scene.sleep('HUDScene');
-        this.scene.launch('Victory');
-      }
-
-    // Avancée du scientist de 650 en constants.TIMER ms
-    // this.scientistImage.setX = 30 + 650/timerEvent;
-
+    // Checkpoints
+    if (this.playerAlive.gameObject.body.x >= TMP_CHECKPOINT_X && this.playerDead.gameObject.body.x >= TMP_CHECKPOINT_X && this.lastGameState.catsPositionX < TMP_CHECKPOINT_X) {
+      console.log('CHECKPOINT reached !');
+      this.lastGameState.groundPositionY = 0;
+      this.lastGameState.catsPositionX = TMP_CHECKPOINT_X;
+      console.log(this.lastGameState);
+    }
   }
 }
