@@ -1,8 +1,8 @@
 import { InputManager } from '../classes/inputManager';
 import { GameScene } from './gameScene';
 import assetClicplay from '../assets/images/mainscreen.png';
-import assetcatalivesit from '../assets/images/catalivesit.png';
-import assetcatdeadsit from '../assets/images/catdeadsit.png';
+import assetcatalivesit from '../assets/images/catalivesit-big.png';
+import assetcatdeadsit from '../assets/images/catdeadsit-big.png';
 
 export class MainMenuScene extends Phaser.Scene {
     private inputManager: InputManager;
