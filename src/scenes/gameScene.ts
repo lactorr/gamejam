@@ -4,7 +4,7 @@ import {Level} from '../classes/level';
 import {Player} from '../classes/player';
 import constants from '../constants';
 //levels
-import level0 from '../assets/levels/level_debug.json';
+import level0 from '../assets/levels/level1.json';
 //images
 import assetPlatform from '../assets/images/platform.png';
 import assetCatAnimA from '../assets/images/cat_anim_a.png';
@@ -66,7 +66,7 @@ export class GameScene extends Phaser.Scene {
   public gamePaused: boolean = false;
   private gameIsOver: boolean = false;
   private soundManager: SoundManager;
-  private lastGameState: GameState = {
+  public lastGameState: GameState = {
     groundPositionY: 0,
     catsPositionX: 40,
   };
@@ -246,9 +246,9 @@ export class GameScene extends Phaser.Scene {
 
     //Conditions de défaite
     //Un chat est écrasé par une boite
-    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.collisionGroup, ceil, floor], this.gameOver.bind(this));
+    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [this.level.collisionGroup, ceil, floor], this.resetToCheckpoint.bind(this));
     //Un chat est écrasé par le plafond
-    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , this.gameOver.bind(this));
+    this.physics.add.overlap([this.playerAlive.gameObject, this.playerDead.gameObject], [ceil, floor] , this.resetToCheckpoint.bind(this));
 
     this.soundManager.updateMusicRatio(0);
   }
