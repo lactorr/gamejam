@@ -68,7 +68,7 @@ export class GameScene extends Phaser.Scene {
   private fondGroup: Phaser.GameObjects.Group;
   public gameStarted: boolean = false;
   public gamePaused: boolean = false;
-  private gameIsOver: boolean = false;
+  public gameIsOver: boolean = false;
   public lastGameState: GameState;
 
   private boxBackgroundA: Phaser.GameObjects.Image[];
@@ -260,6 +260,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   gameOver() {
+    console.log(`TRIGGER gameOver`);
     this.gameIsOver = true;
   }
 
@@ -283,10 +284,13 @@ export class GameScene extends Phaser.Scene {
   }
 
   resetGameState() {
+    this.gameIsOver = false;
     this.lastGameState = {
       groundPositionY: 0,
       catsPositionX: 0,
     };
+    this.resetToCheckpoint();
+    this.updateCheckpointImages();
   }
 
   createAnimations() {
@@ -397,13 +401,7 @@ export class GameScene extends Phaser.Scene {
     let groundIndex = Math.ceil(this.currentGroundPositionY / constants.BLOCKH) + 5;
     for (let i=1; i!=10; ++i) {
       if (this.boxBackgroundA[i]) {
-        /*if (this.winAnimation) {
-          const diffFromLevel = boxOffset - this.level.levelWidth;
-          this.boxBackgroundA[i].x = boxOffset + diffFromLevel;
-        }
-        else */{
-          this.boxBackgroundA[i].x = boxOffset;
-        }
+        this.boxBackgroundA[i].x = boxOffset;
         this.boxBackgroundA[i].setVisible(false);
       }
     }
@@ -421,8 +419,14 @@ export class GameScene extends Phaser.Scene {
     this.inputManager.updateInputData();
     clearDebugText();
     if (!this.gameStarted) {
-      addDebugText("NOT STARTED");
       return;
+    }
+
+    //Scène de GameOver
+    if(this.gameIsOver) {
+      this.scene.stop('HUDScene');
+      this.scene.sleep();
+      this.scene.launch('GameOver');
     }
 
     const inputData = this.inputManager.handleInputs();
@@ -517,12 +521,6 @@ export class GameScene extends Phaser.Scene {
     else if (inputData.goDeathPressed) {
       this.targetGroundPositionY -= constants.BLOCKH;
     }
-    //Scène de GameOver
-    if(this.gameIsOver){
-      this.scene.sleep();
-      this.scene.sleep('HUDScene');
-      this.scene.launch('GameOver');
-    }
 
     if(this.controlledPlayer.gameObject.x >= (this.level.levelWidth + (constants.BLOCKW) * 2)){
       this.controlledPlayer.gameObject.setVelocityX(0);
@@ -565,17 +563,17 @@ export class GameScene extends Phaser.Scene {
         audioCheckpoint.play();
         this.lastGameState.groundPositionY = 0;
         this.lastGameState.catsPositionX = checkPointX + constants.BLOCKW;
-        this.level.checkpointGroup.getChildren().forEach((checkPointObject:any) => {
-          if (checkPointObject.x < this.lastGameState.catsPositionX) {
-            checkPointObject.setVisible(false);
-          }
-        });
-        this.level.checkpointValidatedGroup.getChildren().forEach((checkPointObject:any) => {
-          if (checkPointObject.x < this.lastGameState.catsPositionX) {
-            checkPointObject.setVisible(true);
-          }
-        });
+        this.updateCheckpointImages();
       }
+    });
+  }
+
+  updateCheckpointImages() {
+    this.level.checkpointGroup.getChildren().forEach((checkPointObject:any) => {
+      checkPointObject.setVisible(checkPointObject.x >= this.lastGameState.catsPositionX);
+    });
+    this.level.checkpointValidatedGroup.getChildren().forEach((checkPointObject:any) => {
+      checkPointObject.setVisible(checkPointObject.x < this.lastGameState.catsPositionX);
     });
   }
 }

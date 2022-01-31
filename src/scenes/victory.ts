@@ -14,14 +14,11 @@ export class Victory extends Phaser.Scene {
         console.log('on est dans la scene de victoire');
         this.add.image(0, constants.GAME_HEIGHT, 'winScreen').setOrigin(0, 1);
 
-        var keyEnter = this.input.keyboard.addKey('enter');
+        const keyEnter = this.input.keyboard.addKey('enter');
         keyEnter.on('up', function() {
-            // this.scene.pause();
             this.scene.launch('About');
             this.scene.sleep('Victory');
-            console.log('on restart le level');
         }, this);
-
     }
 
     update(time, delta) {

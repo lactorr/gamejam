@@ -22,13 +22,13 @@ export class GameOver extends Phaser.Scene {
 
         var keybackSpace = this.input.keyboard.addKey('backspace');
         keybackSpace.on('up', function() {
+            const gameScene = this.game.scene.getScene('GameScene') as GameScene;
+            gameScene.resetGameState();
             this.scene.run('HUDScene');
-            this.scene.run('GameScene');
+            this.scene.wake('GameScene');
             this.scene.sleep('GameOver');
-            (this.game.scene.getScene('GameScene') as GameScene).resetGameState();
             console.log('on restart le level');
         }, this);
-
     }
 
     update(time, delta) {
