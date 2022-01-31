@@ -1,4 +1,9 @@
-#SCHRODINGER'S ESCAPE - 2022 Global Game Jam project
+<div align="center">
+    <img style="margin: 0 auto" src="src/assets/images/title.png" alt="Title" width="68%"/>
+</div>
+<br/>
+
+# SCHRODINGER'S ESCAPE - 2022 Global Game Jam project
 
 ## Game resume
 Pr. Erwin Schrödinger really did his cat's experiment ! But, the cat found the craft box very very comfy and doesn't want to get out of it. Kitty has to escape the lab before the professor could catch him. But, beware, Kitty is dead AND alive. He needs to manage to stay in his both states when escaping, or he might destroy is quantum intrication!
