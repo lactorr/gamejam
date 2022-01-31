@@ -4,9 +4,6 @@ import { InputManager } from '../classes/inputManager';
 import { GameScene } from './gameScene';
 
 export class GameOver extends Phaser.Scene {
-    private debugPadText: Phaser.GameObjects.Text;
-    private isDebugVisible: boolean;
-
     constructor () {
         super('GameOver');
     }
@@ -25,9 +22,6 @@ export class GameOver extends Phaser.Scene {
 
         var keybackSpace = this.input.keyboard.addKey('backspace');
         keybackSpace.on('up', function() {
-          // this.scene.pause();
-            // this.game.restart;
-            // this.scene.launch(['GameScene', 'HUDScene']);
             this.scene.run('HUDScene');
             this.scene.run('GameScene');
             this.scene.sleep('GameOver');
@@ -38,6 +32,5 @@ export class GameOver extends Phaser.Scene {
     }
 
     update(time, delta) {
-        const gameScene: any = this.game.scene.getScene('GameScene');
     }
 }

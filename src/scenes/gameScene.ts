@@ -221,7 +221,6 @@ export class GameScene extends Phaser.Scene {
     keyEnter.on('up', function() {
       this.gamePaused = true;
       this.scene.pause();
-      this.scene.sleep('HUDScene');
       this.scene.launch('PauseScreen');
     }, this);
 

@@ -1,12 +1,8 @@
 import constants from '../constants';
 import pauseScreen from '../assets/images/pausescreen.png';
-import { InputManager } from '../classes/inputManager';
 import { GameScene } from './gameScene';
 
 export class PauseScreen extends Phaser.Scene {
-    private debugPadText: Phaser.GameObjects.Text;
-    private isDebugVisible: boolean;
-
     constructor () {
         super('PauseScreen');
     }
@@ -21,19 +17,19 @@ export class PauseScreen extends Phaser.Scene {
 
         this.add.image(0, constants.GAME_HEIGHT, 'pauseScreen').setOrigin(0, 1);
 
-        var keyEnter = this.input.keyboard.addKey('enter');
+        let keyEnter = this.input.keyboard.addKey('enter');
         keyEnter.on('up', function() {
             this.scene.resume('GameScene');
-            this.scene.launch('HUDScene');
             this.scene.sleep('PauseScreen');
             gameScene.gamePaused = false;
             console.log('on enlève la pause');
         }, this);
 
-        var keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
+        let keyObj = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE);
         keyObj.on('up', function() {
-            this.scene.launch('GameScene');
+            this.scene.resume('GameScene');
             this.scene.sleep('PauseScreen');
+            gameScene.resetToCheckpoint();
             gameScene.gamePaused = false;
         }, this);
 
