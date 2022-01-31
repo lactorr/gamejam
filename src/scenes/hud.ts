@@ -122,7 +122,7 @@ export class HUDScene extends Phaser.Scene {
         }
 
         // Le scientifique a rattrapé la boite
-        if (this.boxImage.x <= this.scientistImage.x) {
+        if (this.boxImage.x <= this.scientistImage.x && gameScene.lastGameState.catsPositionX > 40) {
             gameScene.gameOver();
         }
     }
