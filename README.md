@@ -52,12 +52,6 @@ Micha, Nala, Lucky, Irish, Kupo, Bouddha
 - PhaserJS as game engine (https://www.phaser.io)
 - Javascript/TypeScript
 
-## KNOWN BUGS
-
-- Sound bug : when restarting the game without a reload page, the soundManager crashes. -> WIP
-- UX bug : sometimes user have to double tap backspace to restart the game
-- Sounds shifting
-
 ## TODOLIST (after the Game Jam)
 - play sound on switch cat
 - use procedural generation for levels
