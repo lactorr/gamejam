@@ -21,7 +21,7 @@ You can find replays of the creation process of the game on xurei's channel : [h
 
 ## WE CONTINUE THE GAME HERE :
 - We released a functional versions here [Vercel release](https://ggj2022.vercel.app)  
-  This version has been improved after the Game Jam. 
+  This version has been improved after the Game Jam.
 - We have a public github there : [github](https://github.com/lactorr/gamejam)
 
 ## Team
@@ -51,6 +51,10 @@ Micha, Nala, Lucky, Irish, Kupo, Bouddha
 ## Framework and Language
 - PhaserJS as game engine (https://www.phaser.io)
 - Javascript/TypeScript
+
+## FEEDBACK & BUGS
+- when user presses backspace during the outro scene, cats will keep their speed
+for the next level -> feedback to test
 
 ## TODOLIST (after the Game Jam)
 - play sound on switch cat
